@@ -1,1 +1,0 @@
-Vople Android [JAVA]
