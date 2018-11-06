@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">vople</string>
-    <string name="login_signin"><u>회원가입</u></string>
     <string name="title_activity_login">Sign in</string>
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
