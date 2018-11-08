@@ -1,7 +1,6 @@
 package com.mobile.vople.vople;
 
 import android.app.ProgressDialog;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,20 +10,16 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mobile.vople.vople.server.RetrofitInstance;
-import com.mobile.vople.vople.server.Settings;
 import com.mobile.vople.vople.server.SharedPreference;
 import com.mobile.vople.vople.server.VopleServiceApi;
 import com.mobile.vople.vople.server.model.MyRetrofit;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
@@ -49,8 +44,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void Initialize() {
-        edt_id = (EditText) findViewById(R.id.edt_id);
-        edt_password = (EditText) findViewById(R.id.edt_password);
+        edt_id = (EditText) findViewById(R.id.edt_password1);
+        edt_password = (EditText) findViewById(R.id.edt_username);
 
         btn_login = (Button) findViewById(R.id.btn_login);
 
@@ -81,6 +76,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void onResponse(Call<VopleServiceApi.Token> call, Response<VopleServiceApi.Token> response) {
                     if (response.code() == 200) {
                         sp.put("Authorization", response.body().token);
+
                     } else {
                         Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
                                 Toast.LENGTH_SHORT).show();
