@@ -175,6 +175,7 @@
         app:layout_constraintVertical_bias="0.0">
 
         <ListView
+            android:id="@+id/lv_event"
             android:layout_width="match_parent"
             android:layout_height="80dp" />
 
