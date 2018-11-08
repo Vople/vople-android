@@ -76,7 +76,7 @@
         android:id="@+id/button3"
         android:layout_width="80dp"
         android:layout_height="50dp"
-        android:background="00ff0000"
+        android:background="#00ff0000"
         android:fontFamily="@font/bmdohyeon"
         android:text="참가하기"
         android:textColor="#54c4ad"
@@ -98,7 +98,7 @@
         android:id="@+id/imageButton5"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:background="00ff0000"
+        android:background="#00ff0000"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="@+id/imageView6"
         app:layout_constraintEnd_toEndOf="parent"
@@ -109,7 +109,7 @@
         android:id="@+id/button4"
         android:layout_width="80dp"
         android:layout_height="50dp"
-        android:background="00ff0000"
+        android:background="#00ff0000"
         android:fontFamily="@font/bmdohyeon"
         android:text="전송"
         android:textColor="#54c4ad"
@@ -121,7 +121,7 @@
         android:id="@+id/button5"
         android:layout_width="80dp"
         android:layout_height="50dp"
-        android:background="00ff0000"
+        android:background="#00ff0000"
         android:fontFamily="@font/bmdohyeon"
         android:text="취소"
         android:textColor="#54c4ad"
@@ -177,7 +177,7 @@
         <ListView
             android:id="@+id/lv_event"
             android:layout_width="match_parent"
-            android:layout_height="80dp" />
+            android:layout_height="100dp" />
 
     </ScrollView>
 

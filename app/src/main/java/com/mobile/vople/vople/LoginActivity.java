@@ -11,13 +11,10 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mobile.vople.vople.server.RetrofitInstance;
-import com.mobile.vople.vople.server.Settings;
 import com.mobile.vople.vople.server.SharedPreference;
 import com.mobile.vople.vople.server.VopleServiceApi;
 import com.mobile.vople.vople.server.model.MyRetrofit;
 
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import retrofit2.Call;
@@ -68,7 +65,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (v.getId() == btn_login.getId()) {
 
-            ProgressDialog pd = ProgressDialog.show(LoginActivity.this, "로그인중", "로그인중 입니다.");
+            final ProgressDialog pd = ProgressDialog.show(LoginActivity.this, "로그인중", "로그인중 입니다.");
 
             VopleServiceApi.login service = retrofit.create(VopleServiceApi.login.class);
 

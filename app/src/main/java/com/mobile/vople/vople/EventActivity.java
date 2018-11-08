@@ -1,30 +1,28 @@
 package com.mobile.vople.vople;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-public class EventActivity extends Activity {
-    private ListView m_oListView = null;
+public class EventActivity extends AppCompatActivity {
 
+    private ListView listView;
+
+    private ListViewAdapter adapter;
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event);
 
-        int nDataCnt = 0;
-        ArrayList<EventItemData> oData = new ArrayList<>();
+        listView = (ListView) findViewById(R.id.lv_event);
 
-        //for(int i = 0; i < size(); ++i)
-        {
-            //데이터 할당
-        }
+        adapter = new ListViewAdapter();
 
-        m_oListView = (ListView)findViewById(R.id.lv_event);
-        EventAdapter oAdapter = new EventAdapter(oData);
+        adapter.addItem(null, "Evan", "04:11", "2018-09-23 09:30");
 
-        m_oListView.setAdapter(oAdapter);
+        listView.setAdapter(adapter);
     }
 }
