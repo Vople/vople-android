@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         if (v.getId() == btn_login.getId()) {
 
-            ProgressDialog pd = ProgressDialog.show(LoginActivity.this, "로그인중", "로그인중 입니다.");
+            final ProgressDialog pd = ProgressDialog.show(LoginActivity.this, "로그인중", "로그인중 입니다.");
 
             VopleServiceApi.login service = retrofit.create(VopleServiceApi.login.class);
 
