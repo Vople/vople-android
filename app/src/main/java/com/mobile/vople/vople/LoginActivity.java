@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         retrofit = MyRetrofit.getInstance().getRetrofit();
 
         retrofit = RetrofitInstance.getInstance(getApplicationContext());
-        
+
         sp = SharedPreference.getInstance();
     }
 
