@@ -1,12 +1,14 @@
 package com.mobile.vople.vople;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.vople.vople.server.RetrofitInstance;
@@ -22,9 +24,12 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener
+{
+    public static LoginActivity instance;
 
     private EditText edt_id, edt_password;
+    private TextView tv_signup;
     private Button btn_login;
 
     private Retrofit retrofit;
@@ -38,14 +43,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        instance = this;
+
         Initialize();
-
-
     }
 
     private void Initialize() {
         edt_id = (EditText) findViewById(R.id.edt_password1);
         edt_password = (EditText) findViewById(R.id.edt_username);
+
+        tv_signup = (TextView) findViewById(R.id.tv_signup);
 
         btn_login = (Button) findViewById(R.id.btn_login);
 
@@ -56,6 +63,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         retrofit = RetrofitInstance.getInstance(getApplicationContext());
 
         sp = SharedPreference.getInstance();
+
+        tv_signup.setOnClickListener(this);
     }
 
     @Override
@@ -92,6 +101,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     pd.dismiss();
                 }
             });
+        }
+        else if(v.getId() == tv_signup.getId())
+        {
+            Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
+            startActivity(intent);
         }
     }
 }
