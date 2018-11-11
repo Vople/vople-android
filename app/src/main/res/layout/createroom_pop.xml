@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="250dp"
+    android:background="@drawable/pop_bg"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    android:id="@+id/Pop"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        android:gravity="bottom"
+        android:layout_gravity="center_horizontal"
+        android:fontFamily="@font/bmdohyeon"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:text="방 만들기" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="5dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/MissionRoom"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:layout_marginLeft="10dp"
+                android:text="미션" />
+
+            <RadioButton
+                android:id="@+id/SituationRoom"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="상황극" />
+
+
+        </RadioGroup>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:fontFamily="@font/bmdohyeon"
+            android:gravity="center_horizontal"
+            android:text="방 이름"
+            android:textColor="@color/white"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/RoomName"
+            android:layout_width="200dp"
+            android:layout_height="30dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="30dp"
+            android:gravity="right"
+            android:background="@drawable/white_box" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/bmdohyeon"
+            android:gravity="center"
+            android:text="참가 인원"
+            android:textColor="@color/white"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/MaxPeople"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/bmdohyeon"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:text="Num"
+            />
+
+        <TextView
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:fontFamily="@font/bmdohyeon"
+            android:gravity="center"
+            android:text="대본 선택"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            android:id="@+id/ScriptText"
+            />
+
+        <Spinner
+            android:id="@+id/PlayScript"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/Fin_Date"
+            android:layout_width="70dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="8dp"
+            android:background="@drawable/custom_button"
+            android:fontFamily="@font/bmdohyeon"
+            android:gravity="center"
+            android:text="종료일 선택"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/bmdohyeon"
+            android:gravity="center"
+            android:text="종료일 :"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+        <TextView
+            android:id="@+id/EndDateOfRoom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/bmdohyeon"
+            android:gravity="left"
+            android:text="2"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:layout_weight="1"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/Cancle"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button"
+            android:fontFamily="@font/bmdohyeon"
+            android:gravity="center"
+            android:text="취소"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/Submit"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_weight="1"
+            android:background="@drawable/custom_button"
+            android:fontFamily="@font/bmdohyeon"
+            android:gravity="center"
+            android:text="확인"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+    </LinearLayout>
+</LinearLayout>
