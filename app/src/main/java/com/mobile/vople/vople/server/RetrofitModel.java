@@ -7,4 +7,11 @@ package com.mobile.vople.vople.server;
 public class RetrofitModel {
 
 
+    public class BoardContributor
+    {
+        public int id;
+        public String title;
+        public String content;
+
+    }
 }

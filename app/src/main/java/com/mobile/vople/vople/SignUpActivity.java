@@ -16,6 +16,8 @@ import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.SharedPreference;
 import com.mobile.vople.vople.server.VopleServiceApi;
 
+import java.io.IOException;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -72,14 +74,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
             VopleServiceApi.signup service = retrofit.create(VopleServiceApi.signup.class);
 
-            String username = edt_username.getText().toString();
-            String password1 = edt_password1.getText().toString();
-            String password2 = edt_password2.getText().toString();
-            String email = edt_email.getText().toString();
-            String bio = edt_bio.getText().toString();
-            String nickname = edt_nickname.getText().toString();
+            String username     = edt_username.getText().toString();
+            String password1    = edt_password1.getText().toString();
+            String password2    = edt_password2.getText().toString();
+            String email        = edt_email.getText().toString();
+            String bio          = edt_bio.getText().toString();
+            String nickname     = edt_nickname.getText().toString();
 
-            String gender = "";
+            String gender       = "";
 
             if(rb_male.isChecked()) gender = "male";
             else gender = "female";
@@ -89,22 +91,26 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             repos.enqueue(new Callback<VopleServiceApi.Token>() {
                 @Override
                 public void onResponse(Call<VopleServiceApi.Token> call, Response<VopleServiceApi.Token> response) {
-                    if (response.code() == 201) {
-
+                    if (response.code() == 201)
+                    {
                         sp.put("Authorization", response.body().token);
 
                         Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
                         startActivity(intent);
 
-                        if(LoginActivity.instance != null)
-                            LoginActivity.instance.finish();
+                        if(LoginActivity.instance != null) LoginActivity.instance.finish();
 
                         finish();
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
-                                Toast.LENGTH_SHORT).show();
                     }
-
+                    else if(response.code() == 400)
+                    {
+                        finish();
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "Response.code = "
+                                + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                    }
                 }
 
                 @Override

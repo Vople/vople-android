@@ -4,6 +4,7 @@ import android.media.session.MediaSession;
 
 import com.mobile.vople.vople.server.model.User;
 
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Single;
@@ -30,6 +31,7 @@ public class VopleServiceApi {
         );
     }
 
+
     public interface signup
     {
         @FormUrlEncoded
@@ -43,6 +45,12 @@ public class VopleServiceApi {
                 @Field("bio") String bio,
                 @Field("gender") String gender
         );
+    }
+
+    public interface boards
+    {
+        @GET("sounds/board/")
+        Call<List<RetrofitModel.BoardContributor>> repoContributors();
     }
 
     public class Token{
