@@ -4,6 +4,7 @@ import android.media.session.MediaSession;
 
 import com.mobile.vople.vople.server.model.User;
 
+import java.util.List;
 import java.util.Map;
 
 import io.reactivex.Single;
@@ -20,13 +21,36 @@ import retrofit2.http.POST;
 
 public class VopleServiceApi {
 
-    public interface login {
+    public interface login
+    {
         @FormUrlEncoded
         @POST("rest-auth/login/")
         Call<VopleServiceApi.Token> repoContributors(
                 @Field("username") String id,
                 @Field("password") String password
         );
+    }
+
+
+    public interface signup
+    {
+        @FormUrlEncoded
+        @POST("rest-auth/registration/vople-registration/")
+        Call<VopleServiceApi.Token> repoContributors(
+                @Field("username") String id,
+                @Field("password1") String password1,
+                @Field("password2") String password2,
+                @Field("email") String email,
+                @Field("name") String nickname,
+                @Field("bio") String bio,
+                @Field("gender") String gender
+        );
+    }
+
+    public interface boards
+    {
+        @GET("sounds/board/")
+        Call<List<RetrofitModel.BoardContributor>> repoContributors();
     }
 
     public class Token{
