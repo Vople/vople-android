@@ -1,5 +1,6 @@
 package com.mobile.vople.vople;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -23,7 +24,6 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
 
-
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
 
     private EditText edt_id, edt_password;
@@ -41,8 +41,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         setContentView(R.layout.activity_login);
 
         Initialize();
-
-
     }
 
     private void Initialize() {
