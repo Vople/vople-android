@@ -16,15 +16,40 @@ public class RetrofitModel {
         public int id;
         public String title;
         public int mode;
-        //public  String script;
+        Script script;
         //public  int board_likes;
 
     }
 
     public class CreateBoardContributor{
         public String title;
-        String content;
-        Date due;
         int present_id;
+        public String content;
     }
+
+    public class CommentContributor
+    {
+        public String nickname;
+        public String title;
+    }
+
+    public class Script {
+        int id;
+        int owner;
+        int member_restriction;
+        Cast cast;
+    }
+
+    public class Cast {
+        int id;
+        String roll_name;
+        Plots_By_Cast plots_by_cast;
+    }
+
+    public class Plots_By_Cast {
+        int id;
+        String content;
+        int order;
+    }
+
 }

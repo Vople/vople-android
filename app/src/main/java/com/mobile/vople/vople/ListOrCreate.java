@@ -170,7 +170,12 @@ public class ListOrCreate extends AppCompatActivity {
                 int Roomtype_Int = 0;
                 Date Fin_date = new Date();
                 String TitleName = TitleText.getText().toString();
-                int MaxPeople = Integer.parseInt(PeopleNum.getText().toString());
+                int MaxPeople = 1;
+                try {
+                    MaxPeople = Integer.parseInt(PeopleNum.getText().toString());
+                } catch (Exception e){
+                    e.printStackTrace();
+                }
                 String PlayScriptName = Script_spinner.getSelectedItem().toString();
                 try {
                     Fin_date = new SimpleDateFormat("yyyy-MM-dd").parse(Fin_Date_Text.getText().toString());

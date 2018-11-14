@@ -3,14 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="100dp"
+    android:layout_height="80dp"
     android:background="#eeeeee"
     android:orientation="horizontal">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout2"
-        android:layout_width="55dp"
-        android:layout_height="100dp">
+        android:layout_width="45dp"
+        android:layout_height="80dp">
 
         <ImageView
             android:id="@+id/iv_profile"
@@ -18,7 +18,7 @@
             android:layout_height="55dp"
             android:layout_marginTop="5dp"
             android:layout_marginBottom="20dp"
-            android:src="@drawable/imagebutton_event_record_sellector"
+            android:src="@drawable/button_event_record_selector"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -37,13 +37,14 @@
         <TextView
             android:id="@+id/tv_nickname"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="30dp"
+            android:layout_marginBottom="5dp"
             android:fontFamily="@font/bmdohyeon"
             android:gravity="center_vertical"
             android:paddingLeft="10dp"
             android:text="닉네임"
             android:textColor="#A0A0A0"
-            android:textSize="17sp"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -53,8 +54,8 @@
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/constraintLayout4"
-        android:layout_width="180dp"
-        android:layout_height="60dp"
+        android:layout_width="120dp"
+        android:layout_height="50dp"
         android:background="@drawable/edittext_login_whitebox"
         android:orientation="horizontal"
         android:paddingTop="5dp"
@@ -66,62 +67,47 @@
 
         <Button
             android:id="@+id/btn_play"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_gravity="center_vertical"
             android:background="@drawable/event_recording_start"
             app:layout_constraintBottom_toBottomOf="@+id/tv_runningtime"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="@+id/tv_runningtime" />
 
         <TextView
             android:id="@+id/tv_runningtime"
             android:layout_width="wrap_content"
-            android:layout_height="60dp"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="8dp"
-            android:layout_marginLeft="8dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginRight="5dp"
             android:fontFamily="@font/bmdohyeon"
             android:gravity="center"
             android:text="4:00"
             android:textAlignment="center"
             android:textColor="#000000"
-            android:textSize="16sp"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toStartOf="@+id/constraintLayout4"
+            app:layout_constraintStart_toEndOf="@+id/btn_play"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <ProgressBar
-            android:id="@+id/progressBar2"
-            android:layout_width="70dp"
-            android:layout_height="50dp"
-            app:layout_constraintBottom_toBottomOf="@+id/tv_runningtime"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/constraintLayout4"
-            app:layout_constraintTop_toTopOf="@+id/tv_runningtime" />
     </android.support.constraint.ConstraintLayout>
 
     <TextView
         android:id="@+id/tv_nowtime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginLeft="10dp"
+        android:fontFamily="@font/bmdohyeon"
         android:text="오후 3:30"
         android:textColor="#000000"
-        android:textSize="15sp"
+        android:textSize="11sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/constraintLayout4"
-        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintTop_toBottomOf="@+id/constraintLayout3" />
 
 </android.support.constraint.ConstraintLayout>
 

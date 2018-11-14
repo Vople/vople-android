@@ -34,7 +34,6 @@ public class VopleServiceApi {
         );
     }
 
-
     public interface signup
     {
         @FormUrlEncoded
@@ -63,7 +62,12 @@ public class VopleServiceApi {
                 @Field("content") String content,
                 @Field("due data") Date due,
                 @Field("present_id") int present_id
-                );
+        );
+    }
+    public interface comments
+    {
+        @GET("sounds/{board_id}/comments/")
+        Call<List<RetrofitModel.CommentContributor>> repoContributors();
     }
 
     public class Token{

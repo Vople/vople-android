@@ -1,5 +1,6 @@
 package com.mobile.vople.vople;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
@@ -24,7 +25,6 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
-
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
@@ -96,7 +96,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     }
                     pd.dismiss();
 
-                    //Intent intent = new Intent()
                 }
 
                 @Override
