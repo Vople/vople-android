@@ -24,7 +24,6 @@ public class FollowingActivity extends AppCompatActivity implements View.OnClick
         adapter = new FollowingListViewAdapter();
 
         adapter.addItem(null, "Kim");
-        adapter.addItem(null, "Kim");adapter.addItem(null, "Kim");
         adapter.addItem(null, "Kim");
         adapter.addItem(null, "Kim");
         adapter.addItem(null, "Kim");
@@ -33,7 +32,10 @@ public class FollowingActivity extends AppCompatActivity implements View.OnClick
         adapter.addItem(null, "Kim");
         adapter.addItem(null, "Kim");
         adapter.addItem(null, "Kim");
-        adapter.addItem(null, "Kim");adapter.addItem(null, "Kim");
+        adapter.addItem(null, "Kim");
+        adapter.addItem(null, "Kim");
+        adapter.addItem(null, "Kim");
+        adapter.addItem(null, "Kim");
 
 
 

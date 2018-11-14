@@ -4,11 +4,13 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
+import android.media.MediaPlayer;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +32,10 @@ import java.util.ArrayList;
 
 public class ListViewAdapter extends BaseAdapter {
 
+    MediaPlayer player;
+
+    private Context context;
+
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
     private ArrayList<ListViewItem> listViewItemList = new ArrayList<ListViewItem>() ;
 
@@ -48,6 +54,8 @@ public class ListViewAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         final int pos = position;
         final Context context = parent.getContext();
+
+        this.context = context;
 
         // "listview_item" Layout을 inflate하여 convertView 참조 획득.
         if (convertView == null) {
@@ -75,7 +83,7 @@ public class ListViewAdapter extends BaseAdapter {
                     boolean state = (boolean)btn_play.getTag();
                     if(state)
                     {
-                        btn_play.setBackgroundResource(R.drawable.event_recording_pause);
+                        btn_play.setBackgroundResource(R.drawable.button_play_stop);
                         //녹음본 시작
                     }
                     else
@@ -116,5 +124,46 @@ public class ListViewAdapter extends BaseAdapter {
         ListViewItem item = new ListViewItem(profile, nickname, runningtime, nowtime);
 
         listViewItemList.add(item);
+    }
+
+    public void playRec(){
+        if (player != null) {
+            player.stop();
+            player.release();
+            player = null;
+        }
+
+        try {
+
+            // 오디오를 플레이 하기위해 MediaPlayer 객체 player를 생성한다.
+            player = new MediaPlayer ();
+
+            // 재생할 오디오 파일 저장위치를 설정
+            //player.setDataSource(filename);
+            // 웹상에 있는 오디오 파일을 재생할때
+            // player.setDataSource(Audio_Url);
+
+            // 오디오 재생준비,시작
+            player.prepare();
+            player.start();
+
+            Toast.makeText(context, "녹음된 파일을 재생합니다.", Toast.LENGTH_LONG).show();
+        } catch (Exception e) {
+            Log.e("SampleAudioRecorder", "Audio play failed.", e);
+        }
+    }
+
+    public void stopRec(){
+        if (player == null)
+            return;
+// 오디오 재생 중지
+        player.stop();
+
+        Toast.makeText(context, "재생이 중지되었습니다.", Toast.LENGTH_LONG).show();
+
+
+        // 오디오 재생에 필요한 메모리들을 해제한다
+        player.release();
+        player = null;
     }
 }

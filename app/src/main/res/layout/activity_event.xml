@@ -89,9 +89,8 @@
         android:fontFamily="@font/bmdohyeon"
         android:text="전송하기"
         android:textColor="#54c4ad"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -103,6 +102,7 @@
         android:text="취소"
         android:textColor="#54c4ad"
         android:textSize="18sp"
+        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -124,7 +124,7 @@
         android:fontFamily="@font/bmdohyeon"
         android:text="취합하기"
         android:textColor="#54c4ad"
-        android:textSize="18sp"
+        android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="300dp"
+    android:layout_height="400dp"
+    android:background="@drawable/pop_bg"
+    android:layout_gravity="center"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/SC"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:fontFamily="@font/bmdohyeon"
+        android:gravity="center"
+        android:text="대본"
+        android:textColor="@color/white"
+        android:textSize="20sp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="280dp"
+        android:orientation="vertical"
+        android:id="@+id/ContentOfScript"
+        >
+
+        <TextView
+            android:id="@+id/ScriptContent_ByRole"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_horizontal"
+            android:fontFamily="@font/bmdohyeon"
+            android:textSize="15sp"
+            android:text="대본 내용" />
+    </LinearLayout>
+
+    <Spinner
+        android:id="@+id/MyRole"
+        android:layout_width="70dp"
+        android:layout_height="25dp"
+        android:layout_marginBottom="5dp"
+        android:layout_gravity="center_horizontal"/>
+
+    <Button
+        android:id="@+id/Enter"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_marginBottom="10dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/custom_button"
+        android:fontFamily="@font/bmdohyeon"
+        android:textColor="@color/white"
+        android:text="참가" />
+</LinearLayout>

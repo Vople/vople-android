@@ -46,19 +46,10 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         adapter = new ListViewAdapter();
         adapter_role_play = new RolePlayListViewAdapter();
 
-        adapter.addItem(null, "Kim", "02:11", getTime());
-        adapter.addItem(null, "Kim", "02:11", getTime());
-        adapter.addItem(null, "Kim", "02:11", getTime());
-        adapter.addItem(null, "Kim", "02:11", getTime());
-        adapter.addItem(null, "Kim", "02:11", getTime());
-        adapter.addItem(null, "Kim", "02:11", getTime());
-        adapter.addItem(null, "Kim", "02:11", getTime());
-        adapter.addItem(null, "Kim", "02:11", getTime());
-        adapter.addItem(null, "Kim", "02:11", getTime());
-        adapter.addItem(null, "Kim", "02:11", getTime());
+        adapter.addItem(null, "성대모사달인", "76초", getTime());
+        adapter.addItem(null, "성대모사달인", "28초", getTime());
 
-
-        adapter_role_play.addItem(null, "02:14", "ㅁㄴㅇㄹㄴㄻㅈㄷㅂㅈㄷ ㅂㅈㄷㄷㄱㅂㅈㄷ jfdㄱㅍㄷㄱㅂㅈㅍㄱㅂ");
+        adapter_role_play.addItem(null, "", "난 꿈을 믿어요. 당신은 당신의 꿈을 믿나요?");
         listView.setAdapter(adapter);
         listView_role_play.setAdapter(adapter_role_play);
 
