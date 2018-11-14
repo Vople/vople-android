@@ -16,7 +16,7 @@
         <LinearLayout
             android:layout_marginTop="7dp"
             android:layout_marginLeft="8dp"
-            android:layout_width="200dp"
+            android:layout_width="230dp"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
@@ -40,15 +40,15 @@
                     android:layout_weight="1"
                     app:srcCompat="@drawable/on" />
 
-                <ImageView
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    app:srcCompat="@drawable/heart" />
+                    android:layout_marginLeft="10dp"
+                    android:text="최대인원 :" />
 
                 <TextView
-                    android:id="@+id/LikeCount"
+                    android:id="@+id/NumCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"

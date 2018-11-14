@@ -29,7 +29,9 @@
         <RadioGroup
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:id="@+id/RoomType_RG"
+            >
 
             <RadioButton
                 android:id="@+id/MissionRoom"
@@ -79,7 +81,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:id="@+id/SituationOnlyShow"
+        >
 
         <TextView
             android:layout_width="wrap_content"
@@ -100,7 +104,7 @@
             android:gravity="center"
             android:textColor="@color/white"
             android:textSize="12sp"
-            android:text="Num"
+            android:text=""
             />
 
         <TextView
@@ -112,7 +116,6 @@
             android:text="대본 선택"
             android:textColor="@color/white"
             android:textSize="12sp"
-            android:id="@+id/ScriptText"
             />
 
         <Spinner

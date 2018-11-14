@@ -8,12 +8,16 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.telecom.TelecomManager;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -21,16 +25,30 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.mobile.vople.vople.server.RetrofitInstance;
+import com.mobile.vople.vople.server.RetrofitModel;
+import com.mobile.vople.vople.server.VopleServiceApi;
+import com.mobile.vople.vople.server.model.MyRetrofit;
 
 import org.w3c.dom.Text;
 
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
     private DrawerLayout MainDrawer;
     private ActionBarDrawerToggle NavToggle;
+
+    private Retrofit retrofit;
 
 
     @Override
@@ -39,12 +57,15 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         //Nav & CustomList
+        Button NavButton = (Button) findViewById(R.id.NavMain);
         MainDrawer = (DrawerLayout) findViewById(R.id.main_drawer);
-        NavToggle = new ActionBarDrawerToggle(this, MainDrawer, R.string.open, R.string.close);
 
-        MainDrawer.addDrawerListener(NavToggle);
-        NavToggle.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        NavButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                MainDrawer.openDrawer(Gravity.START);
+            }
+        });
 
         ListView MainlistView = (ListView) findViewById(R.id.main_list);
         ListView NavlistView = (ListView) findViewById(R.id.Nav_ListView);
@@ -82,30 +103,49 @@ public class MainActivity extends AppCompatActivity {
                     Role.setVisibility(View.VISIBLE);
                 }
 
-
-
                 EnterRoom.show();
             }
         });
 
-        //EX)
-        mainAdapter.Title.add("I got eyes on that four, five, six mo...");
-        mainAdapter.Like_List.add("1000");
-        mainAdapter.RoomType_List.add(0);
-        mainAdapter.KindOfScript.add("Na to the fla - Wu");
+        //Server RoomList
 
-        mainAdapter.Title.add("Indigo we just go xuck the ops...");
-        mainAdapter.Like_List.add("10000");
-        mainAdapter.RoomType_List.add(1);
-        mainAdapter.KindOfScript.add("Justhis, kidmilli, young b, no:el - Indigo");
+        retrofit = MyRetrofit.getInstance().getRetrofit();
+        retrofit = RetrofitInstance.getInstance(getApplicationContext());
+
+        VopleServiceApi.boards CallList = retrofit.create(VopleServiceApi.boards.class);
+
+        final Call<List<RetrofitModel.BoardContributor>> repos = CallList.repoContributors();
+
+        repos.enqueue(new Callback<List<RetrofitModel.BoardContributor>>() {
+            @Override
+            public void onResponse(Call<List<RetrofitModel.BoardContributor>> call, Response<List<RetrofitModel.BoardContributor>> response) {
+                if (response.code() == 200) {
+
+                    for (Object object : response.body()) {
+                        RetrofitModel.BoardContributor element = (RetrofitModel.BoardContributor) object;
+                        mainAdapter.Title.add(element.title);
+                        //mainAdapter.Num_List.add(String.format("%d", element.board_likes));
+                        mainAdapter.RoomType_List.add(element.mode);
+                        //mainAdapter.KindOfScript.add(element.script);
+                        mainAdapter.RoomID.add(element.id);
+                    }
+
+                    Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
+                            Toast.LENGTH_SHORT).show();
+
+                } else {
+                    Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
+                            Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<RetrofitModel.BoardContributor>> call, Throwable t) {
+                Log.d("TAG", t.getLocalizedMessage());
+                Toast.makeText(getApplicationContext(), "Failed",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
-    //Nav
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (NavToggle.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }

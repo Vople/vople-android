@@ -21,7 +21,7 @@ public class MainAdapter extends BaseAdapter {
 
     public ArrayList<Integer> RoomID = new ArrayList<Integer>();
     public ArrayList<String> Title = new ArrayList<String >();
-    public ArrayList<String> Like_List = new ArrayList<String>();
+    public ArrayList<String> Num_List = new ArrayList<String>();
     public ArrayList<Integer> RoomType_List = new ArrayList<Integer>();
     public ArrayList<String> KindOfScript = new ArrayList<String>();
 
@@ -55,13 +55,13 @@ public class MainAdapter extends BaseAdapter {
         convertView = inflater.inflate(R.layout.main_list, null);
 
         TextView textView = (TextView) convertView.findViewById(R.id.title_text);
-        TextView Like = (TextView) convertView.findViewById(R.id.LikeCount);
+        TextView Like = (TextView) convertView.findViewById(R.id.NumCount);
         TextView Script = (TextView) convertView.findViewById(R.id.ScriptKind);
 
         ImageView RoomType = (ImageView) convertView.findViewById(R.id.RoomKind);
 
         textView.setText(Title.get(position));
-        Like.setText(Like_List.get(position));
+        Like.setText(Num_List.get(position));
         Script.setText(KindOfScript.get(position));
 
         if (RoomType_List.get(position) == 0){

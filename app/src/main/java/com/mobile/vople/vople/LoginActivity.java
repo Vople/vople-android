@@ -88,8 +88,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void onResponse(Call<VopleServiceApi.Token> call, Response<VopleServiceApi.Token> response) {
                     if (response.code() == 200) {
                         sp.put("Authorization", response.body().token);
-
-
+                        Intent intent = new Intent(getApplicationContext(), ListOrCreate.class);
+                        startActivity(intent);
                     } else {
                         Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
                                 Toast.LENGTH_SHORT).show();

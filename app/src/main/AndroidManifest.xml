@@ -27,7 +27,9 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity" />
-        <activity android:name=".SignUpActivity"></activity>
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".VopleAdminEvent" />
+        <activity android:name=".ListOrCreate"></activity>
     </application>
 
 </manifest>

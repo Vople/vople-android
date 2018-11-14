@@ -4,6 +4,9 @@ import android.media.session.MediaSession;
 
 import com.mobile.vople.vople.server.model.User;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -51,6 +54,16 @@ public class VopleServiceApi {
     {
         @GET("sounds/board/")
         Call<List<RetrofitModel.BoardContributor>> repoContributors();
+    }
+
+    public  interface  create_a_board {
+        @POST("sounds/board")
+        Call<RetrofitModel.CreateBoardContributor> repoContributors(
+                @Field("title") String title,
+                @Field("content") String content,
+                @Field("due data") Date due,
+                @Field("present_id") int present_id
+                );
     }
 
     public class Token{
