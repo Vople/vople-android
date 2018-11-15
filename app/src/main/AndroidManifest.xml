@@ -13,7 +13,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@drawable/icon"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
@@ -28,10 +28,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".LoginActivity" />
+        <activity android:name=".SignUpActivity" />
+        <activity android:name=".VopleAdminEvent" />
+        <activity android:name=".ListOrCreate"></activity>
         <activity android:name=".EventActivity"></activity>
-        <activity android:name=".LoginActivity"></activity>
         <activity android:name=".FollowingActivity"></activity>
-        <activity android:name=".SignUpActivity"></activity>
     </application>
 
 </manifest>

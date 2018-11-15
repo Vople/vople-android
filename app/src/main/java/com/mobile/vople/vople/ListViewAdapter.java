@@ -105,8 +105,8 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-    public void addItem(Drawable profile, String nickname, String runningtime, String nowtime) {
-        ListViewItem item = new ListViewItem(profile, nickname, runningtime, nowtime);
+    public void addItem(Drawable profile, String nickname, String runningtime, String nowtime, String sound_url) {
+        ListViewItem item = new ListViewItem(profile, nickname, runningtime, nowtime, sound_url);
 
         listViewItemList.add(item);
     }

@@ -1,206 +1,190 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="300dp"
-    android:layout_height="250dp"
-    android:background="@drawable/pop_bg"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="320dp"
+    android:layout_height="300dp"
     android:layout_gravity="center"
-    android:orientation="vertical"
-    android:id="@+id/Pop"
-    >
+    android:background="@drawable/pop_bg">
 
     <TextView
+        android:id="@+id/textView3"
         android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:layout_weight="1"
-        android:gravity="bottom"
+        android:layout_height="50dp"
         android:layout_gravity="center_horizontal"
+        android:layout_weight="1"
         android:fontFamily="@font/bmdohyeon"
+        android:gravity="center"
+        android:text="방 만들기"
         android:textColor="@color/white"
-        android:textSize="20sp"
-        android:text="방 만들기" />
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <LinearLayout
+    <RadioGroup
+        android:id="@+id/radioGroup"
         android:layout_width="match_parent"
-        android:layout_height="5dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView3">
 
-        <RadioGroup
-            android:layout_width="match_parent"
+        <RadioButton
+            android:id="@+id/MissionRoom"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <RadioButton
-                android:id="@+id/MissionRoom"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:layout_marginLeft="10dp"
-                android:text="미션" />
-
-            <RadioButton
-                android:id="@+id/SituationRoom"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="상황극" />
-
-
-        </RadioGroup>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="0dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
             android:layout_weight="1"
             android:fontFamily="@font/bmdohyeon"
-            android:gravity="center_horizontal"
-            android:text="방 이름"
-            android:textColor="@color/white"
-            android:textSize="15sp" />
+            android:text="미션"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent" />
 
-        <EditText
-            android:id="@+id/RoomName"
-            android:layout_width="200dp"
-            android:layout_height="30dp"
-            android:layout_marginTop="2dp"
-            android:layout_marginRight="30dp"
-            android:gravity="right"
-            android:background="@drawable/white_box" />
-    </LinearLayout>
+        <RadioButton
+            android:id="@+id/SituationRoom"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:fontFamily="@font/bmdohyeon"
+            android:text="상황극"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toStartOf="@+id/radioGroup"
+            app:layout_constraintStart_toStartOf="parent" />
+    </RadioGroup>
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView8"
+        android:layout_width="48dp"
+        android:layout_height="35dp"
+        android:layout_marginEnd="250dp"
+        android:layout_marginRight="250dp"
+        android:layout_weight="1"
+        android:fontFamily="@font/bmdohyeon"
+        android:gravity="center"
+        android:text="방 이름"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        app:layout_constraintBottom_toBottomOf="@+id/RoomName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/RoomName" />
+
+    <EditText
+        android:id="@+id/RoomName"
+        android:layout_width="250dp"
+        android:layout_height="35dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:background="@drawable/white_box"
+        android:fontFamily="@font/bmdohyeon"
+        android:paddingLeft="10dp"
+        android:textColor="#A0A0A0"
+        android:textSize="14sp"
+        app:layout_constraintStart_toEndOf="@+id/textView8"
+        app:layout_constraintTop_toBottomOf="@+id/radioGroup" />
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:layout_height="80dp"
+        android:layout_marginTop="140dp"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:id="@+id/textView9"
+            android:layout_width="60dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="250dp"
+            android:layout_marginRight="250dp"
             android:fontFamily="@font/bmdohyeon"
             android:gravity="center"
             android:text="참가 인원"
             android:textColor="@color/white"
-            android:textSize="13sp" />
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/MaxPeople"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_width="45dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
             android:fontFamily="@font/bmdohyeon"
             android:gravity="center"
-            android:textColor="@color/white"
-            android:textSize="12sp"
             android:text="Num"
-            />
+            android:textColor="@color/white"
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/textView9"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:id="@+id/ScriptText"
+            android:layout_width="60dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
             android:fontFamily="@font/bmdohyeon"
             android:gravity="center"
             android:text="대본 선택"
             android:textColor="@color/white"
-            android:textSize="12sp"
-            android:id="@+id/ScriptText"
-            />
+            android:textSize="13sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/MaxPeople"
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Spinner
             android:id="@+id/PlayScript"
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1" />
+            android:layout_width="120dp"
+            android:layout_height="80dp"
+            android:layout_marginStart="5dp"
+            android:layout_marginLeft="5dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/ScriptText"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    </LinearLayout>
+    </android.support.constraint.ConstraintLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+    <Button
+        android:id="@+id/Cancle"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_marginEnd="100dp"
+        android:layout_marginRight="100dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/custom_button"
+        android:fontFamily="@font/bmdohyeon"
+        android:gravity="center"
+        android:text="취소"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
-            android:id="@+id/Fin_Date"
-            android:layout_width="70dp"
-            android:layout_height="30dp"
-            android:layout_marginLeft="8dp"
-            android:background="@drawable/custom_button"
-            android:fontFamily="@font/bmdohyeon"
-            android:gravity="center"
-            android:text="종료일 선택"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
+    <Button
+        android:id="@+id/Submit"
+        android:layout_width="70dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="100dp"
+        android:layout_marginLeft="100dp"
+        android:layout_marginBottom="30dp"
+        android:background="@drawable/custom_button"
+        android:fontFamily="@font/bmdohyeon"
+        android:gravity="center"
+        android:text="확인"
+        android:textColor="@color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="20dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/bmdohyeon"
-            android:gravity="center"
-            android:text="종료일 :"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
-
-        <TextView
-            android:id="@+id/EndDateOfRoom"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="1"
-            android:fontFamily="@font/bmdohyeon"
-            android:gravity="left"
-            android:text="2"
-            android:textColor="@color/white"
-            android:textSize="10sp" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="10dp"
-        android:layout_weight="1"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/Cancle"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/custom_button"
-            android:fontFamily="@font/bmdohyeon"
-            android:gravity="center"
-            android:text="취소"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-
-        <Button
-            android:id="@+id/Submit"
-            android:layout_width="wrap_content"
-            android:layout_height="20dp"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginRight="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/custom_button"
-            android:fontFamily="@font/bmdohyeon"
-            android:gravity="center"
-            android:text="확인"
-            android:textColor="@color/white"
-            android:textSize="12sp" />
-    </LinearLayout>
-</LinearLayout>
+</android.support.constraint.ConstraintLayout>

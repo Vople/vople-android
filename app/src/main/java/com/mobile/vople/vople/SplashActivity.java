@@ -11,8 +11,8 @@ import android.support.v7.app.AppCompatActivity;
 
 public class SplashActivity extends AppCompatActivity{
 
-    int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = -1;
-    int MY_PERMISSIONS_AUDIO_RECORD = -2;
+    private final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
+    private final int MY_PERMISSIONS_AUDIO_RECORD = 2;
 
     private static int SPLASH_TERM = 3000;
 
@@ -27,7 +27,7 @@ public class SplashActivity extends AppCompatActivity{
         new Handler().postDelayed(new Runnable(){
             @Override
             public void run() {
-                Intent mainIntent = new Intent(getApplicationContext(), SignUpActivity.class);
+                Intent mainIntent = new Intent(getApplicationContext(), LoginActivity.class);
                 startActivity(mainIntent);
                 finish();
             }

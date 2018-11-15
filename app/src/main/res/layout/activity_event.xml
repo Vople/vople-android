@@ -140,6 +140,7 @@
     </ScrollView>
 
     <TextView
+        android:id="@+id/tv_script"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="50dp"
@@ -148,7 +149,8 @@
         android:layout_marginEnd="50dp"
         android:layout_marginRight="50dp"
         android:layout_marginBottom="40dp"
-        android:text="대본"
+        android:textAlignment="center"
+        android:gravity="center"
         android:textColor="#A0A0A0"
         android:textSize="16sp"
         app:layout_constraintBottom_toTopOf="@+id/lv_event_role"

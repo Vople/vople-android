@@ -2,79 +2,116 @@ package com.mobile.vople.vople;
 
 import android.app.Dialog;
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.mobile.vople.vople.server.RetrofitInstance;
+import com.mobile.vople.vople.server.RetrofitModel;
+import com.mobile.vople.vople.server.VopleServiceApi;
+import com.mobile.vople.vople.server.model.MyRetrofit;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class ListOrCreate extends AppCompatActivity {
 
     private DrawerLayout LOCDrawer;
-    private ActionBarDrawerToggle NavToggle_LOC;
+
+    private Retrofit retrofit;
+
+    private List<RetrofitModel.Script> scripts;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_or_create);
 
-        //Nav
-        LOCDrawer = (DrawerLayout) findViewById(R.id.LOC);
-        NavToggle_LOC = new ActionBarDrawerToggle(this, LOCDrawer, R.string.open, R.string.close);
+        retrofit = MyRetrofit.getInstance().getRetrofit();
+        retrofit = RetrofitInstance.getInstance(getApplicationContext());
 
-        LOCDrawer.addDrawerListener(NavToggle_LOC);
-        NavToggle_LOC.syncState();
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-
-        ListView NavlistView_LOC = (ListView) findViewById(R.id.Nav_ListView);
-
-        NavAdapter navAdapter = new NavAdapter();
-        NavlistView_LOC.setAdapter(navAdapter);
+        setNavigation();
 
         //pop up
         final Dialog CreateRoomDialog = new Dialog(this);
-        final Dialog SelectDate = new Dialog(this);
 
         CreateRoomDialog.setContentView(R.layout.createroom_pop);
-        SelectDate.setContentView(R.layout.select_date);
 
         Button RoomListButton = (Button) findViewById(R.id.ViewRoomList);
         final Button CreateRoomButton = (Button) findViewById(R.id.CreateRoom);
         Button ClosePop = (Button) CreateRoomDialog.findViewById(R.id.Cancle);
-        Button ChooseDate = (Button) CreateRoomDialog.findViewById(R.id.Fin_Date);
+        Button CreateRoomSubmit = (Button) CreateRoomDialog.findViewById(R.id.Submit);
         RadioButton Mission = (RadioButton) CreateRoomDialog.findViewById(R.id.MissionRoom);
         RadioButton Situation = (RadioButton) CreateRoomDialog.findViewById(R.id.SituationRoom);
 
-        //Date Min, Max Setting
-        DatePicker DatePick = (DatePicker) SelectDate.findViewById(R.id.datepicking);
-        int year = DatePick.getYear();
-        int month = DatePick.getMonth();
-        int day = DatePick.getDayOfMonth();
+        Mission.setChecked(true);
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(year, month, day);
-        DatePick.setMinDate(calendar.getTimeInMillis());
-        calendar.set(year, month, day + 7);
-        DatePick.setMaxDate(calendar.getTimeInMillis());
+        scripts = new ArrayList<>();
 
-        final TextView EndDate = (TextView) CreateRoomDialog.findViewById(R.id.EndDateOfRoom);
+        VopleServiceApi.listAllScripts service = retrofit.create(VopleServiceApi.listAllScripts.class);
+
+        Call<List<RetrofitModel.Script>> repos = service.repoContributors();
+
+        repos.enqueue(new Callback<List<RetrofitModel.Script>>() {
+            @Override
+            public void onResponse(Call<List<RetrofitModel.Script>> call, Response<List<RetrofitModel.Script>> response) {
+
+                if(response.code() == 200)
+                {
+                    List<RetrofitModel.Script> result = response.body();
+
+                    for(RetrofitModel.Script script : result)
+                        scripts.add(script);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<RetrofitModel.Script>> call, Throwable t) {
+                Toast.makeText(ListOrCreate.this, "Faield to connect!", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         CreateRoomButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                Spinner sp = (CreateRoomDialog).findViewById(R.id.PlayScript);
+
+                ArrayList<String> list = new ArrayList<>();
+
+                for(RetrofitModel.Script script : scripts)
+                    list.add(script.title);
+
+                ArrayAdapter<String> adp1 = new ArrayAdapter<String>(getApplicationContext(),
+                        android.R.layout.simple_list_item_1, list);
+                adp1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                sp.setAdapter(adp1);
+
                 CreateRoomDialog.show();
             }
         });
@@ -97,47 +134,107 @@ public class ListOrCreate extends AppCompatActivity {
         Mission.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView Script_Text = (TextView) CreateRoomDialog.findViewById(R.id.ScriptText);
-                Spinner Script_Spinner = (Spinner) CreateRoomDialog.findViewById(R.id.PlayScript);
-                Script_Text.setVisibility(View.GONE);
-                Script_Spinner.setVisibility(View.GONE);
+                ConstraintLayout NoShowOnMission = (ConstraintLayout) CreateRoomDialog.findViewById(R.id.constraintLayout);
+                if(NoShowOnMission.getVisibility() == View.VISIBLE)
+                    NoShowOnMission.setVisibility(View.GONE);
             }
         });
 
         Situation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView Script_Text = (TextView) CreateRoomDialog.findViewById(R.id.ScriptText);
-                Spinner Script_Spinner = (Spinner) CreateRoomDialog.findViewById(R.id.PlayScript);
-                Script_Text.setVisibility(View.VISIBLE);
-                Script_Spinner.setVisibility(View.VISIBLE);
+                ConstraintLayout NoShowOnMission = (ConstraintLayout) CreateRoomDialog.findViewById(R.id.constraintLayout);
+                if(NoShowOnMission.getVisibility() != View.VISIBLE)
+                    NoShowOnMission.setVisibility(View.VISIBLE);
+
             }
         });
 
-        ChooseDate.setOnClickListener(new View.OnClickListener() {
+
+        //Server CreateRoom
+
+
+        CreateRoomSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SelectDate.show();
+                VopleServiceApi.create_board CreateRoom_Server = retrofit.create(VopleServiceApi.create_board.class);
+                EditText TitleText = (EditText) CreateRoomDialog.findViewById(R.id.RoomName);
+                final RadioGroup RG = (RadioGroup) CreateRoomDialog.findViewById(R.id.radioGroup);
+                TextView PeopleNum = (TextView) CreateRoomDialog.findViewById(R.id.MaxPeople);
+                Spinner Script_spinner = (Spinner) CreateRoomDialog.findViewById(R.id.PlayScript);
+
+                int roomType = 0;
+                String titleName = TitleText.getText().toString();
+
+                int member_restriction = 1;
+
+                if (RG.getCheckedRadioButtonId() == R.id.SituationRoom) {
+                    roomType = 1;
+                } else if (RG.getCheckedRadioButtonId() == R.id.MissionRoom){
+                    roomType = 0;
+                }
+
+                String script_title = (String)Script_spinner.getSelectedItem();
+
+                int script_id = -1;
+
+                for(RetrofitModel.Script script : scripts)
+                {
+                    if(script.title.equals(script.title)) {
+                        script_id = script.id;
+                        member_restriction = script.member_restriction;
+                        break;
+                    }
+                }
+
+                VopleServiceApi.create_board service = retrofit.create(VopleServiceApi.create_board.class);
+
+                //TitleName PlayScriptName Fin_date Roomtype_Int MaxPeople
+                final Call<RetrofitModel.BoardContributor> repos = service.repoContributors(titleName, script_title, roomType, script_id);
+                repos.enqueue(new Callback<RetrofitModel.BoardContributor>() {
+                    @Override
+                    public void onResponse(Call<RetrofitModel.BoardContributor> call, Response<RetrofitModel.BoardContributor> response) {
+                        if (response.code() == 201) {
+                            CreateRoomDialog.dismiss();
+                            Intent roomListIntent = new Intent(getApplicationContext(), EventActivity.class);
+                            roomListIntent.putExtra("RoomID", response.body().id);
+                            startActivity(roomListIntent);
+
+
+                        } else {
+                            Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<RetrofitModel.BoardContributor> call, Throwable t) {
+                        Log.d("TAG", t.getLocalizedMessage());
+                    }
+                });
             }
         });
 
-        DatePick.init(DatePick.getYear(), DatePick.getMonth(), DatePick.getDayOfMonth(), new DatePicker.OnDateChangedListener() {
-            @Override
-            public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                EndDate.setText(String.format("%d년%d월%d일", year, monthOfYear + 1, dayOfMonth));
-                SelectDate.dismiss();
-            }
-        });
     }
 
+    private void setNavigation()
+    {
+        //Nav
+        Button NavButton = (Button) findViewById(R.id.NavLOC);
+        LOCDrawer = (DrawerLayout) findViewById(R.id.LOC);
 
-    //Nav
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        if (NavToggle_LOC.onOptionsItemSelected(item)) {
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
+        NavButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                LOCDrawer.openDrawer(Gravity.START);
+            }
+        });
+
+        ListView NavlistView_LOC = (ListView) findViewById(R.id.Nav_ListView);
+
+        NavAdapter navAdapter = new NavAdapter();
+        NavlistView_LOC.setAdapter(navAdapter);
+
     }
 
 }

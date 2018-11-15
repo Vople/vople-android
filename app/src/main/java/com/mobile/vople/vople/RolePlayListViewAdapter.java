@@ -108,7 +108,7 @@ public class RolePlayListViewAdapter extends BaseAdapter {
 
 //갤럭시 S4기준으로 /storage/emulated/0/의 경로를 갖고 시작한다.
 
-            String path = file.getAbsolutePath() + "/" + "recoder.mp3";
+            String path = file.getAbsolutePath() + "/" + "recoder3.mp3";
 
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 
@@ -160,104 +160,4 @@ public class RolePlayListViewAdapter extends BaseAdapter {
         Toast.makeText(context, "녹음 종료", Toast.LENGTH_SHORT).show();
 
     }
-
-    /*
-    private void doPostRequest() {
-        Log.d("OKHTTP3", "Post function called.");
-        String url = "/sounds/{board_id}/comments/";
-        OkHttpClient client = new OkHttpClient();
-        MediaType JSON = MediaType.parse("application/json;charset=utf-8");
-        JSONObject actulData = new JSONObject();
-        try () {
-            actulData.put("name", "VJ");
-            actulData.put("age", 24);
-        } catch (JSONException e) {
-            Log.d("OKHTTP3", "JSON Exception");
-            e.printStackTrace();
-        }
-
-        RequestBody body = RequestBody.create(JSON, actulData.toString());
-        Log.d("OKHTTP3", "Request Body Created.");
-        Request newReq = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-        try{
-            Response response = client.newCall(newReq).execute();
-            Log.d("OKHTTP3", "Request Done, got the response.");
-            Log.d("OKHTTP3", response.body().string());
-        } catch (IOException e) {
-            Log.d("OKHTTP3", "Exception while doing request.");
-            e.printStackTrace();
-        }
-    }
-
-    private void doFormRequest() {
-        OkHttpClient client = new OkHttpClient();
-        String url = "/sounds/{board_id}/comments/";
-        RequestBody body = new FormBody.Builder()
-                .add("name","Vijay Bambhaniva OR VJ")
-                .add("age", String.valueOf(29))
-                .build();
-
-        Log.d("OKHTTP3_V3_TUT", "Form Body Created.");
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-
-        Log.d("OKHTTP3_V3_TUT", "Request Created.");
-        try{
-            Response response = client.newCall(request).execute();
-            Log.d("OKHTTP3_V3_TUT", "Request Successfully arrived.");
-            Log.d("OKHTTP3_V3_TUT", response.body().string());
-        } catch (IOException e) {
-            Log.d("OKHTTP3_V3_TUT", "Exception Occured while doing formdata request.");
-            Log.d("OKHTTP3_V3_TUT",e.toString());
-            e.printStackTrace();
-        }
-    }
-
-    private void doMultiPartRequest() {
-        String path = Environment.getExternalStorageDirectory().toString() + "/recorder.mp3";
-        Log.d("Files", "Path: " + path);
-        File f = new File(path);
-        File file[] = f.listFiles();
-        Log.d("Files", "Size: " + file.length);
-
-        for (int i = 0; i < file.length; i++) {
-            if (file[i].isFile()) {
-                Log.d("OKHTTP3_VJ_FILES", "FileName :" + file[i].getName());
-                DoActualRequest(file[i]);
-                break;
-            }
-        }
-    }
-
-    private void DoActualRequest(File file) {
-        OkHttpClient client = new OkHttpClient();
-        Log.d("OKHTTP3_VJ_FILES", "Called actual request.");
-        String url = "/sounds/{board_id}/comments/";
-
-        RequestBody body = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("recorder", file.getName(),
-                        RequestBody.create(MediaType.parse("recorder/mp3"), file))
-                .build();
-
-        Request request = new Request.Builder()
-                .url(url)
-                .post(body)
-                .build();
-
-        try {
-            Response response = client.newCall(request).execute();
-            Log.d("OKHTTP3_VJ_FILES", "Request successful");
-            Log.d("OKHTTP3_VJ_FILES", response.body().string());
-        } catch (IOException e) {
-            Log.d("OKHTTP3_VJ_FILES", "Exception occured : " + e.toString());
-            e.printStackTrace();
-        }
-    }
-    */
 }

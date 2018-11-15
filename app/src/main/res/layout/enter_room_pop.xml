@@ -44,7 +44,7 @@
         android:layout_gravity="center_horizontal"/>
 
     <Button
-        android:id="@+id/Enter"
+        android:id="@+id/btn_enter"
         android:layout_width="70dp"
         android:layout_height="30dp"
         android:layout_marginBottom="10dp"

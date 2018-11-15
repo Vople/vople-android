@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.DrawerLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VopleAdminEvent"
+    >
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:background="@drawable/navbg"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:gravity="center"
+            android:fontFamily="@font/bmdohyeon"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            android:text="보플이 쏜다 !" />
+
+        <ListView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/main_list"
+            />
+    </LinearLayout>
+
+    <android.support.design.widget.NavigationView
+        android:id="@+id/Nav"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        app:itemTextColor="@color/DG"
+        app:itemIconTint="@color/DG"
+        android:layout_gravity="start"
+        >
+
+        <include
+            android:id="@+id/NavBody"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            layout = "@layout/header"
+            />
+    </android.support.design.widget.NavigationView>
+
+</android.support.v4.widget.DrawerLayout>
