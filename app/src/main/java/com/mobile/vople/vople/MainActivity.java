@@ -1,5 +1,6 @@
 package com.mobile.vople.vople;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.app.Dialog;
@@ -9,6 +10,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -16,11 +18,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.mobile.vople.vople.item.RoomBreifItem;
 import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
 import com.mobile.vople.vople.server.VopleServiceApi;
 import com.mobile.vople.vople.server.model.MyRetrofit;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -30,10 +35,19 @@ import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
-    private DrawerLayout MainDrawer;
+    private DrawerLayout mainDrawer;
     private ActionBarDrawerToggle NavToggle;
 
     private Retrofit retrofit;
+
+    private Button navButton;
+
+    private ListView mainListView, navlistView;
+
+    private MainAdapter mainAdapter;
+    private NavAdapter navAdapter;
+
+    private Dialog enterRoom;
 
 
     @Override
@@ -41,61 +55,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //Nav & CustomList
-        Button NavButton = (Button) findViewById(R.id.NavMain);
-        MainDrawer = (DrawerLayout) findViewById(R.id.main_drawer);
 
-        NavButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainDrawer.openDrawer(Gravity.START);
-            }
-        });
+        initialize();
 
-        ListView MainlistView = (ListView) findViewById(R.id.main_list);
-        ListView NavlistView = (ListView) findViewById(R.id.Nav_ListView);
 
-        final MainAdapter mainAdapter = new MainAdapter();
-        MainlistView.setAdapter(mainAdapter);
-
-        final NavAdapter navAdapter = new NavAdapter();
-        NavlistView.setAdapter(navAdapter);
-
-        //pop up
-
-        final Dialog EnterRoom = new Dialog(this);
-
-        EnterRoom.setContentView(R.layout.enter_room_pop);
-
-        MainlistView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        mainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                String ScriptName = mainAdapter.getScriptInformation(position); //나중에 main.get~ 으로 쓰고 변수 없애도 됨
+                showEnterRoomDialog(position);
 
-                TextView ScriptContentByRole = (TextView) EnterRoom.findViewById(R.id.ScriptContent_ByRole);
-
-                TextView TitleSC = (TextView) EnterRoom.findViewById(R.id.SC);
-                LinearLayout ContentOfSC = (LinearLayout) EnterRoom.findViewById(R.id.ContentOfScript);
-                Spinner Role = (Spinner) EnterRoom.findViewById(R.id.MyRole);
-                if (mainAdapter.getRoomType(position) == 0){
-                    TitleSC.setVisibility(View.INVISIBLE);
-                    ContentOfSC.setVisibility(View.INVISIBLE);
-                    Role.setVisibility(View.INVISIBLE);
-                }
-                if (mainAdapter.getRoomType(position) == 1){
-                    TitleSC.setVisibility(View.VISIBLE);
-                    ContentOfSC.setVisibility(View.VISIBLE);
-                    Role.setVisibility(View.VISIBLE);
-                }
-
-                EnterRoom.show();
-            }
-        });
-
-        //Server RoomList
-
-        retrofit = MyRetrofit.getInstance().getRetrofit();
-        retrofit = RetrofitInstance.getInstance(getApplicationContext());
+        }});
 
         VopleServiceApi.boards CallList = retrofit.create(VopleServiceApi.boards.class);
 
@@ -106,17 +75,17 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call<List<RetrofitModel.BoardContributor>> call, Response<List<RetrofitModel.BoardContributor>> response) {
                 if (response.code() == 200) {
 
-                    for (Object object : response.body()) {
-                        RetrofitModel.BoardContributor element = (RetrofitModel.BoardContributor) object;
-                        mainAdapter.Title.add(element.title);
-                        //mainAdapter.Num_List.add(String.format("%d", element.board_likes));
-                        mainAdapter.RoomType_List.add(element.mode);
-                        //mainAdapter.KindOfScript.add(element.script);
-                        mainAdapter.RoomID.add(element.id);
+                    for (RetrofitModel.BoardContributor object : response.body()) {
+
+                        if(object.script == null)
+                            mainAdapter.addItem(object.id, object.title, null, object.mode, null);
+                        else
+                            mainAdapter.addItem(object.id, object.title, null, object.mode, object.script.title);
+
+
                     }
 
-                    Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
-                            Toast.LENGTH_SHORT).show();
+                    mainAdapter.notifyDataSetChanged();
 
                 } else {
                     Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
@@ -131,6 +100,130 @@ public class MainActivity extends AppCompatActivity {
                         Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void showEnterRoomDialog(int position)
+    {
+        RoomBreifItem item = (RoomBreifItem) mainAdapter.getItem(position);
+
+        TextView ScriptContentByRole = (TextView) enterRoom.findViewById(R.id.ScriptContent_ByRole);
+
+        TextView tv_script = (TextView) enterRoom.findViewById(R.id.SC);
+        LinearLayout ContentOfSC = (LinearLayout) enterRoom.findViewById(R.id.ContentOfScript);
+        Spinner sp_role = (Spinner) enterRoom.findViewById(R.id.MyRole);
+        Button btn_enter = (Button) enterRoom.findViewById(R.id.btn_enter);
+
+        if (item.getRoomType() == 0){
+            tv_script.setVisibility(View.INVISIBLE);
+            ContentOfSC.setVisibility(View.INVISIBLE);
+            sp_role.setVisibility(View.INVISIBLE);
+
+            enterRoom.show();
+
+            return;
+        }
+        if (item.getRoomType() == 1){
+            tv_script.setVisibility(View.VISIBLE);
+            ContentOfSC.setVisibility(View.VISIBLE);
+            sp_role.setVisibility(View.VISIBLE);
+        }
+
+        if(item.getScript_title() != null)
+            tv_script.setText(item.getScript_title());
+
+        VopleServiceApi.quilifyJoinRoom service = retrofit.create(VopleServiceApi.quilifyJoinRoom.class);
+
+        final Call<RetrofitModel.Roll_Brief> repos = service.repoContributors(item.getRoomID());
+
+        repos.enqueue(new Callback<RetrofitModel.Roll_Brief>() {
+            @Override
+            public void onResponse(Call<RetrofitModel.Roll_Brief> call, Response<RetrofitModel.Roll_Brief> response) {
+                if(response.code() == 200)
+                {
+                    ArrayList<String> list = (ArrayList<String>) response.body().rolls;
+
+                    ArrayAdapter<String> adp1 = new ArrayAdapter<String>(getApplicationContext(),
+                            android.R.layout.simple_list_item_1, list);
+                    adp1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    sp_role.setAdapter(adp1);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetrofitModel.Roll_Brief> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Failed", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        btn_enter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String roll_name = sp_role.getSelectedItem().toString();
+
+                VopleServiceApi.joinRoom service = retrofit.create(VopleServiceApi.joinRoom.class);
+
+                final Call<RetrofitModel.Cast> repos = service.repoContributors(item.getRoomID(), roll_name);
+
+                repos.enqueue(new Callback<RetrofitModel.Cast>() {
+                    @Override
+                    public void onResponse(Call<RetrofitModel.Cast> call, Response<RetrofitModel.Cast> response) {
+                        if(response.code() == 200)
+                        {
+                            Intent intent = new Intent(MainActivity.this, EventActivity.class);
+                            intent.putExtra("RoomID", item.getRoomID());
+                            Gson gson = new Gson();
+                            String cast = gson.toJson(response.body());
+                            intent.putExtra("Cast", cast);
+                            startActivity(intent);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<RetrofitModel.Cast> call, Throwable t) {
+
+                    }
+                });
+
+            }
+        });
+
+
+        enterRoom.show();
+    }
+
+    private void initialize()
+    {
+
+        //Nav & CustomList
+        navButton = (Button) findViewById(R.id.NavMain);
+        mainDrawer = (DrawerLayout) findViewById(R.id.main_drawer);
+
+        navButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mainDrawer.openDrawer(Gravity.START);
+            }
+        });
+
+        mainListView = (ListView) findViewById(R.id.main_list);
+        navlistView = (ListView) findViewById(R.id.Nav_ListView);
+
+        mainAdapter = new MainAdapter();
+        mainListView.setAdapter(mainAdapter);
+
+
+        navAdapter = new NavAdapter();
+        navlistView.setAdapter(navAdapter);
+
+        //pop up
+
+        enterRoom = new Dialog(this);
+
+        enterRoom.setContentView(R.layout.enter_room_pop);
+
+
+        retrofit = MyRetrofit.getInstance().getRetrofit();
+        retrofit = RetrofitInstance.getInstance(getApplicationContext());
     }
 
 }

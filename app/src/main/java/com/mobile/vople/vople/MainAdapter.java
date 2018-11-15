@@ -11,36 +11,32 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mobile.vople.vople.item.RoomBreifItem;
+
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Handler;
 import java.util.logging.LogRecord;
 
 public class MainAdapter extends BaseAdapter {
 
-    public ArrayList<Integer> RoomID = new ArrayList<Integer>();
-    public ArrayList<String> Title = new ArrayList<String >();
-    public ArrayList<String> Num_List = new ArrayList<String>();
-    public ArrayList<Integer> RoomType_List = new ArrayList<Integer>();
-    public ArrayList<String> KindOfScript = new ArrayList<String>();
+    private List<RoomBreifItem> roomList;
 
-    public String getScriptInformation(int position) {
-        return KindOfScript.get(position);
-    }
-
-    public  int getRoomType(int position) {
-        return RoomType_List.get(position);
+    public MainAdapter()
+    {
+        roomList = new ArrayList<>();
     }
 
     @Override
     public int getCount() {
-        return Title.size();
+        return roomList.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return roomList.get(position);
     }
 
     @Override
@@ -60,17 +56,26 @@ public class MainAdapter extends BaseAdapter {
 
         ImageView RoomType = (ImageView) convertView.findViewById(R.id.RoomKind);
 
-        textView.setText(Title.get(position));
-        Like.setText(Num_List.get(position));
-        Script.setText(KindOfScript.get(position));
+        RoomBreifItem item = roomList.get(position);
 
-        if (RoomType_List.get(position) == 0){
+        if(item.getTitle() != null)
+            textView.setText(item.getTitle());
+        Like.setText(item.getNum());
+        if(item.getScript_title() != null)
+            Script.setText(item.getScript_title());
+
+        if (item.getRoomType() == 0){
             RoomType.setImageResource(R.drawable.mission);
         }
-        if (RoomType_List.get(position) == 1){
+        if (item.getRoomType() == 1){
             RoomType.setImageResource(R.drawable.situation);
         }
 
         return convertView;
+    }
+
+    public void addItem(int roomID, String title, String num, int roomType, String kindOfScript)
+    {
+        roomList.add(new RoomBreifItem(roomID, title, num, roomType, kindOfScript));
     }
 }

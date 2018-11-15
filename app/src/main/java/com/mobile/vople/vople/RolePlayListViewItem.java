@@ -7,9 +7,30 @@ public class RolePlayListViewItem {
     private String sRunTime;
     private String sScript;
 
+
     public RolePlayListViewItem(Drawable nProfile, String sRunTime, String sScript) {
         this.nProfile = nProfile;
         this.sRunTime = sRunTime;
+        this.sScript = sScript;
+    }
+
+    public Drawable getnProfile() {
+        return nProfile;
+    }
+
+    public String getsRunTime() {
+        return sRunTime;
+    }
+
+    public void setsRunTime(String sRunTime) {
+        this.sRunTime = sRunTime;
+    }
+
+    public String getsScript() {
+        return sScript;
+    }
+
+    public void setsScript(String sScript) {
         this.sScript = sScript;
     }
 

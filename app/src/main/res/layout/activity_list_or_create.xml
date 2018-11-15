@@ -26,7 +26,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:layout_margin="5dp"
+                android:layout_margin="10dp"
                 android:background="@drawable/nav_image"
                 />
         </LinearLayout>
@@ -35,11 +35,14 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="horizontal"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:weightSum="2"
             >
 
             <Button
                 android:id="@+id/CreateRoom"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@drawable/custom_button_white"
@@ -52,7 +55,7 @@
 
             <Button
                 android:id="@+id/ViewRoomList"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@drawable/custom_button_white"

@@ -95,7 +95,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     {
                         sp.put("Authorization", response.body().token);
 
-                        Intent intent = new Intent(SignUpActivity.this, MainActivity.class);
+                        Intent intent = new Intent(SignUpActivity.this, ListOrCreate.class);
                         startActivity(intent);
 
                         if(LoginActivity.instance != null) LoginActivity.instance.finish();
@@ -104,11 +104,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     }
                     else if(response.code() == 400)
                     {
-                        finish();
+                        Toast.makeText(SignUpActivity.this, "아이디와 패스워드를 다시 확인해 주세요.", Toast.LENGTH_SHORT).show();
                     }
                     else
                     {
-                        Toast.makeText(getApplicationContext(), "Response.code = "
+                        Toast.makeText(getApplicationContext(), "Error! : "
                                 + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
                     }
                 }

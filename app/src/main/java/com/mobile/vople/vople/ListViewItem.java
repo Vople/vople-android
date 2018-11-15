@@ -7,12 +7,55 @@ public class ListViewItem {
     private String sNickName;
     private String sRunningTime;
     private String sNowTime;
+    private String sSoundUrl;
 
-    public ListViewItem(Drawable nProfile, String sNickName, String sRunningTime, String sNowTime) {
+    public ListViewItem(Drawable nProfile, String sNickName, String sRunningTime, String sNowTime, String sSoundUrl) {
         this.nProfile = nProfile;
         this.sNickName = sNickName;
         this.sRunningTime = sRunningTime;
         this.sNowTime = sNowTime;
+        this.sSoundUrl = sSoundUrl;
+    }
+
+
+    public Drawable getnProfile() {
+        return nProfile;
+    }
+
+    public void setnProfile(Drawable nProfile) {
+        this.nProfile = nProfile;
+    }
+
+    public String getsNickName() {
+        return sNickName;
+    }
+
+    public void setsNickName(String sNickName) {
+        this.sNickName = sNickName;
+    }
+
+    public String getsRunningTime() {
+        return sRunningTime;
+    }
+
+    public void setsRunningTime(String sRunningTime) {
+        this.sRunningTime = sRunningTime;
+    }
+
+    public String getsNowTime() {
+        return sNowTime;
+    }
+
+    public void setsNowTime(String sNowTime) {
+        this.sNowTime = sNowTime;
+    }
+
+    public String getsSoundUrl() {
+        return sSoundUrl;
+    }
+
+    public void setsSoundUrl(String sSoundUrl) {
+        this.sSoundUrl = sSoundUrl;
     }
 
     public void setProfile(Drawable profile) {
