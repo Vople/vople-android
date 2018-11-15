@@ -1,14 +1,16 @@
 package com.mobile.vople.vople;
-//취소키 만든다면 RolePlayListViewAdapter로~~
+
 import android.annotation.SuppressLint;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -16,10 +18,16 @@ import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
 import com.mobile.vople.vople.server.VopleServiceApi;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -31,16 +39,18 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     private ListView listView_role_play;
     private boolean bool_owner;
     private int i_big_heart;
-    private int i_record_button;
-    private int n_board_like;
     private Button btn_back;
     private Button btn_big_heart;
     private Button btn_record;
     private Button btn_cancel;
     private Button btn_send;
     private Button btn_gather;
-    private long now;
     private Date date;
+
+    private String allPlots = "";
+
+    private List<RetrofitModel.Plot> plotList;
+
     SimpleDateFormat mFormat = new SimpleDateFormat("MM월 dd일 hh:mm");
 
     private Retrofit retrofit;
@@ -48,6 +58,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
     private ListViewAdapter adapter;
     private RolePlayListViewAdapter adapter_role_play;
+
+    private TextView tv_script;
 
     private int roomId;
 
@@ -63,32 +75,12 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         Intent intent = getIntent();
 
-        if(intent == null){
-            Toast.makeText(this, "유효하지 않은 방 아이디입니다.", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
         roomId = intent.getIntExtra("RoomID", -1);
 
-        if(roomId == -1){
-            Toast.makeText(this, "유효하지 않은 방 아이디입니다.", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
-        String str_cast = intent.getStringExtra("Cast");
-
-        Gson gson = new Gson();
-
-        cast = gson.fromJson(str_cast, RetrofitModel.Cast.class);
-
-        if(cast == null) {
-            Toast.makeText(this, "유효하지 않는 배역입니다", Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
-        for(RetrofitModel.Plot plot : cast.plots_by_cast)
+        if(roomId == -1)
         {
-            adapter_role_play.addItem(null, "04:11", plot.content);
+            Toast.makeText(EventActivity.this, "유효하지 않는 방입니다.", Toast.LENGTH_SHORT).show();
+            finish();
         }
 
         VopleServiceApi.boardDetail service = retrofit.create(VopleServiceApi.boardDetail.class);
@@ -104,15 +96,60 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
                     for( RetrofitModel.CommentBrief comment : list)
                     {
-                        adapter.addItem(null, comment.owner.name, "04:11", getTime(comment.created_at), comment.sound);
+                        adapter.addItem(null, comment.owner.name, "04:11", comment.created_at, comment.sound);
                     }
 
                     adapter.notifyDataSetChanged();
+
+                    for(RetrofitModel.Cast cast : response.body().script.casts)
+                    {
+                        for(RetrofitModel.Plot plot : cast.plots_by_cast)
+                            plotList.add(plot);
+                    }
+
+                    String[] arrPlot = new String[plotList.size()];
+
+                    for(RetrofitModel.Plot plot : plotList)
+                        arrPlot[plot.order-1] = plot.content;
+
+                    for(String s : arrPlot)
+                    {
+                        if(s != null)
+                            allPlots += (s + "\n");
+                    }
+
+                    // 배경에 넣어주기
+                    tv_script.setText(allPlots);
                 }
             }
 
             @Override
             public void onFailure(Call<RetrofitModel.BoardDetail> call, Throwable t) {
+                Toast.makeText(EventActivity.this, "네트워크 상태를 확인해 주세요.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        VopleServiceApi.get_plots getPlotService = retrofit.create(VopleServiceApi.get_plots.class);
+        Call<List<RetrofitModel.Plot>> getPlotRepos = getPlotService.repoContributors(roomId);
+
+        getPlotRepos.enqueue(new Callback<List<RetrofitModel.Plot>>() {
+            @Override
+            public void onResponse(Call<List<RetrofitModel.Plot>> call, Response<List<RetrofitModel.Plot>> response) {
+                if(response.code() == 200)
+                {
+                    List<RetrofitModel.Plot> result = response.body();
+
+                    for(RetrofitModel.Plot plot : result)
+                    {
+                        adapter_role_play.addItem(null, "04:11", plot.content);
+                    }
+                    adapter_role_play.notifyDataSetChanged();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<List<RetrofitModel.Plot>> call, Throwable t) {
 
             }
         });
@@ -140,26 +177,45 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             i_big_heart++;
             if (i_big_heart % 2 == 0) {
                 btn_big_heart.setBackgroundResource(R.drawable.event_unpress_heart);
-                n_board_like = 0;
+
             }
             else if (i_big_heart % 2 != 0) {
                 btn_big_heart.setBackgroundResource(R.drawable.event_press_heart);
-                n_board_like = 1;
+
             }
         }
 
         else if (v.getId() == btn_send.getId()) {
             //녹음본 보내기
-            btn_send.setVisibility(View.GONE);
-            btn_cancel.setVisibility(View.GONE);
-            if (bool_owner == true) {
-                btn_gather.setVisibility(View.VISIBLE);
-            }
+            sendAudioFile();
         }
 
-        //else if (v.getId() == btn_cancel.getId()) {
-            //취소
-        //}
+    }
+
+    private void sendAudioFile()
+    {
+        File file = new File(Environment.getExternalStorageDirectory() + "/recoder3.mp3");
+
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("*/*"), file);
+
+        MultipartBody.Part body = MultipartBody.Part.createFormData("audio", file.getName(), requestFile);
+
+        VopleServiceApi.commentOnBoard service = retrofit.create(VopleServiceApi.commentOnBoard.class);
+
+        Call<ResponseBody> call = service.upload(roomId, requestFile, 15);
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Toast.makeText(getApplicationContext(), "Code : " + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void initialize()
@@ -174,14 +230,15 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         listView.setAdapter(adapter);
         listView_role_play.setAdapter(adapter_role_play);
 
-        n_board_like = 0;
+
         i_big_heart = 0;
         bool_owner = false;
-        btn_back = findViewById(R.id.btn_back_following);
+        btn_back = findViewById(R.id.btn_back);
         btn_big_heart = findViewById(R.id.btn_big_heart);
         btn_cancel = findViewById(R.id.btn_cancel);
         btn_send = findViewById(R.id.btn_send);
         btn_gather = findViewById(R.id.btn_gather);
+        tv_script = findViewById(R.id.tv_script);
 
         btn_back.setOnClickListener(this);
         btn_big_heart.setOnClickListener(this);
@@ -189,7 +246,11 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         btn_send.setOnClickListener(this);
         btn_gather.setOnClickListener(this);
 
+
+
         retrofit = RetrofitInstance.getInstance(this);
+
+        plotList = new ArrayList<RetrofitModel.Plot>();
     }
 }
 

@@ -55,15 +55,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
         initialize();
-
 
         mainListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 showEnterRoomDialog(position);
-
         }});
 
         VopleServiceApi.boards CallList = retrofit.create(VopleServiceApi.boards.class);
@@ -81,8 +78,6 @@ public class MainActivity extends AppCompatActivity {
                             mainAdapter.addItem(object.id, object.title, null, object.mode, null);
                         else
                             mainAdapter.addItem(object.id, object.title, null, object.mode, object.script.title);
-
-
                     }
 
                     mainAdapter.notifyDataSetChanged();
@@ -147,6 +142,43 @@ public class MainActivity extends AppCompatActivity {
                     adp1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                     sp_role.setAdapter(adp1);
                 }
+                else if(response.code() == 202)
+                {
+                    VopleServiceApi.joinAlreadyRegistedRoom innerService = retrofit.create(VopleServiceApi.joinAlreadyRegistedRoom.class);
+
+                    final Call<RetrofitModel.Cast> innerRepos = innerService.repoContributors(item.getRoomID());
+
+                    innerRepos.enqueue(new Callback<RetrofitModel.Cast>() {
+                        @Override
+                        public void onResponse(Call<RetrofitModel.Cast> call, Response<RetrofitModel.Cast> response) {
+                            if(response.code() == 200)
+                            {
+                                Intent intent = new Intent(MainActivity.this, EventActivity.class);
+                                intent.putExtra("RoomID", item.getRoomID());
+                                startActivity(intent);
+                            }
+                            else if(response.code() == 202)
+                            {
+                                Intent intent = new Intent(MainActivity.this, EventActivity.class);
+                                intent.putExtra("RoomID", item.getRoomID());
+                                Gson gson = new Gson();
+                                String cast = gson.toJson(response.body());
+                                intent.putExtra("Cast", cast);
+                                startActivity(intent);
+                            }
+                            else if(response.code() == 204)
+                            {
+                                Toast.makeText(MainActivity.this, "This room is already full", Toast.LENGTH_SHORT).show();
+                            }
+                            enterRoom.dismiss();
+                        }
+
+                        @Override
+                        public void onFailure(Call<RetrofitModel.Cast> call, Throwable t) {
+
+                        }
+                    });
+                }
             }
 
             @Override
@@ -158,7 +190,19 @@ public class MainActivity extends AppCompatActivity {
         btn_enter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String roll_name = sp_role.getSelectedItem().toString();
+                String roll_name = "Default Roll Name";
+
+                if(item.getRoomType() == 1){
+                    if(sp_role.getAdapter() != null && sp_role.getAdapter().getCount() > 0)
+                    {
+                        roll_name = sp_role.getSelectedItem().toString();
+                    }
+                    else
+                    {
+                        Toast.makeText(getApplicationContext(), "방이 이미 꽉 찼거나 입장할 수 없는 방입니다.", Toast.LENGTH_SHORT).show();
+                        enterRoom.dismiss();
+                    }
+                }
 
                 VopleServiceApi.joinRoom service = retrofit.create(VopleServiceApi.joinRoom.class);
 
@@ -171,16 +215,13 @@ public class MainActivity extends AppCompatActivity {
                         {
                             Intent intent = new Intent(MainActivity.this, EventActivity.class);
                             intent.putExtra("RoomID", item.getRoomID());
-                            Gson gson = new Gson();
-                            String cast = gson.toJson(response.body());
-                            intent.putExtra("Cast", cast);
                             startActivity(intent);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<RetrofitModel.Cast> call, Throwable t) {
-
+                        Toast.makeText(MainActivity.this, "네트워크 연결상태를 확인해 주세요.", Toast.LENGTH_SHORT).show();
                     }
                 });
 

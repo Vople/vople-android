@@ -23,6 +23,7 @@ public class RetrofitModel {
 
     }
 
+
     public class CreateBoardContributor{
         public String title;
         public String content;
@@ -38,6 +39,13 @@ public class RetrofitModel {
         public int id;
         public int member_restriction;
         public String title;
+    }
+
+
+    public class BoardDetailScript extends Script
+    {
+        public int owner; // uid
+        public List<Cast> casts;
     }
 
     public class ScriptBrief{
@@ -71,9 +79,8 @@ public class RetrofitModel {
     public class BoardDetail{
         public String title;
         public List<CommentBrief> comments;
-        public int script;
+        public BoardDetailScript script;
     }
-
 
     public class Roll_Brief {
         public List<String> rolls;
