@@ -56,7 +56,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         n_board_like = 0;
         i_big_heart = 0;
         bool_owner = false;
-        btn_back = findViewById(R.id.btn_back_following);
+        btn_back = findViewById(R.id.btn_back);
         btn_big_heart = findViewById(R.id.btn_big_heart);
         btn_cancel = findViewById(R.id.btn_cancel);
         btn_send = findViewById(R.id.btn_send);

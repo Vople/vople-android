@@ -18,7 +18,7 @@
         app:srcCompat="@drawable/event_top_bar" />
 
     <Button
-        android:id="@+id/btn_back_following"
+        android:id="@+id/btn_back"
         android:layout_width="30dp"
         android:layout_height="40dp"
         android:layout_marginStart="10dp"
@@ -42,7 +42,7 @@
         android:textColor="@color/colorPrimary"
         android:textSize="14sp"
         app:layout_constraintBottom_toBottomOf="@+id/imageView4"
-        app:layout_constraintStart_toEndOf="@+id/btn_back_following"
+        app:layout_constraintStart_toEndOf="@+id/btn_back"
         app:layout_constraintTop_toTopOf="@+id/imageView4" />
 
     <Button
@@ -137,9 +137,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4">
 
-
     </ScrollView>
 
+    <TextView
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="50dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginTop="40dp"
+        android:layout_marginEnd="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginBottom="40dp"
+        android:text="대본"
+        android:textColor="#A0A0A0"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toTopOf="@+id/lv_event_role"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="@+id/scrollView2"
+        app:layout_constraintTop_toTopOf="@+id/scrollView2" />
     <ListView
         android:id="@+id/lv_event"
         android:layout_width="0dp"
@@ -159,107 +175,120 @@
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="@+id/scrollView2" />
 
-    <ImageView
-        android:id="@+id/image_event_click_background"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/lv_event"
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="135dp"
         android:visibility="gone"
-        app:srcCompat="@drawable/event_under_bar" />
+        app:layout_constraintBottom_toBottomOf="parent">
 
-    <ImageView
-        android:id="@+id/image_event_click_profile"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="60dp"
-        android:layout_marginRight="60dp"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/image_event_click_background"
-        app:srcCompat="@drawable/button_event_heart_selector" />
+        <ImageView
+            android:id="@+id/image_event_click_background"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:background="#ffffff"
+            android:visibility="visible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tv_event_click_nickname"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="10dp"
-        android:layout_marginLeft="10dp"
-        android:fontFamily="@font/bmdohyeon"
-        android:text="TextView"
-        android:textColor="#000000"
-        android:textSize="18sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/image_event_click_profile"
-        app:layout_constraintStart_toEndOf="@+id/image_event_click_profile"
-        app:layout_constraintTop_toTopOf="@+id/image_event_click_profile"
-        tools:text="이름" />
+        <ImageView
+            android:id="@+id/image_event_click_profile"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="60dp"
+            android:layout_marginRight="60dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/button_event_heart_selector" />
 
-    <Button
-        android:id="@+id/btn_event_following"
-        android:layout_width="80dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/following_following_button"
-        android:fontFamily="@font/bmdohyeon"
-        android:text="팔로잉"
-        android:textColor="#64ad9e"
-        android:textSize="16sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/image_event_click_background"
-        app:layout_constraintStart_toStartOf="parent" />
+        <TextView
+            android:id="@+id/tv_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="10dp"
+            android:fontFamily="@font/bmdohyeon"
+            android:text="TextView"
+            android:textColor="#000000"
+            android:textSize="18sp"
+            app:layout_constraintBottom_toBottomOf="@+id/image_event_click_profile"
+            app:layout_constraintStart_toEndOf="@+id/image_event_click_profile"
+            app:layout_constraintTop_toTopOf="@+id/image_event_click_profile"
+            tools:text="이름" />
 
-    <Button
-        android:id="@+id/btn_event_follow"
-        android:layout_width="80dp"
-        android:layout_height="35dp"
-        android:layout_marginStart="60dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/following_follow_button"
-        android:fontFamily="@font/bmdohyeon"
-        android:text="팔로우"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/image_event_click_background"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/btn_following"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/following_following_button"
+            android:fontFamily="@font/bmdohyeon"
+            android:text="팔로잉"
+            android:textColor="#64ad9e"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/btn_event_career"
-        android:layout_width="80dp"
-        android:layout_height="35dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/following_follow_button"
-        android:fontFamily="@font/bmdohyeon"
-        android:text="참여내역"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/image_event_click_background"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        <Button
+            android:id="@+id/btn_follow"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:layout_marginStart="50dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/following_follow_button"
+            android:fontFamily="@font/bmdohyeon"
+            android:text="팔로우"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
-    <Button
-        android:id="@+id/btn_event_report"
-        android:layout_width="80dp"
-        android:layout_height="35dp"
-        android:layout_marginEnd="60dp"
-        android:layout_marginRight="60dp"
-        android:layout_marginBottom="10dp"
-        android:background="@drawable/following_follow_button"
-        android:fontFamily="@font/bmdohyeon"
-        android:text="신고하기"
-        android:textColor="#ffffff"
-        android:textSize="16sp"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/image_event_click_background"
-        app:layout_constraintEnd_toEndOf="parent" />
+        <Button
+            android:id="@+id/btn_career"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/following_follow_button"
+            android:fontFamily="@font/bmdohyeon"
+            android:text="참여내역"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
+        <Button
+            android:id="@+id/btn_report"
+            android:layout_width="80dp"
+            android:layout_height="35dp"
+            android:layout_marginEnd="50dp"
+            android:layout_marginRight="50dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/following_follow_button"
+            android:fontFamily="@font/bmdohyeon"
+            android:text="신고하기"
+            android:textColor="#ffffff"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+        <Button
+            android:id="@+id/btn_close"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginRight="8dp"
+            android:background="@drawable/button_x"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+    </android.support.constraint.ConstraintLayout>
 </android.support.constraint.ConstraintLayout>

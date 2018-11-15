@@ -1,14 +1,9 @@
 package com.mobile.vople.vople;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.media.MediaRecorder;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,21 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
-
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-
-import okhttp3.FormBody;
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
 
 public class RolePlayListViewAdapter extends BaseAdapter {
 
@@ -79,7 +62,7 @@ public class RolePlayListViewAdapter extends BaseAdapter {
         }
 
         ImageView iv_role_play_profile = (ImageView) convertView.findViewById(R.id.iv_role_play_profile);
-        TextView tv_role_play_script = (TextView) convertView.findViewById(R.id.tv_role_play_script);
+        TextView tv_role_play_script = (TextView) convertView.findViewById(R.id.tv_title);
         TextView tv_role_play_runtime = (TextView) convertView.findViewById(R.id.tv_role_play_runtime);
         Button btn_role_play_record = (Button) convertView.findViewById(R.id.btn_rold_play_record);
 

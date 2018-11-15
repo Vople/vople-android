@@ -38,44 +38,30 @@
         app:layout_constraintTop_toTopOf="@+id/imageView4"
         android:background="@drawable/event_back" />
 
-    <Button
-        android:id="@+id/btn_follower"
-        android:layout_width="80dp"
-        android:layout_height="30dp"
-        android:layout_marginStart="50dp"
-        android:layout_marginLeft="50dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/following_unclick"
-        android:fontFamily="@font/bmdohyeon"
-        android:text="팔로워"
-        android:textColor="#ffffff"
-        android:textSize="15sp"
-        app:layout_constraintEnd_toStartOf="@+id/btn_following"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
-    <Button
-        android:id="@+id/btn_following"
-        android:layout_width="80dp"
-        android:layout_height="30dp"
-        android:layout_marginTop="20dp"
-        android:background="@drawable/following_unclick"
-        android:fontFamily="@font/bmdohyeon"
-        android:text="팔로잉"
-        android:textColor="#ffffff"
-        android:textSize="15sp"
-        app:layout_constraintStart_toEndOf="@+id/btn_follower"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
-
 
     <ListView
-        android:id="@+id/lv_following"
+        android:id="@+id/lv_download"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_following" />
+        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
+    <TextView
+        android:id="@+id/textView10"
+        android:layout_width="49dp"
+        android:layout_height="30dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="15dp"
+        android:fontFamily="@font/bmdohyeon"
+        android:gravity="center"
+        android:text="보관함"
+        android:textColor="#A0A0A0"
+        android:textSize="16sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView4" />
 
 </android.support.constraint.ConstraintLayout>

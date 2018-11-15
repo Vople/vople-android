@@ -41,7 +41,7 @@ public class FollowingActivity extends AppCompatActivity implements View.OnClick
 
         listView.setAdapter(adapter);
 
-        btn_back_following = findViewById(R.id.btn_back_following);
+        btn_back_following = findViewById(R.id.btn_back);
         btn_follower = findViewById(R.id.btn_follower);
         btn_following = findViewById(R.id.btn_following);
 

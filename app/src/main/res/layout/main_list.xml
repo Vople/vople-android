@@ -40,19 +40,6 @@
                     android:layout_weight="1"
                     app:srcCompat="@drawable/on" />
 
-                <ImageView
-                    android:layout_marginLeft="5dp"
-                    android:layout_width="15dp"
-                    android:layout_height="15dp"
-                    android:layout_weight="1"
-                    app:srcCompat="@drawable/heart" />
-
-                <TextView
-                    android:id="@+id/LikeCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="1000" />
             </LinearLayout>
 
             <LinearLayout
@@ -66,12 +53,12 @@
                     android:id="@+id/title_text"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_weight="1"
                     android:layout_marginLeft="10dp"
+                    android:layout_weight="1"
                     android:fontFamily="@font/bmdohyeon"
-                    android:textSize="12sp"
-                    android:textColor="@color/white"
-                    android:text="title_text" />
+                    android:text="title_text"
+                    android:textColor="#A0A0A0"
+                    android:textSize="12sp" />
             </LinearLayout>
 
         </LinearLayout>
@@ -80,14 +67,14 @@
             android:id="@+id/ScriptKind"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginRight="10dp"
             android:layout_gravity="center_vertical"
-            android:gravity="right"
+            android:layout_marginRight="10dp"
+            android:layout_weight="1"
             android:fontFamily="@font/bmdohyeon"
-            android:textColor="@color/white"
-            android:textSize="15sp"
-            android:text="TextView" />
+            android:gravity="right"
+            android:text="TextView"
+            android:textColor="#A0A0A0"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
