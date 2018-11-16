@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 public class ListViewAdapter extends BaseAdapter {
 
-    MediaPlayer player;
+    MediaPlayer mediaPlayer;
 
     private Context context;
 
@@ -85,11 +85,19 @@ public class ListViewAdapter extends BaseAdapter {
                     {
                         btn_play.setBackgroundResource(R.drawable.button_play_stop);
                         //녹음본 시작
+                        try {
+                            playAudio(listViewItemList.get(position).getsSoundUrl());
+
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                     else
                     {
                         btn_play.setBackgroundResource(R.drawable.event_recording_start);
-                        //녹음본 일시 정지
+                        if(mediaPlayer != null && mediaPlayer.isPlaying()) {
+                            mediaPlayer.stop();
+                        }
                     }
 
                     btn_play.setTag(!state);
@@ -127,25 +135,19 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     public void playRec(){
-        if (player != null) {
-            player.stop();
-            player.release();
-            player = null;
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.release();
+            mediaPlayer = null;
         }
 
         try {
 
-            // 오디오를 플레이 하기위해 MediaPlayer 객체 player를 생성한다.
-            player = new MediaPlayer ();
 
-            // 재생할 오디오 파일 저장위치를 설정
-            //player.setDataSource(filename);
-            // 웹상에 있는 오디오 파일을 재생할때
-            // player.setDataSource(Audio_Url);
+            mediaPlayer = new MediaPlayer ();
 
-            // 오디오 재생준비,시작
-            player.prepare();
-            player.start();
+            mediaPlayer.prepare();
+            mediaPlayer.start();
 
             Toast.makeText(context, "녹음된 파일을 재생합니다.", Toast.LENGTH_LONG).show();
         } catch (Exception e) {
@@ -154,16 +156,41 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     public void stopRec(){
-        if (player == null)
+        if (mediaPlayer == null)
             return;
-// 오디오 재생 중지
-        player.stop();
+
+        mediaPlayer.stop();
 
         Toast.makeText(context, "재생이 중지되었습니다.", Toast.LENGTH_LONG).show();
 
 
         // 오디오 재생에 필요한 메모리들을 해제한다
-        player.release();
-        player = null;
+        mediaPlayer.release();
+        mediaPlayer = null;
+    }
+
+    private void playAudio(String url) throws Exception
+    {
+        killMediaPlayer();
+
+        mediaPlayer = new MediaPlayer();
+        mediaPlayer.setDataSource(url);
+        mediaPlayer.prepare();
+        mediaPlayer.start();
+    }
+
+    private void killMediaPlayer() {
+        if(mediaPlayer!=null) {
+            try {
+                mediaPlayer.release();
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void clear(){
+        listViewItemList.clear();
     }
 }

@@ -6,12 +6,21 @@ public class RolePlayListViewItem {
     private Drawable nProfile;
     private String sRunTime;
     private String sScript;
+    private int plot_id;
 
-
-    public RolePlayListViewItem(Drawable nProfile, String sRunTime, String sScript) {
+    public RolePlayListViewItem(Drawable nProfile, String sRunTime, String sScript, int plot_id) {
         this.nProfile = nProfile;
         this.sRunTime = sRunTime;
         this.sScript = sScript;
+        this.plot_id = plot_id;
+    }
+
+    public int getPlot_id() {
+        return plot_id;
+    }
+
+    public void setPlot_id(int plot_id) {
+        this.plot_id = plot_id;
     }
 
     public Drawable getnProfile() {

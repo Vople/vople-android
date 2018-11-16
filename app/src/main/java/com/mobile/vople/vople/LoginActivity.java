@@ -3,6 +3,7 @@ package com.mobile.vople.vople;
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.provider.Settings;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -12,15 +13,15 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.mobile.vople.vople.server.RetrofitInstance;
-import com.mobile.vople.vople.server.RetrofitModel;
 import com.mobile.vople.vople.server.SharedPreference;
 import com.mobile.vople.vople.server.VopleServiceApi;
 import com.mobile.vople.vople.server.model.MyRetrofit;
 
-import java.util.List;
 import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -44,10 +45,33 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+        Initialize();
+
+        //FirebaseApp.initializeApp(getApplicationContext());
+//
+//        FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(this, new OnSuccessListener<InstanceIdResult>() {
+//            @Override
+//            public void onSuccess(InstanceIdResult instanceIdResult) {
+//                String newToken = instanceIdResult.getToken();
+//                Toast.makeText(LoginActivity.this, "newToken : " + newToken, Toast.LENGTH_SHORT).show();
+//                Log.e("newToken",newToken);
+//                SharedPreference.getInstance(LoginActivity.this).put("FCM_TOKEN",newToken);
+//            }
+//        });
+
+
+        FirebaseInstanceId.getInstance().getToken();
+
+
+        if(FirebaseInstanceId.getInstance().getToken() != null) {
+            Log.d("newToken", FirebaseInstanceId.getInstance().getToken());
+            SharedPreference.getInstance(getApplicationContext()).put("FCM_TOKEN", FirebaseInstanceId.getInstance().getToken());
+        }
+
+        final String fcm_token= SharedPreference.getInstance(getApplicationContext()).get("FCM_TOKEN");
 
         instance = this;
 
-        Initialize();
     }
 
     private void Initialize() {
@@ -88,8 +112,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void onResponse(Call<VopleServiceApi.Token> call, Response<VopleServiceApi.Token> response) {
                     if (response.code() == 200) {
                         sp.put("Authorization", response.body().token);
-                        Intent intent = new Intent(getApplicationContext(), ListOrCreate.class);
-                        startActivity(intent);
+                        send_fcmtoken();
+
                     } else {
                         Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
                                 Toast.LENGTH_SHORT).show();
@@ -110,5 +134,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             Intent intent = new Intent(LoginActivity.this, SignUpActivity.class);
             startActivity(intent);
         }
+    }
+
+    public void send_fcmtoken(){
+        VopleServiceApi.fcm_register service = retrofit.create(VopleServiceApi.fcm_register.class);
+        final String deviceID = android.provider.Settings.Secure.getString(getBaseContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        final String fcm_token= SharedPreference.getInstance(getApplicationContext()).get("FCM_TOKEN");
+        final Call<ResponseBody> repos=service.repoContributors(deviceID,fcm_token,true);
+
+        Log.d("<DeviceID>", deviceID + "<FC_TOKEN>" + fcm_token);
+        Toast.makeText(LoginActivity.this,"DeviceID> "+ deviceID + "<FC_TOKEN>" + fcm_token, Toast.LENGTH_SHORT).show();
+        repos.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
+                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(getApplicationContext(), ListOrCreate.class);
+                startActivity(intent);
+                finish();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.d("TAG", t.getLocalizedMessage());
+            }
+        });
     }
 }

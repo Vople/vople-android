@@ -51,7 +51,6 @@ public class MainAdapter extends BaseAdapter {
         convertView = inflater.inflate(R.layout.main_list, null);
 
         TextView textView = (TextView) convertView.findViewById(R.id.title_text);
-        TextView Like = (TextView) convertView.findViewById(R.id.NumCount);
         TextView Script = (TextView) convertView.findViewById(R.id.ScriptKind);
 
         ImageView RoomType = (ImageView) convertView.findViewById(R.id.RoomKind);
@@ -60,7 +59,6 @@ public class MainAdapter extends BaseAdapter {
 
         if(item.getTitle() != null)
             textView.setText(item.getTitle());
-        Like.setText(item.getNum());
         if(item.getScript_title() != null)
             Script.setText(item.getScript_title());
 

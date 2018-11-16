@@ -3,25 +3,48 @@ package com.mobile.vople.vople;
 import android.annotation.SuppressLint;
 
 import android.content.Intent;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.coremedia.iso.boxes.Container;
 import com.google.gson.Gson;
+import com.googlecode.mp4parser.authoring.Movie;
+import com.googlecode.mp4parser.authoring.Track;
+import com.googlecode.mp4parser.authoring.builder.DefaultMp4Builder;
+import com.googlecode.mp4parser.authoring.container.mp4.MovieCreator;
+import com.googlecode.mp4parser.authoring.tracks.AppendTrack;
 import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
 import com.mobile.vople.vople.server.VopleServiceApi;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.io.RandomAccessFile;
+import java.io.SequenceInputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import okhttp3.MediaType;
@@ -51,6 +74,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
     private List<RetrofitModel.Plot> plotList;
 
+    List<RetrofitModel.CommentBrief> commentList;
+
     SimpleDateFormat mFormat = new SimpleDateFormat("MM월 dd일 hh:mm");
 
     private Retrofit retrofit;
@@ -61,7 +86,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
     private TextView tv_script;
 
-    private int roomId;
+    public static int roomId;
 
     private RetrofitModel.Cast cast;
 
@@ -83,51 +108,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             finish();
         }
 
-        VopleServiceApi.boardDetail service = retrofit.create(VopleServiceApi.boardDetail.class);
-
-        final Call<RetrofitModel.BoardDetail> repos = service.repoContributors(roomId);
-
-        repos.enqueue(new Callback<RetrofitModel.BoardDetail>() {
-            @Override
-            public void onResponse(Call<RetrofitModel.BoardDetail> call, Response<RetrofitModel.BoardDetail> response) {
-                if(response.code() == 200)
-                {
-                    List<RetrofitModel.CommentBrief> list = response.body().comments;
-
-                    for( RetrofitModel.CommentBrief comment : list)
-                    {
-                        adapter.addItem(null, comment.owner.name, "04:11", comment.created_at, comment.sound);
-                    }
-
-                    adapter.notifyDataSetChanged();
-
-                    for(RetrofitModel.Cast cast : response.body().script.casts)
-                    {
-                        for(RetrofitModel.Plot plot : cast.plots_by_cast)
-                            plotList.add(plot);
-                    }
-
-                    String[] arrPlot = new String[plotList.size()];
-
-                    for(RetrofitModel.Plot plot : plotList)
-                        arrPlot[plot.order-1] = plot.content;
-
-                    for(String s : arrPlot)
-                    {
-                        if(s != null)
-                            allPlots += (s + "\n");
-                    }
-
-                    // 배경에 넣어주기
-                    tv_script.setText(allPlots);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetrofitModel.BoardDetail> call, Throwable t) {
-                Toast.makeText(EventActivity.this, "네트워크 상태를 확인해 주세요.", Toast.LENGTH_SHORT).show();
-            }
-        });
+        occurDataChange();
 
         VopleServiceApi.get_plots getPlotService = retrofit.create(VopleServiceApi.get_plots.class);
         Call<List<RetrofitModel.Plot>> getPlotRepos = getPlotService.repoContributors(roomId);
@@ -141,7 +122,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
                     for(RetrofitModel.Plot plot : result)
                     {
-                        adapter_role_play.addItem(null, "04:11", plot.content);
+                        adapter_role_play.addItem(null, "04:11", plot.content, plot.id);
                     }
                     adapter_role_play.notifyDataSetChanged();
                 }
@@ -184,39 +165,29 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
             }
         }
+        else if(v.getId() == btn_gather.getId())
+        {
+            new Thread() {
+                public void run() {
+                    combineAllComments();
 
-        else if (v.getId() == btn_send.getId()) {
-            //녹음본 보내기
-            sendAudioFile();
+                    Bundle bun = new Bundle();
+
+                    Message msg = handler.obtainMessage();
+                    msg.setData(bun);
+                    handler.sendMessage(msg);
+
+                }
+            }.start();
         }
-
     }
 
-    private void sendAudioFile()
-    {
-        File file = new File(Environment.getExternalStorageDirectory() + "/recoder3.mp3");
+    Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            Toast.makeText(EventActivity.this, "Success to Merge your file", Toast.LENGTH_SHORT).show();
+        }
+    };
 
-        RequestBody requestFile =
-                RequestBody.create(MediaType.parse("*/*"), file);
-
-        MultipartBody.Part body = MultipartBody.Part.createFormData("audio", file.getName(), requestFile);
-
-        VopleServiceApi.commentOnBoard service = retrofit.create(VopleServiceApi.commentOnBoard.class);
-
-        Call<ResponseBody> call = service.upload(roomId, requestFile, 15);
-
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                Toast.makeText(getApplicationContext(), "Code : " + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Toast.makeText(getApplicationContext(), "Failed!", Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
 
     private void initialize()
     {
@@ -251,6 +222,216 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         retrofit = RetrofitInstance.getInstance(this);
 
         plotList = new ArrayList<RetrofitModel.Plot>();
+    }
+
+    public void occurDataChange()
+    {
+        adapter.clear();
+
+        VopleServiceApi.boardDetail service = retrofit.create(VopleServiceApi.boardDetail.class);
+
+        final Call<RetrofitModel.BoardDetail> repos = service.repoContributors(roomId);
+
+        repos.enqueue(new Callback<RetrofitModel.BoardDetail>() {
+            @Override
+            public void onResponse(Call<RetrofitModel.BoardDetail> call, Response<RetrofitModel.BoardDetail> response) {
+                if(response.code() == 200)
+                {
+                    commentList = response.body().comments;
+
+                    for( RetrofitModel.CommentBrief comment : commentList)
+                    {
+                        adapter.addItem(null, comment.owner.name, "04:11", comment.created_at, comment.sound);
+                    }
+
+                    adapter.notifyDataSetChanged();
+
+                    for(RetrofitModel.Cast cast : response.body().script.casts)
+                    {
+                        for(RetrofitModel.Plot plot : cast.plots_by_cast)
+                            plotList.add(plot);
+                    }
+
+                    String[] arrPlot = new String[plotList.size()];
+
+                    for(RetrofitModel.Plot plot : plotList)
+                        arrPlot[plot.order-1] = plot.content;
+
+                    for(String s : arrPlot)
+                    {
+                        if(s != null)
+                            allPlots += (s + "\n");
+                    }
+
+                    // 배경에 넣어주기
+                    tv_script.setText(allPlots);
+
+                    listView.setAdapter(adapter);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetrofitModel.BoardDetail> call, Throwable t) {
+                Toast.makeText(EventActivity.this, "네트워크 상태를 확인해 주세요.", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void combineAllComments()
+    {
+        List<String> soundPathList = new ArrayList<>();
+
+        int count = 0;
+
+        for(RetrofitModel.CommentBrief comment : commentList)
+        {
+            if(comment.sound == null) continue;
+
+            try {
+                URLConnection conn = new URL(comment.sound).openConnection();
+
+                InputStream is = conn.getInputStream();
+
+                OutputStream outstream = new FileOutputStream(new File(
+                        Environment.getExternalStorageDirectory().getAbsoluteFile() + "/" + "sound" + count + ".mp3"));
+                byte[] buffer = new byte[4096];
+                int len;
+                while ((len = is.read(buffer)) > 0) {
+                    outstream.write(buffer, 0, len);
+                }
+                outstream.close();
+
+                soundPathList.add(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + "sound" + count++ + ".mp3");
+
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+
+        count = 0;
+
+        String merge_filename = Environment.getExternalStorageDirectory().getAbsolutePath() + "/merge";
+
+        mergeMediaFiles(true, soundPathList, merge_filename + ".mp3");
+
+//
+//        FileInputStream stream1 = null;
+//        FileInputStream stream2 = null;
+//
+//        SequenceInputStream sistream = null;
+//        FileOutputStream fostream = null;
+//
+//        while(count+1 < soundPathList.size())
+//        {
+//            if(count == 0)
+//            {
+//                try {
+//                    stream1 = new FileInputStream(soundPathList.get(count));
+//                    stream2 = new FileInputStream(soundPathList.get(count+1));
+//
+//                    sistream = new SequenceInputStream(stream1, stream2);
+//                    fostream = new FileOutputStream(merge_filename + ++count + ".mp3");
+//
+//                    byte[] buffer = new byte[4096];
+//
+//                    int len;
+//
+//                    try {
+//                        while( ( len = sistream.read(buffer) ) != -1)
+//                        {
+//                            // System.out.print( (char) temp ); // to print at DOS prompt
+//                            fostream.write(buffer, 0, len);   // to write to file
+//                        }
+//
+//                        fostream.close();
+//
+//                        sistream.close();
+//
+//                    } catch (IOException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//            else
+//            {
+//                try {
+//                    stream1 = new FileInputStream(merge_filename + count + ".mp3");
+//                    stream2 = new FileInputStream(soundPathList.get(count+1));
+//
+//                    sistream = new SequenceInputStream(stream1, stream2);
+//                    fostream = new FileOutputStream(merge_filename + ++count + ".mp3");
+//
+//                    byte[] buffer = new byte[4096];
+//
+//                    int len;
+//
+//
+//                    while( ( len = sistream.read(buffer) ) != -1)
+//                    {
+//                        // System.out.print( (char) temp ); // to print at DOS prompt
+//                        fostream.write(buffer, 0, len);   // to write to file
+//                    }
+//
+//                    fostream.close();
+//
+//                    sistream.close();
+//
+//                } catch (FileNotFoundException e) {
+//                    e.printStackTrace();
+//                } catch (IOException e) {
+//                    e.printStackTrace();
+//                } catch (IndexOutOfBoundsException e){
+//                    e.printStackTrace();
+//                }
+//
+//            }
+//
+//
+//            try {
+//                stream1.close();
+//                stream2.close();
+//                sistream.close();
+//                fostream.close();
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+    }
+    public static boolean mergeMediaFiles(boolean isAudio, List<String> sourceFiles, String targetFile) {
+        try {
+            String mediaKey = isAudio ? "soun" : "vide";
+            List<Movie> listMovies = new ArrayList<>();
+            for (String filename : sourceFiles) {
+                listMovies.add(MovieCreator.build(filename));
+            }
+            List<Track> listTracks = new LinkedList<>();
+            for (Movie movie : listMovies) {
+                for (Track track : movie.getTracks()) {
+                    if (track.getHandler().equals(mediaKey)) {
+                        listTracks.add(track);
+                    }
+                }
+            }
+            Movie outputMovie = new Movie();
+            if (!listTracks.isEmpty()) {
+                outputMovie.addTrack(new AppendTrack(listTracks.toArray(new Track[listTracks.size()])));
+            }
+            Container container = new DefaultMp4Builder().build(outputMovie);
+            FileChannel fileChannel = new RandomAccessFile(String.format(targetFile), "rws").getChannel();
+            container.writeContainer(fileChannel);
+            fileChannel.close();
+            return true;
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
 

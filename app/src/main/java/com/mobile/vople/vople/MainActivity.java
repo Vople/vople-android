@@ -82,10 +82,17 @@ public class MainActivity extends AppCompatActivity {
 
                     mainAdapter.notifyDataSetChanged();
 
-                } else {
-                    Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
-                            Toast.LENGTH_SHORT).show();
+                } else if(response.code() == 202){
+                    for (RetrofitModel.BoardContributor object : response.body()) {
+
+                        if(object.script == null)
+                            mainAdapter.addItem(object.id, object.title, null, object.mode, null);
+                        else
+                            mainAdapter.addItem(object.id, object.title, null, object.mode, object.script.title);
+                    }
                 }
+                Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
+                        Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -237,7 +244,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Nav & CustomList
         navButton = (Button) findViewById(R.id.NavMain);
-        mainDrawer = (DrawerLayout) findViewById(R.id.main_drawer);
+        //mainDrawer = (DrawerLayout) findViewById(R.id.main_drawer);
 
         navButton.setOnClickListener(new View.OnClickListener() {
             @Override

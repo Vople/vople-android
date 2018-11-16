@@ -2,6 +2,7 @@ package com.mobile.vople.vople;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.media.MediaRecorder;
@@ -18,6 +19,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.vople.vople.server.RetrofitInstance;
+import com.mobile.vople.vople.server.VopleServiceApi;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.w3c.dom.Text;
@@ -33,12 +37,18 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Retrofit;
 
 public class RolePlayListViewAdapter extends BaseAdapter {
 
     private Context context;
 
     MediaRecorder recorder = null;
+
+    private String sound_path = "/recorder";
 
     private ArrayList<RolePlayListViewItem> listViewItemList = new ArrayList<RolePlayListViewItem>();
 
@@ -61,8 +71,8 @@ public class RolePlayListViewAdapter extends BaseAdapter {
     }
 
     // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-    public void addItem(Drawable profile, String runtime, String script) {
-        RolePlayListViewItem item = new RolePlayListViewItem(profile, runtime, script);
+    public void addItem(Drawable profile, String runtime, String script, int plot_id) {
+        RolePlayListViewItem item = new RolePlayListViewItem(profile, runtime, script, plot_id);
 
         listViewItemList.add(item);
     }
@@ -79,9 +89,9 @@ public class RolePlayListViewAdapter extends BaseAdapter {
         }
 
         ImageView iv_role_play_profile = (ImageView) convertView.findViewById(R.id.iv_role_play_profile);
-        TextView tv_role_play_script = (TextView) convertView.findViewById(R.id.tv_role_play_script);
-        TextView tv_role_play_runtime = (TextView) convertView.findViewById(R.id.tv_role_play_runtime);
+        TextView tv_role_play_script = (TextView) convertView.findViewById(R.id.tv_title);
         Button btn_role_play_record = (Button) convertView.findViewById(R.id.btn_rold_play_record);
+        Button btn_send = (Button) convertView.findViewById(R.id.btn_send);
 
         btn_role_play_record.setTag(true);
 
@@ -95,7 +105,7 @@ public class RolePlayListViewAdapter extends BaseAdapter {
 
                     if (state) {
                         btn_role_play_record.setBackgroundResource(R.drawable.event_press_record_button);
-                        startRec();
+                        startRec(position);
                         //long start = System.currentTimeMillis();
                     } else {
                         btn_role_play_record.setBackgroundResource(R.drawable.event_unpress_record_button);
@@ -105,18 +115,24 @@ public class RolePlayListViewAdapter extends BaseAdapter {
 
                     btn_role_play_record.setTag(!state);
                 }
+                else if(v.getId() == btn_send.getId())
+                {
+                    sendAudioFile(position);
+
+                    ((EventActivity)context).occurDataChange();
+                }
             }
         };
 
+        btn_send.setOnClickListener(listener);
         iv_role_play_profile.setImageDrawable(listViewItem.getProfile());
         tv_role_play_script.setText(listViewItem.getScript());
-        tv_role_play_runtime.setText(listViewItem.getRunTime());
         btn_role_play_record.setOnClickListener(listener);
 
         return convertView;
     }
 
-    public void startRec() {
+    public void startRec(int position) {
 
         try {
             recorder = new MediaRecorder();
@@ -125,7 +141,7 @@ public class RolePlayListViewAdapter extends BaseAdapter {
 
 //갤럭시 S4기준으로 /storage/emulated/0/의 경로를 갖고 시작한다.
 
-            String path = file.getAbsolutePath() + "/" + "recoder3.mp3";
+            String path = file.getAbsolutePath() + sound_path + String.valueOf(position) + ".mp3";
 
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 
@@ -177,4 +193,35 @@ public class RolePlayListViewAdapter extends BaseAdapter {
         Toast.makeText(context, "녹음 종료", Toast.LENGTH_SHORT).show();
 
     }
+
+    private void sendAudioFile(int position)
+    {
+        File file = new File(Environment.getExternalStorageDirectory() + sound_path + String.valueOf(position) + ".mp3");
+
+        Retrofit retrofit = RetrofitInstance.getInstance(context);
+
+        RequestBody requestFile =
+                RequestBody.create(MediaType.parse("audio/*"), file);
+
+        MultipartBody.Part body = MultipartBody.Part.createFormData("audio", file.getName(), requestFile);
+
+        VopleServiceApi.commentOnBoard service = retrofit.create(VopleServiceApi.commentOnBoard.class);
+
+        Call<ResponseBody> call = service.upload(EventActivity.roomId, requestFile, listViewItemList.get(position).getPlot_id());
+
+        call.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
+                Toast.makeText(context, "Code : " + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Toast.makeText(context, "Failed!", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
+    }
+
 }

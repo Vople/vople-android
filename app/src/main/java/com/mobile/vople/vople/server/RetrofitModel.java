@@ -66,6 +66,16 @@ public class RetrofitModel {
         public int member;  // user_id
     }
 
+    public class CastBreif{
+        public List<Plot> plots_by_cast;
+        public String roll_name;
+    }
+
+    public class ScriptDetail extends Script
+    {
+        public List<CastBreif> casts;
+    }
+
     public class UserBrief{
         public String name;
     }

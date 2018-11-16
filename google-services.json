@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "101633174759",
+    "firebase_url": "https://vople-5ee36.firebaseio.com",
+    "project_id": "vople-5ee36",
+    "storage_bucket": "vople-5ee36.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:101633174759:android:e67584cfe2d7ea98",
+        "android_client_info": {
+          "package_name": "com.mobile.vople.vople"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "101633174759-oa8kas2b8ajqaf5dorafis5k5t96jco0.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAHSLfLIF1vSnm05pIojWdPjpeQZE5BlBI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
