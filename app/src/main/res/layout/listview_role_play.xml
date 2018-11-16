@@ -44,6 +44,7 @@
         android:layout_height="30dp"
         android:layout_gravity="center_vertical"
         android:layout_marginBottom="10dp"
+
         android:layout_marginRight="40dp"
         android:background="@drawable/event_unpress_record_button"
         app:layout_constraintBottom_toBottomOf="parent"

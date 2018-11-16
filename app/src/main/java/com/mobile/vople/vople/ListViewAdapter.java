@@ -1,33 +1,18 @@
 package com.mobile.vople.vople;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
-import android.media.MediaRecorder;
-import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mobile.vople.vople.ListViewItem;
-import com.mobile.vople.vople.R;
-
-import java.io.File;
-import java.io.IOException;
-import java.text.DateFormat;
 import java.util.ArrayList;
 
 public class ListViewAdapter extends BaseAdapter {
@@ -65,7 +50,7 @@ public class ListViewAdapter extends BaseAdapter {
 
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
         ImageView profileImageView = (ImageView) convertView.findViewById(R.id.iv_profile) ;
-        TextView nicknameTextView = (TextView) convertView.findViewById(R.id.tv_nickname) ;
+        TextView nicknameTextView = (TextView) convertView.findViewById(R.id.tv_title) ;
         TextView runningtimeTextView = (TextView) convertView.findViewById(R.id.tv_runningtime) ;
         TextView nowtimeTextView = (TextView) convertView.findViewById(R.id.tv_nowtime) ;
         Button btn_play = (Button) convertView.findViewById(R.id.btn_play);

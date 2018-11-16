@@ -1,15 +1,9 @@
 package com.mobile.vople.vople;
 
-import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.drawable.Drawable;
 import android.media.MediaRecorder;
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,10 +15,6 @@ import android.widget.Toast;
 
 import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.VopleServiceApi;
-
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;

@@ -110,6 +110,59 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         occurDataChange();
 
+        i_big_heart = 0;
+        bool_owner = false;
+        btn_back = findViewById(R.id.btn_back);
+        btn_big_heart = findViewById(R.id.btn_big_heart);
+        btn_cancel = findViewById(R.id.btn_cancel);
+        btn_send = findViewById(R.id.btn_send);
+        btn_gather = findViewById(R.id.btn_gather);
+        VopleServiceApi.boardDetail service = retrofit.create(VopleServiceApi.boardDetail.class);
+
+        final Call<RetrofitModel.BoardDetail> repos = service.repoContributors(roomId);
+
+        repos.enqueue(new Callback<RetrofitModel.BoardDetail>() {
+            @Override
+            public void onResponse(Call<RetrofitModel.BoardDetail> call, Response<RetrofitModel.BoardDetail> response) {
+                if(response.code() == 200)
+                {
+                    List<RetrofitModel.CommentBrief> list = response.body().comments;
+
+                    for( RetrofitModel.CommentBrief comment : list)
+                    {
+                        adapter.addItem(null, comment.owner.name, "04:11", comment.created_at, comment.sound);
+                    }
+
+                    adapter.notifyDataSetChanged();
+
+                    for(RetrofitModel.Cast cast : response.body().script.casts)
+                    {
+                        for(RetrofitModel.Plot plot : cast.plots_by_cast)
+                            plotList.add(plot);
+                    }
+
+                    String[] arrPlot = new String[plotList.size()];
+
+                    for(RetrofitModel.Plot plot : plotList)
+                        arrPlot[plot.order-1] = plot.content;
+
+                    for(String s : arrPlot)
+                    {
+                        if(s != null)
+                            allPlots += (s + "\n");
+                    }
+
+                    // 배경에 넣어주기
+                    tv_script.setText(allPlots);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<RetrofitModel.BoardDetail> call, Throwable t) {
+                Toast.makeText(EventActivity.this, "네트워크 상태를 확인해 주세요.", Toast.LENGTH_SHORT).show();
+            }
+        });
+
         VopleServiceApi.get_plots getPlotService = retrofit.create(VopleServiceApi.get_plots.class);
         Call<List<RetrofitModel.Plot>> getPlotRepos = getPlotService.repoContributors(roomId);
 

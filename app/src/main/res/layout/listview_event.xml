@@ -35,7 +35,7 @@
         app:layout_constraintStart_toEndOf="@+id/constraintLayout2">
 
         <TextView
-            android:id="@+id/tv_nickname"
+            android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="30dp"
             android:layout_marginBottom="5dp"
