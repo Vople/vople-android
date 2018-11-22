@@ -33,10 +33,9 @@ public class NoticeActivity extends AppCompatActivity {
         });
 
         noticeAdapter = new NoticeListViewAdapter();
-
         lv_notice.setAdapter(noticeAdapter);
 
         noticeAdapter.addItem("[공지] 사용자 여러분의 더 나은 사용 환경을 위해 욕설을 자제해주시기 바랍니다.", "11월21일");
-        noticeAdapter.addItem("[공지] 보플이 쏜다! 이벤트 안내", "11월22일");
+        noticeAdapter.addItem("[이벤트] 보플이 쏜다! 11월 30일 오후 5시 많은 참여 부탁드립니다!! " , "11월22일");
     }
 }

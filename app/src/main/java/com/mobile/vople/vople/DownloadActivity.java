@@ -15,6 +15,8 @@ public class DownloadActivity extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_download);
 
         btn_back = findViewById(R.id.btn_back);
+
+        btn_back.setOnClickListener(this);
     }
 
     @Override
