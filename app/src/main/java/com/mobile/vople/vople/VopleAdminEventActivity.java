@@ -226,11 +226,11 @@ public class VopleAdminEventActivity extends AppCompatActivity {
 
                 VopleServiceApi.joinRoom service = retrofit.create(VopleServiceApi.joinRoom.class);
 
-                final Call<RetrofitModel.Cast> repos = service.repoContributors(item.getRoomID(), roll_name);
+                final Call<RetrofitModel.Casting> repos = service.repoContributors(item.getRoomID(), roll_name);
 
-                repos.enqueue(new Callback<RetrofitModel.Cast>() {
+                repos.enqueue(new Callback<RetrofitModel.Casting>() {
                     @Override
-                    public void onResponse(Call<RetrofitModel.Cast> call, Response<RetrofitModel.Cast> response) {
+                    public void onResponse(Call<RetrofitModel.Casting> call, Response<RetrofitModel.Casting> response) {
                         if(response.code() == 200)
                         {
                             Intent intent = new Intent(VopleAdminEventActivity.this, EventActivity.class);
@@ -240,7 +240,7 @@ public class VopleAdminEventActivity extends AppCompatActivity {
                     }
 
                     @Override
-                    public void onFailure(Call<RetrofitModel.Cast> call, Throwable t) {
+                    public void onFailure(Call<RetrofitModel.Casting> call, Throwable t) {
                         Toast.makeText(VopleAdminEventActivity.this, "네트워크 연결상태를 확인해 주세요.", Toast.LENGTH_SHORT).show();
                     }
                 });

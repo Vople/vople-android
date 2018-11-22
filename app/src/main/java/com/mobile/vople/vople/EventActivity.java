@@ -76,8 +76,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
     private List<RetrofitModel.Plot> plotList;
 
-    List<RetrofitModel.CommentBrief> commentList;
-
     SimpleDateFormat mFormat = new SimpleDateFormat("MM월 dd일 hh:mm");
 
     private Retrofit retrofit;
@@ -247,14 +245,23 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<RetrofitModel.BoardDetail> call, Response<RetrofitModel.BoardDetail> response) {
                 if(response.code() == 200)
                 {
+
                     if(response.body().script == null) return;
+
+                    boolean is_duplicated = false;
 
                     for(RetrofitModel.Cast cast : response.body().script.casts)
                     {
-                        for(RetrofitModel.Plot plot : cast.plots_by_cast)
-                            plotList.add(plot);
+                        for(RetrofitModel.Plot plot : cast.plots_by_cast) {
+                            for (RetrofitModel.Plot _plot : plotList)
+                                if ( _plot.commenting.board.id == plot.commenting.board.id &&
+                                        _plot.order == plot.order &&
+                                        _plot.id == plot.id) is_duplicated = true;
+                            if ( is_duplicated == false && plot.commenting != null && plot.commenting.board != null && plot.commenting.board.id == roomId)
+                                plotList.add(plot);
+                        }
+                        is_duplicated = false;
                     }
-
 
                     Collections.sort(plotList, new Comparator<RetrofitModel.Plot>() {
                         @Override
@@ -267,9 +274,9 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
                     for(RetrofitModel.Plot plot : plotList)
                     {
-                        if(plot.comment == null) continue;
+                        if(plot.commenting.comment == null) continue;
 
-                        RetrofitModel.CommentBrief comment = plot.comment;
+                        RetrofitModel.CommentBrief comment = plot.commenting.comment;
                         String[] temp1 = comment.created_at.split("T");
                         String[] temp2 = temp1[0].split("-");
                         String[] temp3 = temp1[1].split(":");
@@ -324,7 +331,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         RetrofitModel.CommentBrief[] arrComment = new RetrofitModel.CommentBrief[plotList.size()];
 
         for(RetrofitModel.Plot plot : plotList)
-            arrComment[plot.order-1] = plot.comment;
+            arrComment[plot.order-1] = plot.commenting.comment;
 
         for(RetrofitModel.CommentBrief comment : arrComment)
         {
