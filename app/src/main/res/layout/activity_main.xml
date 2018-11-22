@@ -28,7 +28,7 @@
 
                 <Button
                     android:id="@+id/NavMain"
-                    android:layout_width="30dp"
+                    android:layout_width="34dp"
                     android:layout_height="30dp"
                     android:layout_margin="5dp"
                     android:background="@drawable/nav_image" />
@@ -38,13 +38,13 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="50dp"
                 android:layout_marginTop="10dp"
-                android:gravity="center"
+                android:layout_marginRight="50dp"
                 android:fontFamily="@font/bmdohyeon"
+                android:gravity="center"
+                android:text="방 목록"
                 android:textColor="@color/white"
-                android:textSize="20sp"
-                android:text="방 목록" />
+                android:textSize="20sp" />
 
         </LinearLayout>
 

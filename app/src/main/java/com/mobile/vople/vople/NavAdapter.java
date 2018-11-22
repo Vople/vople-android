@@ -62,15 +62,15 @@ public class NavAdapter extends BaseAdapter {
                     context.startActivity(intent);
                 }
 
-                else if(title.equals("보관함"))
+                else if(title.equals("공지사항"))
                 {
-                    Intent intent = new Intent(context, DownloadActivity.class);
+                    Intent intent = new Intent(context, NoticeActivity.class);
                     context.startActivity(intent);
                 }
 
                 else if(title.equals("보관함"))
                 {
-                    Intent intent = new Intent(context, NoticeActivity.class);
+                    Intent intent = new Intent(context, DownloadActivity.class);
                     context.startActivity(intent);
                 }
             }

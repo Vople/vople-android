@@ -36,6 +36,8 @@ public class VopleAdminEventActivity extends AppCompatActivity {
     private DrawerLayout AdminEventDrawer;
     private ActionBarDrawerToggle NavToggle;
 
+    private Button btn_back;
+
     private VopleAdminAdapter adapter;
 
     private Retrofit retrofit;
@@ -58,11 +60,18 @@ public class VopleAdminEventActivity extends AppCompatActivity {
 
         lv_event = (ListView) findViewById(R.id.lv_event);
 
+        btn_back = (Button) findViewById(R.id.btn_back);
+
+        btn_back.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
 
         enterRoom = new Dialog(this);
 
         enterRoom.setContentView(R.layout.enter_room_pop);
-
 
 
         retrofit = MyRetrofit.getInstance().getRetrofit();

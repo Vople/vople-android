@@ -13,7 +13,10 @@ import java.util.ArrayList;
 public class NoticeListViewAdapter extends BaseAdapter {
     private ArrayList<NoticeListViewItem> listViewItemList = new ArrayList<NoticeListViewItem>();
     private Context context;
-    ListView listView;
+
+    NoticeListViewAdapter(){
+
+    }
 
     @Override
     public int getCount() {
@@ -47,13 +50,13 @@ public class NoticeListViewAdapter extends BaseAdapter {
         }
 
         TextView tv_title = convertView.findViewById(R.id.tv_title);
+        TextView tv_nowtime = convertView.findViewById(R.id.tv_nowtime);
 
         NoticeListViewItem listViewItem = listViewItemList.get(pos);
 
         tv_title.setText(listViewItem.getTitle());
+        tv_nowtime.setText(listViewItem.getNowTime());
 
         return convertView;
     }
-
-
 }
