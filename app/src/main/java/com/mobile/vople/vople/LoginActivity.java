@@ -123,6 +123,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 public void onResponse(Call<VopleServiceApi.Token> call, Response<VopleServiceApi.Token> response) {
                     if (response.code() == 200) {
                         sp.put("Authorization", response.body().token);
+                        sp.put("IS_AUTO_LOGIN", "Yes");
+                        sp.put("STORED_ID", id_str);
+                        sp.put("STORED_PWD", pw_str);
                         Intent intent = new Intent(getApplicationContext(), ListOrCreateActivity.class);
                         startActivity(intent);
                         finish();

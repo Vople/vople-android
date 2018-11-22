@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -26,6 +27,7 @@ import com.mobile.vople.vople.server.model.MyRetrofit;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,6 +78,12 @@ public class VopleAdminEventActivity extends AppCompatActivity {
 
         NavlistView.setAdapter(navAdapter);
 
+        lv_event.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showEnterRoomDialog(position);
+            }
+        });
 
         Retrofit retrofit = RetrofitInstance.getInstance(getApplicationContext());
 
@@ -128,13 +136,41 @@ public class VopleAdminEventActivity extends AppCompatActivity {
         Spinner sp_role = (Spinner) enterRoom.findViewById(R.id.MyRole);
         Button btn_enter = (Button) enterRoom.findViewById(R.id.btn_enter);
 
+
+
         if (item.getRoomType() == 0){
             tv_script.setVisibility(View.INVISIBLE);
             ContentOfSC.setVisibility(View.INVISIBLE);
             sp_role.setVisibility(View.INVISIBLE);
 
-            enterRoom.show();
+            btn_enter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    VopleServiceApi.joinFreeRoom service = retrofit.create(VopleServiceApi.joinFreeRoom.class);
 
+                    Call<ResponseBody> repos = service.repoContributors(item.getRoomID(), "sadlfjlxzcvnqwenx,mvnsdlkj");
+                    repos.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            if(response.code() == 200)
+                            {
+                                Intent intent = new Intent(VopleAdminEventActivity.this, FreeActivity.class);
+                                intent.putExtra("RoomID", item.getRoomID());
+                                intent.putExtra("RoomTitle", item.getTitle());
+                                startActivity(intent);
+                                enterRoom.dismiss();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Toast.makeText(VopleAdminEventActivity.this, "네트워크 연결상태를 확인해 주세요.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+
+            enterRoom.show();
             return;
         }
         if (item.getRoomType() == 1){
@@ -153,6 +189,8 @@ public class VopleAdminEventActivity extends AppCompatActivity {
         repos.enqueue(new Callback<RetrofitModel.Roll_Brief>() {
             @Override
             public void onResponse(Call<RetrofitModel.Roll_Brief> call, Response<RetrofitModel.Roll_Brief> response) {
+                Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
+                        Toast.LENGTH_SHORT).show();
                 if(response.code() == 200)
                 {
                     ArrayList<String> list = (ArrayList<String>) response.body().rolls;
@@ -171,11 +209,16 @@ public class VopleAdminEventActivity extends AppCompatActivity {
                     innerRepos.enqueue(new Callback<RetrofitModel.Cast>() {
                         @Override
                         public void onResponse(Call<RetrofitModel.Cast> call, Response<RetrofitModel.Cast> response) {
+                            Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
+                                    Toast.LENGTH_SHORT).show();
                             if(response.code() == 200)
                             {
-                                Intent intent = new Intent(VopleAdminEventActivity.this, EventActivity.class);
+                                // Free Mode
+                                Intent intent = new Intent(VopleAdminEventActivity.this, FreeActivity.class);
                                 intent.putExtra("RoomID", item.getRoomID());
+                                intent.putExtra("RoomTitle", item.getTitle());
                                 startActivity(intent);
+                                enterRoom.dismiss();
                             }
                             else if(response.code() == 202)
                             {
@@ -184,18 +227,21 @@ public class VopleAdminEventActivity extends AppCompatActivity {
                                 Gson gson = new Gson();
                                 String cast = gson.toJson(response.body());
                                 intent.putExtra("Cast", cast);
+                                intent.putExtra("RoomTitle", item.getTitle());
                                 startActivity(intent);
+                                enterRoom.dismiss();
                             }
                             else if(response.code() == 204)
                             {
                                 Toast.makeText(VopleAdminEventActivity.this, "This room is already full", Toast.LENGTH_SHORT).show();
+                                enterRoom.dismiss();
                             }
                             enterRoom.dismiss();
                         }
 
                         @Override
                         public void onFailure(Call<RetrofitModel.Cast> call, Throwable t) {
-
+                            Toast.makeText(VopleAdminEventActivity.this, "네트워크 연결상태를 확인해 주세요.", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -231,11 +277,25 @@ public class VopleAdminEventActivity extends AppCompatActivity {
                 repos.enqueue(new Callback<RetrofitModel.Casting>() {
                     @Override
                     public void onResponse(Call<RetrofitModel.Casting> call, Response<RetrofitModel.Casting> response) {
+                        Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
+                                Toast.LENGTH_SHORT).show();
+
                         if(response.code() == 200)
                         {
                             Intent intent = new Intent(VopleAdminEventActivity.this, EventActivity.class);
                             intent.putExtra("RoomID", item.getRoomID());
+                            intent.putExtra("RoomTitle", item.getTitle());
                             startActivity(intent);
+                            enterRoom.dismiss();
+                        }
+                        else if(response.code() == 202)
+                        {
+                            // Free Mode
+                            Intent intent = new Intent(VopleAdminEventActivity.this, FreeActivity.class);
+                            intent.putExtra("RoomID", item.getRoomID());
+                            intent.putExtra("RoomTitle", item.getTitle());
+                            startActivity(intent);
+                            enterRoom.dismiss();
                         }
                     }
 
@@ -247,6 +307,8 @@ public class VopleAdminEventActivity extends AppCompatActivity {
 
             }
         });
+
+
 
 
         enterRoom.show();

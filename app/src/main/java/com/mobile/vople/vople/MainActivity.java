@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.mobile.vople.vople.item.RoomBreifItem;
 import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
+import com.mobile.vople.vople.server.SharedPreference;
 import com.mobile.vople.vople.server.VopleServiceApi;
 import com.mobile.vople.vople.server.model.MyRetrofit;
 
@@ -136,8 +137,9 @@ public class MainActivity extends AppCompatActivity {
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if(response.code() == 200)
                             {
-                                Intent intent = new Intent(MainActivity.this, EventActivity.class);
+                                Intent intent = new Intent(MainActivity.this, FreeActivity.class);
                                 intent.putExtra("RoomID", item.getRoomID());
+                                intent.putExtra("RoomTitle", item.getTitle());
                                 startActivity(intent);
                             }
                         }
@@ -193,8 +195,10 @@ public class MainActivity extends AppCompatActivity {
                                     Toast.LENGTH_SHORT).show();
                             if(response.code() == 200)
                             {
-                                Intent intent = new Intent(MainActivity.this, EventActivity.class);
+                                // Free Mode
+                                Intent intent = new Intent(MainActivity.this, FreeActivity.class);
                                 intent.putExtra("RoomID", item.getRoomID());
+                                intent.putExtra("RoomTitle", item.getTitle());
                                 startActivity(intent);
                             }
                             else if(response.code() == 202)
@@ -204,6 +208,7 @@ public class MainActivity extends AppCompatActivity {
                                 Gson gson = new Gson();
                                 String cast = gson.toJson(response.body());
                                 intent.putExtra("Cast", cast);
+                                intent.putExtra("RoomTitle", item.getTitle());
                                 startActivity(intent);
                             }
                             else if(response.code() == 204)
@@ -258,6 +263,15 @@ public class MainActivity extends AppCompatActivity {
                         {
                             Intent intent = new Intent(MainActivity.this, EventActivity.class);
                             intent.putExtra("RoomID", item.getRoomID());
+                            intent.putExtra("RoomTitle", item.getTitle());
+                            startActivity(intent);
+                        }
+                        else if(response.code() == 202)
+                        {
+                            // Free Mode
+                            Intent intent = new Intent(MainActivity.this, FreeActivity.class);
+                            intent.putExtra("RoomID", item.getRoomID());
+                            intent.putExtra("RoomTitle", item.getTitle());
                             startActivity(intent);
                         }
                     }
@@ -293,6 +307,21 @@ public class MainActivity extends AppCompatActivity {
 
         mainListView = (ListView) findViewById(R.id.main_list);
         navlistView = (ListView) findViewById(R.id.Nav_ListView);
+
+        Button btn_logout = findViewById(R.id.NavBody).findViewById(R.id.btn_logout);
+
+        btn_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreference.getInstance(MainActivity.this).remove("IS_AUTO_LOGIN");
+                SharedPreference.getInstance(MainActivity.this).put("IS_AUTO_LOGIN", "No");
+                Intent intent = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                if(ListOrCreateActivity.mInstance != null)
+                    ListOrCreateActivity.mInstance.finish();
+            }
+        });
 
         mainAdapter = new MainAdapter();
         mainListView.setAdapter(mainAdapter);

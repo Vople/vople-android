@@ -1,11 +1,7 @@
 package com.mobile.vople.vople;
 
-import android.Manifest;
-import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.os.Build;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -25,6 +21,7 @@ import android.widget.Toast;
 
 import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
+import com.mobile.vople.vople.server.SharedPreference;
 import com.mobile.vople.vople.server.VopleServiceApi;
 import com.mobile.vople.vople.server.model.MyRetrofit;
 
@@ -44,11 +41,16 @@ public class ListOrCreateActivity extends AppCompatActivity {
 
     private List<RetrofitModel.Script> scripts;
 
+    public static ListOrCreateActivity mInstance;
+
+    private boolean is_shutdown = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_or_create);
 
+        mInstance = this;
 
         retrofit = MyRetrofit.getInstance().getRetrofit();
         retrofit = RetrofitInstance.getInstance(getApplicationContext());
@@ -67,6 +69,19 @@ public class ListOrCreateActivity extends AppCompatActivity {
         RadioButton Mission = (RadioButton) CreateRoomDialog.findViewById(R.id.MissionRoom);
         RadioButton Situation = (RadioButton) CreateRoomDialog.findViewById(R.id.SituationRoom);
 
+        Button btn_logout = findViewById(R.id.NavBody).findViewById(R.id.btn_logout);
+
+        btn_logout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharedPreference.getInstance(ListOrCreateActivity.this).remove("IS_AUTO_LOGIN");
+                SharedPreference.getInstance(ListOrCreateActivity.this).put("IS_AUTO_LOGIN", "No");
+                Intent intent = new Intent(ListOrCreateActivity.this, LoginActivity.class);
+                startActivity(intent);
+                finish();
+                is_shutdown = false;
+            }
+        });
         Mission.setChecked(true);
 
         scripts = new ArrayList<>();
@@ -236,5 +251,9 @@ public class ListOrCreateActivity extends AppCompatActivity {
 
     }
 
-
+    @Override
+    protected void onDestroy() {
+        if( is_shutdown && LoginActivity.instance != null) LoginActivity.instance.finish();
+        super.onDestroy();
+    }
 }

@@ -92,6 +92,11 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     {
                         sp.put("Authorization", response.body().token);
 
+                        sp.put("Authorization", response.body().token);
+                        sp.put("IS_AUTO_LOGIN", "Yes");
+                        sp.put("STORED_ID", username);
+                        sp.put("STORED_PWD", password1);
+
                         Intent intent = new Intent(SignUpActivity.this, ListOrCreateActivity.class);
                         startActivity(intent);
 

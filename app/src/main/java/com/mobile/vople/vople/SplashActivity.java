@@ -14,8 +14,18 @@ import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.mobile.vople.vople.server.RetrofitInstance;
+import com.mobile.vople.vople.server.SharedPreference;
+import com.mobile.vople.vople.server.VopleServiceApi;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -23,10 +33,16 @@ public class SplashActivity extends AppCompatActivity {
 
     Bitmap bgBitmap;
 
+    private SharedPreference sp;
+
+    private Retrofit retrofit;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+
+        retrofit = RetrofitInstance.getInstance(SplashActivity.this);
 
         SharedPreferences pref = getSharedPreferences("VER", 0);
 
@@ -98,9 +114,52 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                Intent i = new Intent(SplashActivity.this, LoginActivity.class);
-                startActivity(i);
 
+                sp = SharedPreference.getInstance(SplashActivity.this);
+
+                String is_auto_login = sp.get("IS_AUTO_LOGIN");
+
+                String stored_id = "";
+                String stored_pwd = "";
+
+                if(is_auto_login.equals("Yes"))
+                {
+                    stored_id = sp.get("STORED_ID");
+                    stored_pwd = sp.get("STORED_PWD");
+                }
+                else {
+                    Intent i = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(i);
+                }
+
+                if(stored_id.length() <= 0 || stored_pwd.length() <= 0)
+                {
+                    Intent i = new Intent(SplashActivity.this, LoginActivity.class);
+                    startActivity(i);
+                }
+
+                VopleServiceApi.login service = retrofit.create(VopleServiceApi.login.class);
+
+                final Call<VopleServiceApi.Token> repos = service.repoContributors(stored_id, stored_pwd);
+                repos.enqueue(new Callback<VopleServiceApi.Token>() {
+                    @Override
+                    public void onResponse(Call<VopleServiceApi.Token> call, Response<VopleServiceApi.Token> response) {
+                        if (response.code() == 200) {
+                            sp.put("Authorization", response.body().token);
+                            Intent intent = new Intent(getApplicationContext(), ListOrCreateActivity.class);
+                            startActivity(intent);
+                            finish();
+
+                        } else {
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<VopleServiceApi.Token> call, Throwable t) {
+                        Log.d("TAG", t.getLocalizedMessage());
+                    }
+                });
                 // close this activity
                 finish();
             }

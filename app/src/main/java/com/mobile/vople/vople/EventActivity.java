@@ -84,9 +84,11 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     private ListViewAdapter adapter;
     private RolePlayListViewAdapter adapter_role_play;
 
-    private TextView tv_script;
+    private TextView tv_script, tv_room_title;
 
     public static int roomId;
+
+    public static String roomTitle;
 
     private RetrofitModel.Cast cast;
 
@@ -101,6 +103,9 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         Intent intent = getIntent();
 
         roomId = intent.getIntExtra("RoomID", -1);
+        roomTitle = intent.getStringExtra("RoomTitle");
+
+        tv_room_title.setText(roomTitle);
 
         if(roomId == -1)
         {
@@ -213,6 +218,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         btn_send = findViewById(R.id.btn_send);
         btn_gather = findViewById(R.id.btn_gather);
         tv_script = findViewById(R.id.tv_script);
+        tv_room_title = findViewById(R.id.tv_room_title);
 
         btn_back.setOnClickListener(this);
         btn_big_heart.setOnClickListener(this);

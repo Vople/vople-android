@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class FreeListViewAdapter extends BaseAdapter {
 
@@ -22,10 +23,11 @@ public class FreeListViewAdapter extends BaseAdapter {
     private Context context;
 
     // Adapter에 추가된 데이터를 저장하기 위한 ArrayList
-    private ArrayList<ListViewItem> listViewItemList = new ArrayList<ListViewItem>() ;
+    private List<FreeListViewItem> listViewItemList;
 
     // ListViewAdapter의 생성자
     public FreeListViewAdapter() {
+        listViewItemList = new ArrayList<FreeListViewItem>();
     }
 
     // Adapter에 사용되는 데이터의 개수를 리턴. : 필수 구현
@@ -57,35 +59,61 @@ public class FreeListViewAdapter extends BaseAdapter {
         btn_play.setTag(true);
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
-        ListViewItem listViewItem = listViewItemList.get(pos);
+        FreeListViewItem listViewItem = listViewItemList.get(pos);
+
+        mediaPlayer = new MediaPlayer();
+
+        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                boolean state = (boolean)btn_play.getTag();
+                if(state)
+                {
+                    btn_play.setBackgroundResource(R.drawable.button_play_stop);
+                    //녹음본 시작
+                    try {
+                        playAudio(listViewItemList.get(position).getsSoundUrl());
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                else
+                {
+                    btn_play.setBackgroundResource(R.drawable.event_recording_start);
+                    if(mediaPlayer != null && mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                    }
+                }
+
+                btn_play.setTag(!state);
+            }
+        });
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(v.getId() == btn_play.getId())
+                boolean state = (boolean)btn_play.getTag();
+                if(state)
                 {
-                    boolean state = (boolean)btn_play.getTag();
-                    if(state)
-                    {
-                        btn_play.setBackgroundResource(R.drawable.button_play_stop);
-                        //녹음본 시작
-                        try {
-                            playAudio(listViewItemList.get(position).getsSoundUrl());
+                    btn_play.setBackgroundResource(R.drawable.button_play_stop);
+                    //녹음본 시작
+                    try {
+                        playAudio(listViewItemList.get(position).getsSoundUrl());
 
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
-                    else
-                    {
-                        btn_play.setBackgroundResource(R.drawable.event_recording_start);
-                        if(mediaPlayer != null && mediaPlayer.isPlaying()) {
-                            mediaPlayer.stop();
-                        }
-                    }
-
-                    btn_play.setTag(!state);
                 }
+                else
+                {
+                    btn_play.setBackgroundResource(R.drawable.event_recording_start);
+                    if(mediaPlayer != null && mediaPlayer.isPlaying()) {
+                        mediaPlayer.stop();
+                    }
+                }
+
+                btn_play.setTag(!state);
             }
         };
 
@@ -112,7 +140,7 @@ public class FreeListViewAdapter extends BaseAdapter {
 
     // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
     public void addItem(Drawable profile, String nickname, String nowtime, String sound_url) {
-        ListViewItem item = new ListViewItem(profile, nickname, nowtime, sound_url);
+        FreeListViewItem item = new FreeListViewItem(profile, nickname, nowtime, sound_url);
 
         listViewItemList.add(item);
     }
