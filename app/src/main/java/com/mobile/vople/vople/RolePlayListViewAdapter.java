@@ -61,8 +61,8 @@ public class RolePlayListViewAdapter extends BaseAdapter {
     }
 
     // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-    public void addItem(Drawable profile, String runtime, String script, int plot_id) {
-        RolePlayListViewItem item = new RolePlayListViewItem(profile, runtime, script, plot_id);
+    public void addItem(Drawable profile, String script, int plot_id) {
+        RolePlayListViewItem item = new RolePlayListViewItem(profile, script, plot_id);
 
         listViewItemList.add(item);
     }

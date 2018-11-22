@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300dp"
-    android:layout_height="400dp"
+    android:layout_height="200dp"
     android:background="@drawable/pop_bg"
     android:layout_gravity="center"
     android:orientation="vertical"
@@ -21,7 +21,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="280dp"
+        android:layout_height="80dp"
         android:orientation="vertical"
         android:id="@+id/ContentOfScript"
         >
@@ -30,18 +30,17 @@
             android:id="@+id/ScriptContent_ByRole"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal"
             android:fontFamily="@font/bmdohyeon"
-            android:textSize="15sp"
-            android:text="대본 내용" />
+            android:gravity="center_horizontal"
+            android:textSize="15sp" />
     </LinearLayout>
 
     <Spinner
         android:id="@+id/MyRole"
-        android:layout_width="70dp"
-        android:layout_height="25dp"
-        android:layout_marginBottom="5dp"
-        android:layout_gravity="center_horizontal"/>
+        android:layout_width="180dp"
+        android:layout_height="30dp"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="5dp" />
 
     <Button
         android:id="@+id/btn_enter"

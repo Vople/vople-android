@@ -51,7 +51,6 @@ public class ListViewAdapter extends BaseAdapter {
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득
         ImageView profileImageView = (ImageView) convertView.findViewById(R.id.iv_profile) ;
         TextView nicknameTextView = (TextView) convertView.findViewById(R.id.tv_title) ;
-        TextView runningtimeTextView = (TextView) convertView.findViewById(R.id.tv_runningtime) ;
         TextView nowtimeTextView = (TextView) convertView.findViewById(R.id.tv_nowtime) ;
         Button btn_play = (Button) convertView.findViewById(R.id.btn_play);
 
@@ -93,7 +92,6 @@ public class ListViewAdapter extends BaseAdapter {
         // 아이템 내 각 위젯에 데이터 반영
         profileImageView.setImageDrawable(listViewItem.getProfile());
         nicknameTextView.setText(listViewItem.getNickName());
-        runningtimeTextView.setText(listViewItem.getRunningTime());
         nowtimeTextView.setText(listViewItem.getNowTime());
         btn_play.setOnClickListener(listener);
 
@@ -113,8 +111,8 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     // 아이템 데이터 추가를 위한 함수. 개발자가 원하는대로 작성 가능.
-    public void addItem(Drawable profile, String nickname, String runningtime, String nowtime, String sound_url) {
-        ListViewItem item = new ListViewItem(profile, nickname, runningtime, nowtime, sound_url);
+    public void addItem(Drawable profile, String nickname, String nowtime, String sound_url) {
+        ListViewItem item = new ListViewItem(profile, nickname, nowtime, sound_url);
 
         listViewItemList.add(item);
     }

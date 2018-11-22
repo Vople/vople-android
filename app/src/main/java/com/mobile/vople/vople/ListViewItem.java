@@ -5,14 +5,12 @@ import android.graphics.drawable.Drawable;
 public class ListViewItem {
     private Drawable nProfile;
     private String sNickName;
-    private String sRunningTime;
     private String sNowTime;
     private String sSoundUrl;
 
-    public ListViewItem(Drawable nProfile, String sNickName, String sRunningTime, String sNowTime, String sSoundUrl) {
+    public ListViewItem(Drawable nProfile, String sNickName, String sNowTime, String sSoundUrl) {
         this.nProfile = nProfile;
         this.sNickName = sNickName;
-        this.sRunningTime = sRunningTime;
         this.sNowTime = sNowTime;
         this.sSoundUrl = sSoundUrl;
     }
@@ -32,14 +30,6 @@ public class ListViewItem {
 
     public void setsNickName(String sNickName) {
         this.sNickName = sNickName;
-    }
-
-    public String getsRunningTime() {
-        return sRunningTime;
-    }
-
-    public void setsRunningTime(String sRunningTime) {
-        this.sRunningTime = sRunningTime;
     }
 
     public String getsNowTime() {
@@ -66,10 +56,6 @@ public class ListViewItem {
         sNickName = nickname;
     }
 
-    public void setRunningTime(String runningtime) {
-        sRunningTime = runningtime;
-    }
-
     public void setNowTime(String nowtime) {
         sNowTime = nowtime;
     }
@@ -80,10 +66,6 @@ public class ListViewItem {
 
     public String getNickName() {
         return this.sNickName;
-    }
-
-    public String getRunningTime() {
-        return this.sRunningTime;
     }
 
     public String getNowTime() {

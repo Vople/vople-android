@@ -50,6 +50,7 @@ public class RetrofitModel {
 
     public class ScriptBrief{
         public String title;
+        public int id;
     }
 
 
@@ -57,6 +58,7 @@ public class RetrofitModel {
         public int id;
         public String content;
         public int order;
+        public CommentBrief comment;
     }
 
     public class Cast {

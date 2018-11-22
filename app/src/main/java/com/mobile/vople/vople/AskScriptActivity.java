@@ -1,5 +1,6 @@
 package com.mobile.vople.vople;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -10,7 +11,7 @@ import android.widget.Toast;
 
 public class AskScriptActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private Button btn_ask;
+    private Button btn_ask, btn_back;
     private EditText edt_title;
     private EditText edt_script;
 
@@ -20,7 +21,9 @@ public class AskScriptActivity extends AppCompatActivity implements View.OnClick
         setContentView(R.layout.activity_askscript);
 
         btn_ask = findViewById(R.id.btn_ask);
+        btn_back = findViewById(R.id.btn_back);
         btn_ask.setOnClickListener(this);
+        btn_back.setOnClickListener(this);
 
         edt_title = findViewById(R.id.tv_title);
 
@@ -39,9 +42,21 @@ public class AskScriptActivity extends AppCompatActivity implements View.OnClick
             }
 
             else{
-                Toast.makeText(this, "신청이 완료되었습니다.", Toast.LENGTH_SHORT).show();
+
+                Intent email = new Intent(Intent.ACTION_SEND);
+                email.setType("plain/text");
+                String[] address = {"once29@naver.com"};
+                email.putExtra(Intent.EXTRA_EMAIL, address);
+                email.putExtra(Intent.EXTRA_SUBJECT,edt_title.getText().toString());
+                email.putExtra(Intent.EXTRA_TEXT,edt_script.getText().toString());
+                startActivity(email);
                 finish();
             }
+        }
+
+        else if(v.getId() == btn_back.getId())
+        {
+            finish();
         }
     }
 }

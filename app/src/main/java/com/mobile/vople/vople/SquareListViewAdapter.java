@@ -33,8 +33,8 @@ public class SquareListViewAdapter extends BaseAdapter {
         return position;
     }
 
-    public void addItem(String title) {
-        SquareListViewItem item = new SquareListViewItem(title);
+    public void addItem(String title, int id, int member_restriction) {
+        SquareListViewItem item = new SquareListViewItem(title,id, member_restriction);
 
         listViewItemList.add(item);
     }
@@ -53,14 +53,21 @@ public class SquareListViewAdapter extends BaseAdapter {
 
         SquareListViewItem listViewItem = listViewItemList.get(pos);
 
+        tv_title.setText(listViewItem.getsTitle());
+
+
         View.OnClickListener listener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (v.getId() == tv_title.getId()) {
-                    context.startActivity(new Intent(context, ScriptInformationActivity.class));
+                    Intent intent = new Intent(context, ScriptInformationActivity.class);
+                    intent.putExtra("script_id", listViewItem.getId());
+                    context.startActivity(intent);
                 }
             }
         };
+
+        tv_title.setOnClickListener(listener);
 
         return convertView;
     }

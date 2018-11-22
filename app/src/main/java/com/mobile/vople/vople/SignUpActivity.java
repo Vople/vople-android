@@ -1,6 +1,5 @@
 package com.mobile.vople.vople;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,8 +14,6 @@ import android.widget.Toast;
 import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.SharedPreference;
 import com.mobile.vople.vople.server.VopleServiceApi;
-
-import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -39,7 +36,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_signup_facebook);
+        setContentView(R.layout.activity_signup);
 
         Initialize();
 
@@ -95,7 +92,7 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                     {
                         sp.put("Authorization", response.body().token);
 
-                        Intent intent = new Intent(SignUpActivity.this, ListOrCreate.class);
+                        Intent intent = new Intent(SignUpActivity.this, ListOrCreateActivity.class);
                         startActivity(intent);
 
                         if(LoginActivity.instance != null) LoginActivity.instance.finish();

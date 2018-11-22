@@ -43,6 +43,8 @@ import java.net.URLConnection;
 import java.nio.channels.FileChannel;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -117,51 +119,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         btn_cancel = findViewById(R.id.btn_cancel);
         btn_send = findViewById(R.id.btn_send);
         btn_gather = findViewById(R.id.btn_gather);
-        VopleServiceApi.boardDetail service = retrofit.create(VopleServiceApi.boardDetail.class);
-
-        final Call<RetrofitModel.BoardDetail> repos = service.repoContributors(roomId);
-
-        repos.enqueue(new Callback<RetrofitModel.BoardDetail>() {
-            @Override
-            public void onResponse(Call<RetrofitModel.BoardDetail> call, Response<RetrofitModel.BoardDetail> response) {
-                if(response.code() == 200)
-                {
-                    List<RetrofitModel.CommentBrief> list = response.body().comments;
-
-                    for( RetrofitModel.CommentBrief comment : list)
-                    {
-                        adapter.addItem(null, comment.owner.name, "04:11", comment.created_at, comment.sound);
-                    }
-
-                    adapter.notifyDataSetChanged();
-
-                    for(RetrofitModel.Cast cast : response.body().script.casts)
-                    {
-                        for(RetrofitModel.Plot plot : cast.plots_by_cast)
-                            plotList.add(plot);
-                    }
-
-                    String[] arrPlot = new String[plotList.size()];
-
-                    for(RetrofitModel.Plot plot : plotList)
-                        arrPlot[plot.order-1] = plot.content;
-
-                    for(String s : arrPlot)
-                    {
-                        if(s != null)
-                            allPlots += (s + "\n");
-                    }
-
-                    // 배경에 넣어주기
-                    tv_script.setText(allPlots);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetrofitModel.BoardDetail> call, Throwable t) {
-                Toast.makeText(EventActivity.this, "네트워크 상태를 확인해 주세요.", Toast.LENGTH_SHORT).show();
-            }
-        });
 
         VopleServiceApi.get_plots getPlotService = retrofit.create(VopleServiceApi.get_plots.class);
         Call<List<RetrofitModel.Plot>> getPlotRepos = getPlotService.repoContributors(roomId);
@@ -175,7 +132,7 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
                     for(RetrofitModel.Plot plot : result)
                     {
-                        adapter_role_play.addItem(null, "04:11", plot.content, plot.id);
+                        adapter_role_play.addItem(null, plot.content, plot.id);
                     }
                     adapter_role_play.notifyDataSetChanged();
                 }
@@ -270,8 +227,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
         btn_send.setOnClickListener(this);
         btn_gather.setOnClickListener(this);
 
-
-
         retrofit = RetrofitInstance.getInstance(this);
 
         plotList = new ArrayList<RetrofitModel.Plot>();
@@ -280,6 +235,8 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     public void occurDataChange()
     {
         adapter.clear();
+
+        allPlots = "";
 
         VopleServiceApi.boardDetail service = retrofit.create(VopleServiceApi.boardDetail.class);
 
@@ -290,20 +247,39 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
             public void onResponse(Call<RetrofitModel.BoardDetail> call, Response<RetrofitModel.BoardDetail> response) {
                 if(response.code() == 200)
                 {
-                    commentList = response.body().comments;
-
-                    for( RetrofitModel.CommentBrief comment : commentList)
-                    {
-                        adapter.addItem(null, comment.owner.name, "04:11", comment.created_at, comment.sound);
-                    }
-
-                    adapter.notifyDataSetChanged();
+                    if(response.body().script == null) return;
 
                     for(RetrofitModel.Cast cast : response.body().script.casts)
                     {
                         for(RetrofitModel.Plot plot : cast.plots_by_cast)
                             plotList.add(plot);
                     }
+
+
+                    Collections.sort(plotList, new Comparator<RetrofitModel.Plot>() {
+                        @Override
+                        public int compare(RetrofitModel.Plot o1, RetrofitModel.Plot o2) {
+                            if(o1.order < o2.order) return -1;
+                            else if(o1.order > o2.order) return 1;
+                            return 0;
+                        }
+                    });
+
+                    for(RetrofitModel.Plot plot : plotList)
+                    {
+                        if(plot.comment == null) continue;
+
+                        RetrofitModel.CommentBrief comment = plot.comment;
+                        String[] temp1 = comment.created_at.split("T");
+                        String[] temp2 = temp1[0].split("-");
+                        String[] temp3 = temp1[1].split(":");
+
+                        String nowtime = temp2[1] + "월 " + temp2[2] + "일 " + temp3[0] + ":" + temp3[1];
+
+                        adapter.addItem(null, comment.owner.name, nowtime, comment.sound);
+                    }
+
+                    adapter.notifyDataSetChanged();
 
                     String[] arrPlot = new String[plotList.size()];
 
@@ -336,9 +312,23 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         int count = 0;
 
-        for(RetrofitModel.CommentBrief comment : commentList)
+        Collections.sort(plotList, new Comparator<RetrofitModel.Plot>() {
+            @Override
+            public int compare(RetrofitModel.Plot o1, RetrofitModel.Plot o2) {
+                if(o1.order < o2.order) return -1;
+                else if(o1.order > o2.order) return 1;
+                return 0;
+            }
+        });
+
+        RetrofitModel.CommentBrief[] arrComment = new RetrofitModel.CommentBrief[plotList.size()];
+
+        for(RetrofitModel.Plot plot : plotList)
+            arrComment[plot.order-1] = plot.comment;
+
+        for(RetrofitModel.CommentBrief comment : arrComment)
         {
-            if(comment.sound == null) continue;
+            if(comment == null || comment.sound == null) continue;
 
             try {
                 URLConnection conn = new URL(comment.sound).openConnection();
@@ -370,91 +360,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
 
         mergeMediaFiles(true, soundPathList, merge_filename + ".mp3");
 
-//
-//        FileInputStream stream1 = null;
-//        FileInputStream stream2 = null;
-//
-//        SequenceInputStream sistream = null;
-//        FileOutputStream fostream = null;
-//
-//        while(count+1 < soundPathList.size())
-//        {
-//            if(count == 0)
-//            {
-//                try {
-//                    stream1 = new FileInputStream(soundPathList.get(count));
-//                    stream2 = new FileInputStream(soundPathList.get(count+1));
-//
-//                    sistream = new SequenceInputStream(stream1, stream2);
-//                    fostream = new FileOutputStream(merge_filename + ++count + ".mp3");
-//
-//                    byte[] buffer = new byte[4096];
-//
-//                    int len;
-//
-//                    try {
-//                        while( ( len = sistream.read(buffer) ) != -1)
-//                        {
-//                            // System.out.print( (char) temp ); // to print at DOS prompt
-//                            fostream.write(buffer, 0, len);   // to write to file
-//                        }
-//
-//                        fostream.close();
-//
-//                        sistream.close();
-//
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//            else
-//            {
-//                try {
-//                    stream1 = new FileInputStream(merge_filename + count + ".mp3");
-//                    stream2 = new FileInputStream(soundPathList.get(count+1));
-//
-//                    sistream = new SequenceInputStream(stream1, stream2);
-//                    fostream = new FileOutputStream(merge_filename + ++count + ".mp3");
-//
-//                    byte[] buffer = new byte[4096];
-//
-//                    int len;
-//
-//
-//                    while( ( len = sistream.read(buffer) ) != -1)
-//                    {
-//                        // System.out.print( (char) temp ); // to print at DOS prompt
-//                        fostream.write(buffer, 0, len);   // to write to file
-//                    }
-//
-//                    fostream.close();
-//
-//                    sistream.close();
-//
-//                } catch (FileNotFoundException e) {
-//                    e.printStackTrace();
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                } catch (IndexOutOfBoundsException e){
-//                    e.printStackTrace();
-//                }
-//
-//            }
-//
-//
-//            try {
-//                stream1.close();
-//                stream2.close();
-//                sistream.close();
-//                fostream.close();
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
     }
     public static boolean mergeMediaFiles(boolean isAudio, List<String> sourceFiles, String targetFile) {
         try {

@@ -34,8 +34,8 @@ public class DownloadListViewAdapter extends BaseAdapter {
         return position;
     }
 
-    public void addItem(String nickname, String script, String runningtime) {
-        DownloadListViewItem item = new DownloadListViewItem(nickname, script, runningtime);
+    public void addItem(String nickname, String script) {
+        DownloadListViewItem item = new DownloadListViewItem(nickname, script);
 
         listViewItemList.add(item);
     }
@@ -50,7 +50,6 @@ public class DownloadListViewAdapter extends BaseAdapter {
         }
 
         TextView tv_nickname = (TextView) convertView.findViewById(R.id.tv_nickname);
-        TextView tv_runningtime = (TextView) convertView.findViewById(R.id.tv_runningtime);
         Button btn_play = (Button) convertView.findViewById(R.id.btn_play);
 
         DownloadListViewItem listViewItem = listViewItemList.get(pos);
@@ -76,7 +75,6 @@ public class DownloadListViewAdapter extends BaseAdapter {
         };
 
         tv_nickname.setText(listViewItem.getNickName());
-        tv_runningtime.setText(listViewItem.getRunningTime());
         btn_play.setOnClickListener(listener);
 
         return convertView;

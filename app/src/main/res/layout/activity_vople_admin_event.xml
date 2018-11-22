@@ -6,7 +6,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VopleAdminEvent"
+    tools:context=".VopleAdminEventActivity"
     >
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/main_list"
+            android:id="@+id/lv_event"
             />
     </LinearLayout>
 

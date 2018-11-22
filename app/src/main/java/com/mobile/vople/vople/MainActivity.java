@@ -28,6 +28,7 @@ import com.mobile.vople.vople.server.model.MyRetrofit;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -70,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
         repos.enqueue(new Callback<List<RetrofitModel.BoardContributor>>() {
             @Override
             public void onResponse(Call<List<RetrofitModel.BoardContributor>> call, Response<List<RetrofitModel.BoardContributor>> response) {
+                Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
+                        Toast.LENGTH_SHORT).show();
                 if (response.code() == 200) {
 
                     for (RetrofitModel.BoardContributor object : response.body()) {
@@ -115,13 +118,39 @@ public class MainActivity extends AppCompatActivity {
         Spinner sp_role = (Spinner) enterRoom.findViewById(R.id.MyRole);
         Button btn_enter = (Button) enterRoom.findViewById(R.id.btn_enter);
 
+
+
         if (item.getRoomType() == 0){
             tv_script.setVisibility(View.INVISIBLE);
             ContentOfSC.setVisibility(View.INVISIBLE);
             sp_role.setVisibility(View.INVISIBLE);
 
-            enterRoom.show();
+            btn_enter.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    VopleServiceApi.joinFreeRoom service = retrofit.create(VopleServiceApi.joinFreeRoom.class);
 
+                    Call<ResponseBody> repos = service.repoContributors(item.getRoomID(), "sadlfjlxzcvnqwenx,mvnsdlkj");
+                    repos.enqueue(new Callback<ResponseBody>() {
+                        @Override
+                        public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                            if(response.code() == 200)
+                            {
+                                Intent intent = new Intent(MainActivity.this, EventActivity.class);
+                                intent.putExtra("RoomID", item.getRoomID());
+                                startActivity(intent);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ResponseBody> call, Throwable t) {
+                            Toast.makeText(MainActivity.this, "네트워크 연결상태를 확인해 주세요.", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                }
+            });
+
+            enterRoom.show();
             return;
         }
         if (item.getRoomType() == 1){
@@ -140,6 +169,8 @@ public class MainActivity extends AppCompatActivity {
         repos.enqueue(new Callback<RetrofitModel.Roll_Brief>() {
             @Override
             public void onResponse(Call<RetrofitModel.Roll_Brief> call, Response<RetrofitModel.Roll_Brief> response) {
+                Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
+                        Toast.LENGTH_SHORT).show();
                 if(response.code() == 200)
                 {
                     ArrayList<String> list = (ArrayList<String>) response.body().rolls;
@@ -158,6 +189,8 @@ public class MainActivity extends AppCompatActivity {
                     innerRepos.enqueue(new Callback<RetrofitModel.Cast>() {
                         @Override
                         public void onResponse(Call<RetrofitModel.Cast> call, Response<RetrofitModel.Cast> response) {
+                            Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
+                                    Toast.LENGTH_SHORT).show();
                             if(response.code() == 200)
                             {
                                 Intent intent = new Intent(MainActivity.this, EventActivity.class);
@@ -182,7 +215,7 @@ public class MainActivity extends AppCompatActivity {
 
                         @Override
                         public void onFailure(Call<RetrofitModel.Cast> call, Throwable t) {
-
+                            Toast.makeText(MainActivity.this, "네트워크 연결상태를 확인해 주세요.", Toast.LENGTH_SHORT).show();
                         }
                     });
                 }
@@ -218,6 +251,9 @@ public class MainActivity extends AppCompatActivity {
                 repos.enqueue(new Callback<RetrofitModel.Cast>() {
                     @Override
                     public void onResponse(Call<RetrofitModel.Cast> call, Response<RetrofitModel.Cast> response) {
+                        Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
+                                Toast.LENGTH_SHORT).show();
+
                         if(response.code() == 200)
                         {
                             Intent intent = new Intent(MainActivity.this, EventActivity.class);
@@ -236,6 +272,8 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+
+
         enterRoom.show();
     }
 
@@ -244,7 +282,7 @@ public class MainActivity extends AppCompatActivity {
 
         //Nav & CustomList
         navButton = (Button) findViewById(R.id.NavMain);
-        //mainDrawer = (DrawerLayout) findViewById(R.id.main_drawer);
+        mainDrawer = (DrawerLayout) findViewById(R.id.main_drawer);
 
         navButton.setOnClickListener(new View.OnClickListener() {
             @Override

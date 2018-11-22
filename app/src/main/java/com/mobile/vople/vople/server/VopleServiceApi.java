@@ -139,6 +139,16 @@ public class VopleServiceApi {
         );
     }
 
+    public interface joinFreeRoom
+    {
+        @FormUrlEncoded
+        @POST("sounds/{board_id}/join/")
+        Call<ResponseBody> repoContributors(
+                @Path("board_id") int board_id,
+                @Field("roll_name") String roll_name
+        );
+    }
+
     public interface boardDetail
     {
         @GET("sounds/{board_id}/board/")
@@ -160,7 +170,7 @@ public class VopleServiceApi {
 
     public interface getAllScripts{
         @GET("sounds/scripts/")
-        Call<List<RetrofitModel.ScriptBrief>> repoContributors();
+        Call<List<RetrofitModel.Script>> repoContributors();
     }
 
     public interface getScriptDetail{
@@ -168,6 +178,11 @@ public class VopleServiceApi {
         Call<RetrofitModel.ScriptDetail> repoContributors(
                 @Path("script_id") int script_id
         );
+    }
+
+    public interface getEventBoards{
+        @GET("sounds/event/")
+        Call<List<RetrofitModel.BoardContributor>> repoContributors();
     }
 
     public class Token{

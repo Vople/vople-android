@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mobile.vople.vople">
+    package="com.mobile.vople.vople"
+    android:versionName="1.1"
+    android:versionCode="2">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <!-- To auto-complete the email text field in the login form with the user's emails -->
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
     <uses-permission android:name="android.permission.READ_PROFILE" />
     <uses-permission android:name="android.permission.READ_CONTACTS" />
-
 
     <application
         android:allowBackup="true"
@@ -31,31 +32,32 @@
         </activity>
         <activity android:name=".LoginActivity" />
         <activity android:name=".SignUpActivity" />
-        <activity android:name=".VopleAdminEvent" />
-        <activity android:name=".ListOrCreate"></activity>
-        <activity android:name=".EventActivity"></activity>
-        <activity android:name=".FollowingActivity"></activity>
-        
-        <service android:name=".fcm.MyFirebaseMessagingService"
+        <activity android:name=".VopleAdminEventActivity" />
+        <activity android:name=".ListOrCreateActivity" />
+        <activity android:name=".EventActivity" />
+        <activity android:name=".FollowingActivity" />
+        <activity android:name=".SquareActivity" />
+        <activity android:name=".ScriptInformationActivity" />
+        <activity android:name=".AskScriptActivity" />
+
+        <service
+            android:name=".fcm.MyFirebaseMessagingService"
             android:enabled="true"
             android:exported="true">
-
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
-
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-
         </service>
-
         <service
             android:name=".fcm.MyFirebaseInstanceIDService"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT" />
             </intent-filter>
         </service>
 
+        <activity android:name=".TutorialActivity"></activity>
     </application>
 
 </manifest>
