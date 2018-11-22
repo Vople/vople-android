@@ -148,9 +148,7 @@ public class ListOrCreateActivity extends AppCompatActivity {
             }
         });
 
-
         //Server CreateRoom
-
 
         CreateRoomSubmit.setOnClickListener(new View.OnClickListener() {
             @Override

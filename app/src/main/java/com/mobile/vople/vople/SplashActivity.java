@@ -28,7 +28,6 @@ public class SplashActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
-
         SharedPreferences pref = getSharedPreferences("VER", 0);
 
         try {
@@ -62,10 +61,8 @@ public class SplashActivity extends AppCompatActivity {
             bgBitmap.recycle();
     }
 
-
-
-
     /*private void RequestPermission() {
+>>>>>>> 1b2fc21459f786f7e7d1a606f999d198d2982b41
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -83,7 +80,7 @@ public class SplashActivity extends AppCompatActivity {
                 // No explanation needed, we can request the permission.
 
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO},
                         MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 
                 // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an

@@ -98,21 +98,6 @@ public class VopleServiceApi {
         );
     }
 
-    public interface upload{
-        @Multipart
-        @POST("sounds/comment/")
-        Call<ResponseBody> uploadTrack(
-                @Part("track") RequestBody file,
-                @Part("plot_id") int plot_id
-        );
-    }
-
-    public interface comments
-    {
-        @GET("sounds/{board_id}/comments/")
-        Call<List<RetrofitModel.CommentContributor>> repoContributors();
-    }
-
     public interface quilifyJoinRoom
     {
         @GET("sounds/{board_id}/join/")
@@ -133,7 +118,7 @@ public class VopleServiceApi {
     {
         @FormUrlEncoded
         @POST("sounds/{board_id}/join/")
-        Call<RetrofitModel.Cast> repoContributors(
+        Call<RetrofitModel.Casting> repoContributors(
                 @Path("board_id") int board_id,
                 @Field("roll_name") String roll_name
         );
@@ -156,17 +141,6 @@ public class VopleServiceApi {
                 @Path("board_id") int board_id
         );
     }
-
-    public interface fcm_register{
-        @FormUrlEncoded
-        @POST("fcm/devices/")
-        Call<ResponseBody> repoContributors(
-                @Field("dev_id") String device_id,
-                @Field("reg_id") String token,
-                @Field("is_active") boolean is_active
-        );
-    }
-
 
     public interface getAllScripts{
         @GET("sounds/scripts/")

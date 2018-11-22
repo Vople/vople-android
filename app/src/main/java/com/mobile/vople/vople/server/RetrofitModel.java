@@ -1,5 +1,7 @@
 package com.mobile.vople.vople.server;
 
+import com.mobile.vople.vople.server.model.User;
+
 import java.io.File;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -53,19 +55,29 @@ public class RetrofitModel {
         public int id;
     }
 
+    public class Commenting{
+        public CommentBrief comment;
+        public BoardContributor board;
+
+    }
 
     public class Plot {
         public int id;
         public String content;
         public int order;
-        public CommentBrief comment;
+        public Commenting commenting;
     }
 
     public class Cast {
         public int id;
         public String roll_name;
         public List<Plot> plots_by_cast;
+    }
+
+    public class Casting {
+        public int id;
         public int member;  // user_id
+        public Cast cast;
     }
 
     public class CastBreif{
