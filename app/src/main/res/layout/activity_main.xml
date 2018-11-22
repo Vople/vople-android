@@ -28,12 +28,10 @@
 
                 <Button
                     android:id="@+id/NavMain"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
                     android:layout_margin="5dp"
-                    android:background="@drawable/nav_image"
-                    />
+                    android:background="@drawable/nav_image" />
 
             </LinearLayout>
 

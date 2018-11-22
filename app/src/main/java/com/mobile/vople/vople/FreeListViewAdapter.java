@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
-public class ListViewAdapter extends BaseAdapter {
+public class FreeListViewAdapter extends BaseAdapter {
 
     MediaPlayer mediaPlayer;
 
@@ -25,7 +25,7 @@ public class ListViewAdapter extends BaseAdapter {
     private ArrayList<ListViewItem> listViewItemList = new ArrayList<ListViewItem>() ;
 
     // ListViewAdapter의 생성자
-    public ListViewAdapter() {
+    public FreeListViewAdapter() {
     }
 
     // Adapter에 사용되는 데이터의 개수를 리턴. : 필수 구현
@@ -45,7 +45,7 @@ public class ListViewAdapter extends BaseAdapter {
         // "listview_item" Layout을 inflate하여 convertView 참조 획득.
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = inflater.inflate(R.layout.listview_event, parent, false);
+            convertView = inflater.inflate(R.layout.listview_free, parent, false);
         }
 
         // 화면에 표시될 View(Layout이 inflate된)으로부터 위젯에 대한 참조 획득

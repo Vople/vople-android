@@ -1,34 +1,32 @@
 package com.mobile.vople.vople;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-public class SplashActivity extends AppCompatActivity{
-
-    private final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 1;
-    private final int MY_PERMISSIONS_AUDIO_RECORD = 2;
+public class SplashActivity extends AppCompatActivity {
 
     private static int SPLASH_TERM = 3000;
 
     Bitmap bgBitmap;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState){
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
-
-        RequestPermission();
 
         SharedPreferences pref = getSharedPreferences("VER", 0);
 
@@ -38,14 +36,14 @@ public class SplashActivity extends AppCompatActivity{
             int version = pi.versionCode;
             int old_ver = pref.getInt("version", 0);
 
-            if(old_ver < version) {
+            if (old_ver < version) {
                 SharedPreferences.Editor edit = pref.edit();
-                edit.putInt("version",  version);
+                edit.putInt("version", version);
                 edit.commit();
                 Intent it = new Intent(this, TutorialActivity.class);
                 startActivity(it);
                 finish();
-            } else{
+            } else {
                 startSplash();
             }
 
@@ -55,14 +53,16 @@ public class SplashActivity extends AppCompatActivity{
 
     }
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if(bgBitmap != null)
+        if (bgBitmap != null)
             bgBitmap.recycle();
     }
 
-    private void RequestPermission() {
+    /*private void RequestPermission() {
+>>>>>>> 1b2fc21459f786f7e7d1a606f999d198d2982b41
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -88,11 +88,11 @@ public class SplashActivity extends AppCompatActivity{
                 // result of the request.
             }
         }
-    }
+    }*/
 
 
-    private void startSplash()
-    {
+
+    private void startSplash() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -104,6 +104,6 @@ public class SplashActivity extends AppCompatActivity{
                 // close this activity
                 finish();
             }
-        }, 3000);
+        }, SPLASH_TERM);
     }
 }

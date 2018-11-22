@@ -27,58 +27,41 @@
         app:srcCompat="@drawable/login_logo" />
 
     <Button
-        android:id="@+id/btn_NavMain"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:id="@+id/btn_back"
+        android:layout_width="20dp"
+        android:layout_height="30dp"
         android:layout_marginStart="10dp"
         android:layout_marginLeft="10dp"
-        android:background="@drawable/nav_image"
+        android:background="@drawable/event_back"
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="@+id/imageView4"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/imageView4" />
 
+
+    <ListView
+        android:id="@+id/lv_notice"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView10" />
+
     <TextView
-        android:id="@+id/textView11"
-        android:layout_width="80dp"
+        android:id="@+id/textView10"
+        android:layout_width="65dp"
         android:layout_height="30dp"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
         android:layout_marginTop="15dp"
         android:fontFamily="@font/bmdohyeon"
         android:gravity="center"
-        android:text="방 목록"
+        android:text="공지사항"
         android:textColor="#A0A0A0"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView4" />
-
-    <ListView
-        android:id="@+id/main_list"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginTop="15dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView11" />
-
-    <android.support.design.widget.NavigationView
-        android:id="@+id/Nav"
-        android:layout_width="170dp"
-        android:layout_height="match_parent"
-        android:layout_gravity="start"
-        android:background="@color/white"
-        app:itemIconTint="@color/DG"
-        app:itemTextColor="@color/DG">
-
-        <include
-            android:id="@+id/NavBody"
-            layout="@layout/header"
-            android:layout_width="170dp"
-            android:layout_height="match_parent" />
-
-    </android.support.design.widget.NavigationView>
-
 
 </android.support.constraint.ConstraintLayout>

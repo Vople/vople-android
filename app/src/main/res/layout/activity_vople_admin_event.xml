@@ -15,20 +15,41 @@
         android:background="@drawable/navbg"
         >
 
-        <TextView
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:gravity="center"
-            android:fontFamily="@font/bmdohyeon"
-            android:textColor="@color/white"
-            android:textSize="20sp"
-            android:text="보플이 쏜다 !" />
+            android:layout_height="50dp">
 
+            <Button
+                android:id="@+id/btn_back"
+                android:layout_width="20dp"
+                android:layout_height="30dp"
+                android:layout_marginStart="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/event_back"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+            <TextView
+                android:layout_width="158dp"
+                android:layout_height="40dp"
+                android:layout_margin="10dp"
+                android:fontFamily="@font/bmdohyeon"
+                android:gravity="center"
+                android:text="보플이 쏜다 !"
+                android:textColor="@color/white"
+                android:textSize="20sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </android.support.constraint.ConstraintLayout>
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:id="@+id/lv_event"
+            android:background="#eeeeee"
             />
     </LinearLayout>
 

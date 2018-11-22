@@ -24,8 +24,8 @@
 
     <Button
         android:id="@+id/btn_play"
-        android:layout_width="45dp"
-        android:layout_height="45dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_marginStart="5dp"
         android:layout_marginLeft="5dp"
         android:background="@drawable/event_recording_start"

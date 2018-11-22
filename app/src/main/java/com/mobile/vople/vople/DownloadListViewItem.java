@@ -1,24 +1,24 @@
 package com.mobile.vople.vople;
 
 public class DownloadListViewItem {
-    private String sNickName;
+    private String sTitle;
     private String sRecord;
 
-    public DownloadListViewItem(String sNickName, String sRecord) {
-        this.sNickName = sNickName;
+    public DownloadListViewItem(String sTitle, String sRecord) {
+        this.sTitle = sTitle;
         this.sRecord = sRecord;
     }
 
-    public void setNickName(String nickname){
-        sNickName = nickname;
+    public void setTitle(String title){
+        sTitle = title;
     }
 
     public void setRecord(String record) {
         sRecord = record;
     }
 
-    public String getNickName() {
-        return this.sNickName;
+    public String getTitle() {
+        return this.sTitle;
     }
 
     public String getRecord() {
