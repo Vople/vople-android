@@ -1,7 +1,11 @@
 package com.mobile.vople.vople;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -44,6 +48,7 @@ public class ListOrCreateActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_or_create);
+
 
         retrofit = MyRetrofit.getInstance().getRetrofit();
         retrofit = RetrofitInstance.getInstance(getApplicationContext());
@@ -232,5 +237,6 @@ public class ListOrCreateActivity extends AppCompatActivity {
         NavlistView_LOC.setAdapter(navAdapter);
 
     }
+
 
 }

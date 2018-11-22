@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 public class NavAdapter extends BaseAdapter {
 
-    private int[] NAVIMAGES = {R.drawable.participate_record, R.drawable.follow, R.drawable.ranking, R.drawable.vople_present, R.drawable.information, R.drawable.download, R.drawable.setup};
-    private String[] NAVNAMES = {"참여기록", "대본신청", "대본광장", "보플이 쏜다", "공지사항/이벤트", "보관함", "설정"};
+    private int[] NAVIMAGES = {R.drawable.participate_record, R.drawable.follow, R.drawable.vople_present, R.drawable.information, R.drawable.download};
+    private String[] NAVNAMES = {"대본신청", "대본광장", "보플이 쏜다", "공지사항", "보관함"};
 
     @Override
     public int getCount() {
@@ -59,6 +59,18 @@ public class NavAdapter extends BaseAdapter {
                 else if(title.equals("대본신청"))
                 {
                     Intent intent = new Intent(context, AskScriptActivity.class);
+                    context.startActivity(intent);
+                }
+
+                else if(title.equals("보관함"))
+                {
+                    Intent intent = new Intent(context, DownloadActivity.class);
+                    context.startActivity(intent);
+                }
+
+                else if(title.equals("보관함"))
+                {
+                    Intent intent = new Intent(context, NoticeActivity.class);
                     context.startActivity(intent);
                 }
             }

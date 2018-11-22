@@ -155,11 +155,6 @@ public class EventActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
 
-        if(bool_owner == true)
-        {
-            btn_gather.setVisibility(View.VISIBLE);
-        }
-
         if (v.getId() == btn_back.getId()) {
             finish();
         }

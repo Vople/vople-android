@@ -40,12 +40,13 @@
 
     <Button
         android:id="@+id/btn_rold_play_record"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
         android:layout_gravity="center_vertical"
-        android:layout_marginBottom="10dp"
+        android:layout_marginEnd="20dp"
 
-        android:layout_marginRight="40dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/event_unpress_record_button"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

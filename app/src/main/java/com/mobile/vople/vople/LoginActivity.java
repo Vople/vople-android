@@ -1,7 +1,12 @@
 package com.mobile.vople.vople;
 
+import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -25,6 +30,11 @@ import retrofit2.Retrofit;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener
 {
+    public final int PERMISSION = 1;
+
+    public int permissionCheck_STORAGE;
+    public int permissionCheck_RECORD;
+
     public static LoginActivity instance;
 
     private EditText edt_id, edt_password;
@@ -41,11 +51,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        RequestPermission();
+
         Initialize();
 
         instance = this;
 
     }
+
 
     private void Initialize() {
         edt_id = (EditText) findViewById(R.id.edt_password1);
@@ -64,6 +78,30 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         sp = SharedPreference.getInstance();
 
         tv_signup.setOnClickListener(this);
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
+    private void RequestPermission() {
+
+        permissionCheck_STORAGE = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        permissionCheck_RECORD = ContextCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO);
+
+        if (permissionCheck_STORAGE != PackageManager.PERMISSION_GRANTED ||
+                permissionCheck_RECORD != PackageManager.PERMISSION_GRANTED)
+        {
+            Toast.makeText(getApplicationContext(), "앱 사용을 위해 권한 허가를 부탁드립니다.",Toast.LENGTH_SHORT).show();
+
+            if(shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
+                    shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO))
+            {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, PERMISSION);
+            }
+
+            else
+            {
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, PERMISSION);
+            }
+        }
     }
 
     @Override
