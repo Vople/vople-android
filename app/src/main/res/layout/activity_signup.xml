@@ -38,7 +38,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <EditText
-        android:id="@+id/edt_password"
+        android:id="@+id/edt_id"
         android:layout_width="270dp"
         android:layout_height="35dp"
         android:layout_marginStart="60dp"
@@ -62,7 +62,7 @@
         app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <EditText
-        android:id="@+id/edt_id"
+        android:id="@+id/edt_password"
         android:layout_width="270dp"
         android:layout_height="35dp"
         android:layout_marginTop="15dp"
@@ -77,7 +77,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edt_password" />
+        app:layout_constraintTop_toBottomOf="@id/edt_id" />
 
     <EditText
         android:id="@+id/edt_password2"

@@ -8,6 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.vople.vople.server.MyUtils;
 import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
 import com.mobile.vople.vople.server.VopleServiceApi;
@@ -15,18 +16,29 @@ import com.mobile.vople.vople.server.VopleServiceApi;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class ScriptInformationActivity extends AppCompatActivity implements View.OnClickListener {
+public class ScriptInformationActivity extends AppCompatActivity{
 
-    private TextView tv_title, tv_script;
-    private Button btn_back;
+    @BindView(R.id.tv_title)
+    TextView tv_title;
+    @BindView(R.id.tv_script)
+    TextView tv_script;
+    @BindView(R.id.btn_back)
+    Button btn_back;
 
     private String allPlots = "";
     private String script_title;
+
+    private Retrofit retrofit;
 
     private List<RetrofitModel.Plot> plotList;
 
@@ -35,17 +47,14 @@ public class ScriptInformationActivity extends AppCompatActivity implements View
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_script_information);
 
+        ButterKnife.bind(this);
+
+        initialize();
+    }
+
+    private void initialize()
+    {
         plotList = new ArrayList<>();
-
-        tv_title = findViewById(R.id.tv_title);
-        //광장 리스트 누른 후 화면의 제목 tv_title.setText("");
-
-        tv_script = findViewById(R.id.tv_script);
-        //광장 리스트 누른 후 화면의 대본 tv_script.setText("");
-
-        btn_back = findViewById(R.id.btn_back);
-        btn_back.setOnClickListener(this);
-
 
         Intent intent = getIntent();
 
@@ -63,65 +72,47 @@ public class ScriptInformationActivity extends AppCompatActivity implements View
             finish();
         }
 
-        Retrofit retrofit = RetrofitInstance.getInstance(getApplicationContext());
+        retrofit = RetrofitInstance.getInstance(getApplicationContext());
 
-        VopleServiceApi.getScriptDetail service = retrofit.create(VopleServiceApi.getScriptDetail.class);
+        VopleServiceApi.getScriptDetail service_script_detail = retrofit.create(VopleServiceApi.getScriptDetail.class);
 
-        Call<RetrofitModel.ScriptDetail> repos = service.repoContributors(script_id);
-
-        repos.enqueue(new Callback<RetrofitModel.ScriptDetail>() {
-            @Override
-            public void onResponse(Call<RetrofitModel.ScriptDetail> call, Response<RetrofitModel.ScriptDetail> response) {
-                if(response.code() == 200)
-                {
-                    script_title = response.body().title;
-
-
-                    for(RetrofitModel.CastBreif cast : response.body().casts)
-                    {
-                        for(RetrofitModel.Plot plot : cast.plots_by_cast)
-                            plotList.add(plot);
-                    }
-
-                    String[] arrPlot = new String[plotList.size()];
-
-                    for(RetrofitModel.Plot plot : plotList)
-                        arrPlot[plot.order-1] = plot.content;
-
-                    for(String s : arrPlot)
-                    {
-                        if(s != null)
-                            allPlots += (s + "\n");
-                    }
-
-                    // 배경에 넣어주기
-                    tv_script.setText(allPlots);
-                    tv_title.setText(script_title);
-                }
-                else
-                {
-                    Toast.makeText(getApplicationContext(), "Response Code : " + response.code(), Toast.LENGTH_SHORT).show();
-                    Toast.makeText(getApplicationContext(), "네트워크를 확인해 주세요.", Toast.LENGTH_SHORT).show();
-                    finish();
-                }
-
-
-            }
-
-            @Override
-            public void onFailure(Call<RetrofitModel.ScriptDetail> call, Throwable t) {
-
-            }
-        });
+        service_script_detail.repoContributors(script_id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {setContent(response);},
+                        throwable -> {MyUtils.makeNetworkErrorToast(this);
+                });
     }
 
+    @OnClick(R.id.btn_back)
+    public void onBackButtonClick(View v) {
+        finish();
+    }
 
-    @Override
-    public void onClick(View v) {
-        if(v.getId() == btn_back.getId())
+    private void setContent(RetrofitModel.ScriptDetail response)
+    {
+        script_title = response.title;
+
+        for(RetrofitModel.CastBreif cast : response.casts)
         {
-            finish();
+            for(RetrofitModel.Plot plot : cast.plots_by_cast)
+                plotList.add(plot);
         }
+
+        String[] arrPlot = new String[plotList.size()];
+
+        for(RetrofitModel.Plot plot : plotList)
+            arrPlot[plot.order-1] = plot.content;
+
+        for(String s : arrPlot)
+        {
+            if(s != null)
+                allPlots += (s + "\n");
+        }
+
+        // 배경에 넣어주기
+        tv_script.setText(allPlots);
+        tv_title.setText(script_title);
     }
 
 }

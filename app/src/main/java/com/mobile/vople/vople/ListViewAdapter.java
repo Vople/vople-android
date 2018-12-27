@@ -26,6 +26,8 @@ public class ListViewAdapter extends BaseAdapter {
 
     // ListViewAdapter의 생성자
     public ListViewAdapter() {
+
+        mediaPlayer = new MediaPlayer();
     }
 
     // Adapter에 사용되는 데이터의 개수를 리턴. : 필수 구현
@@ -55,8 +57,6 @@ public class ListViewAdapter extends BaseAdapter {
         Button btn_play = (Button) convertView.findViewById(R.id.btn_play);
 
         btn_play.setTag(true);
-
-
 
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
         ListViewItem listViewItem = listViewItemList.get(pos);
@@ -92,6 +92,11 @@ public class ListViewAdapter extends BaseAdapter {
                 }
             }
         };
+
+        mediaPlayer.setOnCompletionListener(mp -> {
+            if(!mp.isPlaying())
+                btn_play.setBackgroundResource(R.drawable.event_recording_start);
+        });
 
         // 아이템 내 각 위젯에 데이터 반영
         profileImageView.setImageDrawable(listViewItem.getProfile());
@@ -130,7 +135,7 @@ public class ListViewAdapter extends BaseAdapter {
     }
 
     private void killMediaPlayer() {
-        if(mediaPlayer!=null) {
+        if(mediaPlayer != null) {
             try {
                 mediaPlayer.release();
             }

@@ -3,6 +3,7 @@ package com.mobile.vople.vople.server;
 import android.content.Context;
 
 import java.io.IOException;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -17,17 +18,17 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class RetrofitInstance {
-    private static Retrofit retrofit=null;
+    private static Retrofit retrofit = null;
     private static final String API_URL = MySettings.BASE_URL;
 
     static public  Retrofit getInstance(Context context){
-        if(retrofit==null){
+        if(retrofit == null){
             final SharedPreference preference = SharedPreference.getInstance(context);
             OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
             builder.addInterceptor(new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
-                    String token=preference.get("Authorization");
+                    String token = preference.get("Authorization");
                     //Log.d("TAG", token);
                     Request.Builder  requestBuilder = chain.request().newBuilder();
 
@@ -39,7 +40,10 @@ public class RetrofitInstance {
                     return chain.proceed(request);
                 }
             });
-            OkHttpClient client = builder.build();
+            OkHttpClient client = builder
+                    .connectTimeout(10, TimeUnit.SECONDS)
+                    .readTimeout(10, TimeUnit.SECONDS)
+                    .build();
 
 
             retrofit = new Retrofit.Builder()

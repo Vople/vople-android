@@ -15,6 +15,10 @@ import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.SharedPreference;
 import com.mobile.vople.vople.server.VopleServiceApi;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -22,10 +26,22 @@ import retrofit2.Retrofit;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
 
-    private EditText edt_username, edt_password1, edt_password2, edt_email, edt_bio, edt_nickname;
-    private RadioGroup rg_gender;
-    private RadioButton rb_male, rb_female;
-    private Button btn_submit;
+    @BindView(R.id.edt_id)
+    EditText edt_id;
+    @BindView(R.id.edt_password)
+    EditText edt_password1;
+    @BindView(R.id.edt_password2)
+    EditText edt_password2;
+    @BindView(R.id.edt_email)
+    EditText edt_email;
+    @BindView(R.id.edt_bio)
+    EditText edt_bio;
+    @BindView(R.id.edt_nickname)
+    EditText edt_nickname;
+    @BindView(R.id.rb_male)
+    RadioButton rb_male;
+    @BindView(R.id.btn_submit)
+    Button btn_submit;
 
     private Retrofit retrofit;
 
@@ -38,27 +54,14 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
 
-        Initialize();
+        ButterKnife.bind(this);
+
+        initialize();
 
     }
 
-    private void Initialize()
+    private void initialize()
     {
-        edt_username    = (EditText) findViewById(R.id.edt_password);
-        edt_password1   = (EditText) findViewById(R.id.edt_id);
-        edt_password2   = (EditText) findViewById(R.id.edt_password2);
-        edt_email       = (EditText) findViewById(R.id.edt_email);
-        edt_bio         = (EditText) findViewById(R.id.edt_bio);
-        edt_nickname    = (EditText) findViewById(R.id.edt_nickname);
-
-        rg_gender       = (RadioGroup) findViewById(R.id.rg_gender);
-        rb_male         = (RadioButton) findViewById(R.id.rb_male);
-        rb_female       = (RadioButton) findViewById(R.id.rb_female);
-
-        btn_submit      = (Button) findViewById(R.id.btn_submit);
-
-        btn_submit.setOnClickListener(this);
-
         retrofit = RetrofitInstance.getInstance(getApplicationContext());
 
         sp = SharedPreference.getInstance();
@@ -68,10 +71,9 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     public void onClick(View v) {
         if(v.getId() == btn_submit.getId())
         {
+            VopleServiceApi.signup service_signup = retrofit.create(VopleServiceApi.signup.class);
 
-            VopleServiceApi.signup service = retrofit.create(VopleServiceApi.signup.class);
-
-            String username     = edt_username.getText().toString();
+            String id     = edt_id.getText().toString();
             String password1    = edt_password1.getText().toString();
             String password2    = edt_password2.getText().toString();
             String email        = edt_email.getText().toString();
@@ -83,18 +85,13 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
             if(rb_male.isChecked()) gender = "male";
             else gender = "female";
 
-            final Call<VopleServiceApi.Token> repos = service.repoContributors(username, password1, password2,
-                    email, nickname, bio, gender);
-            repos.enqueue(new Callback<VopleServiceApi.Token>() {
-                @Override
-                public void onResponse(Call<VopleServiceApi.Token> call, Response<VopleServiceApi.Token> response) {
-                    if (response.code() == 201)
-                    {
-                        sp.put("Authorization", response.body().token);
-
-                        sp.put("Authorization", response.body().token);
+            service_signup.repoContributors(id, password1, password2, email, bio, nickname, gender)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(response -> {
+                        sp.put("Authorization", response.token);
                         sp.put("IS_AUTO_LOGIN", "Yes");
-                        sp.put("STORED_ID", username);
+                        sp.put("STORED_ID", id);
                         sp.put("STORED_PWD", password1);
 
                         Intent intent = new Intent(SignUpActivity.this, ListOrCreateActivity.class);
@@ -103,24 +100,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
                         if(LoginActivity.instance != null) LoginActivity.instance.finish();
 
                         finish();
-                    }
-                    else if(response.code() == 400)
-                    {
+                    }, throwable -> {
                         Toast.makeText(SignUpActivity.this, "아이디와 패스워드를 다시 확인해 주세요.", Toast.LENGTH_SHORT).show();
-                    }
-                    else
-                    {
-                        Toast.makeText(getApplicationContext(), "Error! : "
-                                + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
-                    }
-                }
+                    });
 
-                @Override
-                public void onFailure(Call<VopleServiceApi.Token> call, Throwable t) {
-                    Log.d("TAG", t.getLocalizedMessage());
-
-                }
-            });
         }
     }
 }

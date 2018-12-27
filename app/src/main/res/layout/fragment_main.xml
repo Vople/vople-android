@@ -22,7 +22,7 @@
                 android:layout_height="50dp">
 
                 <Button
-                    android:id="@+id/NavMain"
+                    android:id="@+id/btn_nav"
                     android:layout_width="34dp"
                     android:layout_height="30dp"
                     android:layout_margin="5dp"
@@ -46,7 +46,7 @@
         <ListView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:id="@+id/main_list"
+            android:id="@+id/lv_main"
             />
     </LinearLayout>
 </LinearLayout>

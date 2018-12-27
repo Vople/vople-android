@@ -55,7 +55,7 @@ public class SituationActivity extends BaseEventActivity {
     Button btn_gather;
     @BindView(R.id.tv_script)
     TextView tv_script;
-    @BindView(R.id.tv_title)
+    @BindView(R.id.tv_room_title)
     TextView tv_room_title;
 
     int i_big_heart;
@@ -100,6 +100,7 @@ public class SituationActivity extends BaseEventActivity {
 
         plotList = new ArrayList<>();
 
+        occurDataChange();
 
         Intent intent = getIntent();
 
@@ -151,7 +152,7 @@ public class SituationActivity extends BaseEventActivity {
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> {
-                    if(result.code() == 201)
+                    if(result.code() == 200)
                         settingBoardDetail(result.body());
                 }, throwable -> {
                     Toast.makeText(SituationActivity.this, "네트워크 상태를 확인해 주세요.", Toast.LENGTH_SHORT).show();

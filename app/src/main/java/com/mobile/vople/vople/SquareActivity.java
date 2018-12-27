@@ -8,12 +8,18 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.mobile.vople.vople.server.MyUtils;
 import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
 import com.mobile.vople.vople.server.VopleServiceApi;
 
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -21,63 +27,49 @@ import retrofit2.Retrofit;
 
 public class SquareActivity extends AppCompatActivity{
 
-    private ListView lv_script_square;
+    @BindView(R.id.lv_script_square)
+    ListView lv_script_square;
+    @BindView(R.id.btn_back)
+    Button btn_back;
 
-    private Button btn_back;
-
-    private SquareListViewAdapter adapter;
+    private SquareListViewAdapter adp_square;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_square);
 
-        btn_back = (Button) findViewById(R.id.btn_back);
+        ButterKnife.bind(this);
 
-        lv_script_square = (ListView)findViewById(R.id.lv_script_square);
+        initialize();
 
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+    }
 
-        adapter = new SquareListViewAdapter();
+    private void initialize()
+    {
+        adp_square = new SquareListViewAdapter();
 
-        lv_script_square.setAdapter(adapter);
+        lv_script_square.setAdapter(adp_square);
 
         Retrofit retrofit = RetrofitInstance.getInstance(getApplicationContext());
 
-        VopleServiceApi.getAllScripts service = retrofit.create(VopleServiceApi.getAllScripts.class);
+        VopleServiceApi.getAllScripts service_get_all_scripts = retrofit.create(VopleServiceApi.getAllScripts.class);
 
-        Call<List<RetrofitModel.Script>> repos = service.repoContributors();
+        service_get_all_scripts.repoContributors()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(response -> {
+                    for(RetrofitModel.Script script : response)
+                        adp_square.addItem(script.title, script.id, script.member_restriction);
+                    adp_square.notifyDataSetChanged();
+                }, throwable -> {
+                    MyUtils.makeNetworkErrorToast(this);
+                });
+    }
 
-        repos.enqueue(new Callback<List<RetrofitModel.Script>>() {
-            @Override
-            public void onResponse(Call<List<RetrofitModel.Script>> call, Response<List<RetrofitModel.Script>> response) {
-                if(response.code() == 200)
-                {
-                    List<RetrofitModel.Script> list = response.body();
-
-                    for(RetrofitModel.Script script : list)
-                    {
-                        adapter.addItem(script.title, script.id, script.member_restriction);
-                    }
-
-                    adapter.notifyDataSetChanged();
-                }
-                else{
-                    Toast.makeText(getApplicationContext(), "잘못된 접근입니다.", Toast.LENGTH_SHORT).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<List<RetrofitModel.Script>> call, Throwable t) {
-
-            }
-        });
-
-
+    @OnClick(R.id.btn_back)
+    void onBackClick()
+    {
+        finish();
     }
 }

@@ -103,7 +103,7 @@ public class CreateRoomDialog extends Dialog{
     }
 
     @OnClick({R.id.btn_cancel, R.id.btn_submit, R.id.rb_situation, R.id.rb_mission})
-    private void onButtonClick(View v)
+    void onButtonClick(View v)
     {
 
         if(v.getId() == R.id.btn_submit)

@@ -59,4 +59,9 @@ public class MyUtils {
         Toast.makeText(context, "네트워크 설정을 확인해 주세요.", Toast.LENGTH_SHORT).show();
     }
 
+    public static void makeFullRoomErrorToast(Context context)
+    {
+        Toast.makeText(context, "방이 꽉 찼습니다. 다른 방을 이용해 주세요.", Toast.LENGTH_SHORT).show();
+    }
+
 }

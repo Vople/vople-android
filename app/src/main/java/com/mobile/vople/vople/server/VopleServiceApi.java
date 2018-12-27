@@ -26,7 +26,7 @@ public class VopleServiceApi {
     public interface login
     {
         @FormUrlEncoded
-        @POST("rest-auth/login/")
+        @POST("/rest-auth/login/")
         Single<Token> repoContributors(
                 @Field("username") String id,
                 @Field("password") String password
@@ -37,7 +37,7 @@ public class VopleServiceApi {
     {
         @FormUrlEncoded
         @POST("rest-auth/registration/vople-registration/")
-        Call<VopleServiceApi.Token> repoContributors(
+        Single<Token> repoContributors(
                 @Field("username") String id,
                 @Field("password1") String password1,
                 @Field("password2") String password2,
@@ -57,7 +57,7 @@ public class VopleServiceApi {
     public interface boards
     {
         @GET("sounds/board/")
-        Call<List<RetrofitModel.BoardContributor>> repoContributors();
+        Single<List<RetrofitModel.BoardContributor>> repoContributors();
     }
 
     public interface create_board {
@@ -91,7 +91,7 @@ public class VopleServiceApi {
     public interface quilifyJoinRoom
     {
         @GET("sounds/{board_id}/join/")
-        Call<RetrofitModel.Roll_Brief> repoContributors(
+        Single<Response<RetrofitModel.Roll_Brief>> repoContributors(
                 @Path("board_id") int board_id
         );
     }
@@ -99,7 +99,7 @@ public class VopleServiceApi {
     public interface joinAlreadyRegistedRoom
     {
         @PUT("sounds/{board_id}/join/")
-        Call<RetrofitModel.Cast> repoContributors(
+        Single<Response<RetrofitModel.Cast>> repoContributors(
                 @Path("board_id") int board_id
         );
     }
@@ -108,7 +108,7 @@ public class VopleServiceApi {
     {
         @FormUrlEncoded
         @POST("sounds/{board_id}/join/")
-        Call<RetrofitModel.Casting> repoContributors(
+        Single<Response<RetrofitModel.Casting>> repoContributors(
                 @Path("board_id") int board_id,
                 @Field("roll_name") String roll_name
         );
@@ -118,7 +118,7 @@ public class VopleServiceApi {
     {
         @FormUrlEncoded
         @POST("sounds/{board_id}/join/")
-        Call<ResponseBody> repoContributors(
+        Single<ResponseBody> repoContributors(
                 @Path("board_id") int board_id,
                 @Field("roll_name") String roll_name
         );
@@ -134,27 +134,23 @@ public class VopleServiceApi {
 
     public interface getAllScripts{
         @GET("sounds/scripts/")
-        Call<List<RetrofitModel.Script>> repoContributors();
+        Single<List<RetrofitModel.Script>> repoContributors();
     }
 
     public interface getScriptDetail{
         @GET("sounds/{script_id}/script/")
-        Call<RetrofitModel.ScriptDetail> repoContributors(
+        Single<RetrofitModel.ScriptDetail> repoContributors(
                 @Path("script_id") int script_id
         );
     }
 
     public interface getEventBoards{
         @GET("sounds/event/")
-        Call<List<RetrofitModel.BoardContributor>> repoContributors();
+        Single<List<RetrofitModel.BoardContributor>> repoContributors();
     }
 
     public class Token{
         public String token;
-    }
-
-    public class Empty{
-
     }
 
 }

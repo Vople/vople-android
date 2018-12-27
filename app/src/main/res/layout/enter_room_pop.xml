@@ -9,7 +9,7 @@
     >
 
     <TextView
-        android:id="@+id/SC"
+        android:id="@+id/tv_script"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
@@ -20,14 +20,15 @@
         android:textSize="20sp" />
 
     <LinearLayout
+        android:id="@+id/ly_content_of_script"
         android:layout_width="match_parent"
         android:layout_height="80dp"
         android:orientation="vertical"
-        android:id="@+id/ContentOfScript"
+
         >
 
         <TextView
-            android:id="@+id/ScriptContent_ByRole"
+            android:id="@+id/tv_script_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:fontFamily="@font/bmdohyeon"
@@ -36,7 +37,7 @@
     </LinearLayout>
 
     <Spinner
-        android:id="@+id/MyRole"
+        android:id="@+id/sp_available_role"
         android:layout_width="180dp"
         android:layout_height="30dp"
         android:layout_gravity="center_horizontal"

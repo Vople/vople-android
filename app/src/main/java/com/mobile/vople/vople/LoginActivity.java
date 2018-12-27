@@ -103,6 +103,8 @@ public class LoginActivity extends AppCompatActivity {
             String login_id = edt_id.getText().toString();
             String login_pwd = edt_password.getText().toString();
 
+            Toast.makeText(this, login_id + " : " + login_pwd, Toast.LENGTH_SHORT).show();
+
             service.repoContributors(login_id, login_pwd)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
@@ -113,12 +115,11 @@ public class LoginActivity extends AppCompatActivity {
                         sp.put("STORED_PWD", login_pwd);
                         Intent intent = new Intent(getApplicationContext(), ListOrCreateActivity.class);
                         startActivity(intent);
-                        pd.dismiss();
                         finish();
-                    }, t -> {
-                        Toast.makeText(getApplicationContext(), "아이디나 비밀번호가 잘못되었습니다",
-                                Toast.LENGTH_SHORT).show();
-                        Log.d("TAG", t.getLocalizedMessage());
+                        pd.dismiss();
+                    }, throwable -> {
+                        //Toast.makeText(getApplicationContext(), "아이디나 비밀번호가 잘못되었습니다",
+                          //      Toast.LENGTH_SHORT).show();
                         pd.dismiss();
                     });
         }
