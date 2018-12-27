@@ -18,9 +18,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.mobile.vople.vople.item.RoomBreifItem;
 import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
+import com.mobile.vople.vople.server.RoomBreifItem;
 import com.mobile.vople.vople.server.VopleServiceApi;
 import com.mobile.vople.vople.server.model.MyRetrofit;
 
@@ -58,7 +58,7 @@ public class VopleAdminEventActivity extends AppCompatActivity {
         AdminEventDrawer.addDrawerListener(NavToggle);
         NavToggle.syncState();
 
-        ListView NavlistView = (ListView) findViewById(R.id.Nav_ListView);
+        ListView NavlistView = (ListView) findViewById(R.id.lv_nav);
 
         lv_event = (ListView) findViewById(R.id.lv_event);
 
@@ -157,14 +157,14 @@ public class VopleAdminEventActivity extends AppCompatActivity {
                 public void onClick(View v) {
                     VopleServiceApi.joinFreeRoom service = retrofit.create(VopleServiceApi.joinFreeRoom.class);
 
-                    Call<ResponseBody> repos = service.repoContributors(item.getRoomID(), "sadlfjlxzcvnqwenx,mvnsdlkj");
+                    Call<ResponseBody> repos = service.repoContributors(item.getRoomId(), "sadlfjlxzcvnqwenx,mvnsdlkj");
                     repos.enqueue(new Callback<ResponseBody>() {
                         @Override
                         public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                             if(response.code() == 200)
                             {
                                 Intent intent = new Intent(VopleAdminEventActivity.this, FreeActivity.class);
-                                intent.putExtra("RoomID", item.getRoomID());
+                                intent.putExtra("RoomID", item.getRoomId());
                                 intent.putExtra("RoomTitle", item.getTitle());
                                 startActivity(intent);
                                 enterRoom.dismiss();
@@ -193,7 +193,7 @@ public class VopleAdminEventActivity extends AppCompatActivity {
 
         VopleServiceApi.quilifyJoinRoom service = retrofit.create(VopleServiceApi.quilifyJoinRoom.class);
 
-        final Call<RetrofitModel.Roll_Brief> repos = service.repoContributors(item.getRoomID());
+        final Call<RetrofitModel.Roll_Brief> repos = service.repoContributors(item.getRoomId());
 
         repos.enqueue(new Callback<RetrofitModel.Roll_Brief>() {
             @Override
@@ -213,7 +213,7 @@ public class VopleAdminEventActivity extends AppCompatActivity {
                 {
                     VopleServiceApi.joinAlreadyRegistedRoom innerService = retrofit.create(VopleServiceApi.joinAlreadyRegistedRoom.class);
 
-                    final Call<RetrofitModel.Cast> innerRepos = innerService.repoContributors(item.getRoomID());
+                    final Call<RetrofitModel.Cast> innerRepos = innerService.repoContributors(item.getRoomId());
 
                     innerRepos.enqueue(new Callback<RetrofitModel.Cast>() {
                         @Override
@@ -224,15 +224,15 @@ public class VopleAdminEventActivity extends AppCompatActivity {
                             {
                                 // Free Mode
                                 Intent intent = new Intent(VopleAdminEventActivity.this, FreeActivity.class);
-                                intent.putExtra("RoomID", item.getRoomID());
+                                intent.putExtra("RoomID", item.getRoomId());
                                 intent.putExtra("RoomTitle", item.getTitle());
                                 startActivity(intent);
                                 enterRoom.dismiss();
                             }
                             else if(response.code() == 202)
                             {
-                                Intent intent = new Intent(VopleAdminEventActivity.this, EventActivity.class);
-                                intent.putExtra("RoomID", item.getRoomID());
+                                Intent intent = new Intent(VopleAdminEventActivity.this, SituationActivity.class);
+                                intent.putExtra("RoomID", item.getRoomId());
                                 Gson gson = new Gson();
                                 String cast = gson.toJson(response.body());
                                 intent.putExtra("Cast", cast);
@@ -281,7 +281,7 @@ public class VopleAdminEventActivity extends AppCompatActivity {
 
                 VopleServiceApi.joinRoom service = retrofit.create(VopleServiceApi.joinRoom.class);
 
-                final Call<RetrofitModel.Casting> repos = service.repoContributors(item.getRoomID(), roll_name);
+                final Call<RetrofitModel.Casting> repos = service.repoContributors(item.getRoomId(), roll_name);
 
                 repos.enqueue(new Callback<RetrofitModel.Casting>() {
                     @Override
@@ -291,8 +291,8 @@ public class VopleAdminEventActivity extends AppCompatActivity {
 
                         if(response.code() == 200)
                         {
-                            Intent intent = new Intent(VopleAdminEventActivity.this, EventActivity.class);
-                            intent.putExtra("RoomID", item.getRoomID());
+                            Intent intent = new Intent(VopleAdminEventActivity.this, SituationActivity.class);
+                            intent.putExtra("RoomID", item.getRoomId());
                             intent.putExtra("RoomTitle", item.getTitle());
                             startActivity(intent);
                             enterRoom.dismiss();
@@ -301,7 +301,7 @@ public class VopleAdminEventActivity extends AppCompatActivity {
                         {
                             // Free Mode
                             Intent intent = new Intent(VopleAdminEventActivity.this, FreeActivity.class);
-                            intent.putExtra("RoomID", item.getRoomID());
+                            intent.putExtra("RoomID", item.getRoomId());
                             intent.putExtra("RoomTitle", item.getTitle());
                             startActivity(intent);
                             enterRoom.dismiss();

@@ -44,8 +44,8 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void Initialize()
     {
-        edt_username    = (EditText) findViewById(R.id.edt_username);
-        edt_password1   = (EditText) findViewById(R.id.edt_password1);
+        edt_username    = (EditText) findViewById(R.id.edt_password);
+        edt_password1   = (EditText) findViewById(R.id.edt_id);
         edt_password2   = (EditText) findViewById(R.id.edt_password2);
         edt_email       = (EditText) findViewById(R.id.edt_email);
         edt_bio         = (EditText) findViewById(R.id.edt_bio);

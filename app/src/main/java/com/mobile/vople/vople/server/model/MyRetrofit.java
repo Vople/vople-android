@@ -1,6 +1,6 @@
 package com.mobile.vople.vople.server.model;
 
-import com.mobile.vople.vople.server.Settings;
+import com.mobile.vople.vople.server.MySettings;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.scalars.ScalarsConverterFactory;
@@ -24,7 +24,7 @@ public class MyRetrofit {
     public Retrofit getRetrofit()
     {
         Retrofit r = new Retrofit.Builder()
-                .baseUrl(Settings.BASE_URL)
+                .baseUrl(MySettings.BASE_URL)
                 .addConverterFactory(ScalarsConverterFactory.create())
                 .build();
 

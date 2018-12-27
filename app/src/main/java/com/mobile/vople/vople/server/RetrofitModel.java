@@ -66,6 +66,7 @@ public class RetrofitModel {
         public String content;
         public int order;
         public Commenting commenting;
+        public int color;
     }
 
     public class Cast {
@@ -104,6 +105,7 @@ public class RetrofitModel {
         public String title;
         public List<CommentBrief> comments;
         public BoardDetailScript script;
+        public String get_all_plots;
     }
 
     public class Roll_Brief {

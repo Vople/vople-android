@@ -54,7 +54,7 @@
     </LinearLayout>
 
     <android.support.design.widget.NavigationView
-        android:id="@+id/Nav"
+        android:id="@+id/nv_listOrCireate"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@color/white"
@@ -64,7 +64,7 @@
         >
 
         <include
-            android:id="@+id/NavBody"
+            android:id="@+id/navBody"
             android:layout_height="match_parent"
             android:layout_width="match_parent"
             layout = "@layout/header"

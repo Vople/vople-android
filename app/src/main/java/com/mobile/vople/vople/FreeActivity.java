@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mobile.vople.vople.server.MyUtils;
 import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
 import com.mobile.vople.vople.server.VopleServiceApi;
@@ -24,6 +25,11 @@ import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -33,21 +39,26 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class FreeActivity extends AppCompatActivity implements View.OnClickListener {
-    private ListView listView;
+public class FreeActivity extends BaseEventActivity{
 
-    private FreeListViewAdapter adapter;
+    @BindView(R.id.lv_event)
+    ListView lv_event;
+    @BindView(R.id.btn_back)
+    Button btn_back;
+    @BindView(R.id.btn_big_heart)
+    Button btn_big_heart;
+    @BindView(R.id.btn_record)
+    Button btn_record;
+    @BindView(R.id.btn_send)
+    Button btn_send;
+    @BindView(R.id.tv_room_title)
+    TextView tv_room_title;
+
     private int i_big_heart;
-    private Button btn_back;
-    private Button btn_big_heart;
-    private Button btn_record;
-    private Button btn_cancel;
-    private Button btn_send;
-    private Date date;
-    private MediaPlayer mediaPlayer;
 
     MediaRecorder recorder = null;
 
+    private FreeListViewAdapter adp_free_list;
     private Retrofit retrofit;
 
     private int roomID;
@@ -55,14 +66,24 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
 
     private String sound_path = "/recorder";
 
-    private TextView tv_room_title;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_free);
 
+        ButterKnife.bind(this);
         initialize();
+        displayAllItem();
+
+    }
+
+
+    private void initialize()
+    {
+        i_big_heart = 0;
+
+        btn_record.setTag(true);
 
         Intent get_intent = getIntent();
 
@@ -76,41 +97,32 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
 
         tv_room_title.setText(roomTitle);
 
-        adapter = new FreeListViewAdapter();
+        adp_free_list = new FreeListViewAdapter();
 
-        listView.setAdapter(adapter);
+        lv_event.setAdapter(adp_free_list);
 
-        VopleServiceApi.boardDetail service = retrofit.create(VopleServiceApi.boardDetail.class);
-
-        Call<RetrofitModel.BoardDetail> repos = service.repoContributors(roomID);
-
-        repos.enqueue(new Callback<RetrofitModel.BoardDetail>() {
-            @Override
-            public void onResponse(Call<RetrofitModel.BoardDetail> call, Response<RetrofitModel.BoardDetail> response) {
-                if(response.code() == 200)
-                {
-                    for(RetrofitModel.CommentBrief comment : response.body().comments) {
-                        String[] temp1 = comment.created_at.split("T");
-                        String[] temp2 = temp1[0].split("-");
-                        String[] temp3 = temp1[1].split(":");
-
-                        String nowtime = temp2[1] + "월 " + temp2[2] + "일 " + temp3[0] + ":" + temp3[1];
-
-                        adapter.addItem(null, comment.owner.name, nowtime, comment.sound);
-                    }
-                    adapter.notifyDataSetChanged();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<RetrofitModel.BoardDetail> call, Throwable t) {
-
-            }
-        });
-
+        retrofit = RetrofitInstance.getInstance(getApplicationContext());
     }
 
-    @Override
+
+    private void displayAllItem()
+    {
+        adp_free_list.clear();
+
+        VopleServiceApi.boardDetail service_board_detail = retrofit.create(VopleServiceApi.boardDetail.class);
+
+        service_board_detail.repoContributors(roomID)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(response -> { return response.code() == 200 ? response.body() : null;})
+                .subscribe(response -> {
+                    settingBoardDetail(response);
+                }, throwable -> {
+                    Toast.makeText(this, "네트워크를 확인해주세요.", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    @OnClick({R.id.btn_record, R.id.btn_send, R.id.btn_back})
     public void onClick(View v) {
         if (v.getId() == btn_back.getId()) {
             finish();
@@ -134,11 +146,9 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
             if (state) {
                 btn_record.setBackgroundResource(R.drawable.event_press_record_button);
                 startRec();
-                //long start = System.currentTimeMillis();
             } else {
                 btn_record.setBackgroundResource(R.drawable.event_unpress_record_button);
                 stopRec();
-                //long end = System.currentTimeMillis();
             }
 
             btn_record.setTag(!state);
@@ -153,6 +163,7 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
             } catch (Exception e) {
                 Toast.makeText(this, "잘못된 접근입니다", Toast.LENGTH_SHORT).show();
             }
+            displayAllItem();
         }
     }
 
@@ -163,44 +174,31 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
 
             File file = Environment.getExternalStorageDirectory();
 
-//갤럭시 S4기준으로 /storage/emulated/0/의 경로를 갖고 시작한다.
-
-            String path = file.getAbsolutePath() + sound_path + "record.mp3";
+            String path = file.getAbsolutePath() + sound_path + ".mp3";
 
             recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 
-//첫번째로 어떤 것으로 녹음할것인가를 설정한다. 마이크로 녹음을 할것이기에 MIC로 설정한다.
 
             recorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 
-//이것은 파일타입을 설정한다. 녹음파일의경우 3gp로해야 용량도 작고 효율적인 녹음기를 개발할 수있다.
 
             recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 
-//이것은 코덱을 설정하는 것이라고 생각하면된다.
 
             recorder.setOutputFile(path);
 
-//저장될 파일을 저장한뒤
 
             recorder.prepare();
 
             recorder.start();
 
-//시작하면된다.
 
             Toast.makeText(this, "녹음 시작", Toast.LENGTH_SHORT).show();
 
         } catch (IllegalStateException e) {
-
-// TODO Auto-generated catch block
-
             e.printStackTrace();
         } catch (IOException e) {
-
-// TODO Auto-generated catch block
             e.printStackTrace();
-
         }
     }
 
@@ -208,7 +206,7 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
 
         recorder.stop();
 
-//멈추는 것이다.
+
 
         recorder.release();
 
@@ -218,61 +216,14 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void initialize()
-    {
-        i_big_heart = 0;
-        btn_back = findViewById(R.id.btn_back);
-        btn_big_heart = findViewById(R.id.btn_big_heart);
-        btn_record = findViewById(R.id.btn_record);
-        btn_send = findViewById(R.id.btn_send);
-        tv_room_title = findViewById(R.id.tv_room_title);
-
-        btn_record = findViewById(R.id.btn_record);
-        btn_send = findViewById(R.id.btn_send);
-
-        listView = findViewById(R.id.lv_event);
-
-        btn_record.setTag(true);
-
-        btn_record.setOnClickListener(this);
-        btn_send.setOnClickListener(this);
-
-        retrofit = RetrofitInstance.getInstance(getApplicationContext());
-    }
-
-
-    private void playAudio(String url) throws Exception
-    {
-        killMediaPlayer();
-
-        mediaPlayer = new MediaPlayer();
-        mediaPlayer.setDataSource(url);
-        mediaPlayer.prepare();
-        mediaPlayer.start();
-    }
-
-    private void killMediaPlayer() {
-        if(mediaPlayer!=null) {
-            try {
-                mediaPlayer.release();
-            }
-            catch(Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
     private void sendAudioFile() throws Exception
     {
-        File file = new File(Environment.getExternalStorageDirectory() + sound_path + "record.mp3");
-
-        Retrofit retrofit = RetrofitInstance.getInstance(getApplicationContext());
+        File file = new File(Environment.getExternalStorageDirectory() + sound_path + ".mp3");
 
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("audio/*"), file);
 
-        MultipartBody.Part body = MultipartBody.Part.createFormData("audio", file.getName(), requestFile);
+        //MultipartBody.Part body = MultipartBody.Part.createFormData("audio", file.getName(), requestFile);
 
         VopleServiceApi.commentOnBoard service = retrofit.create(VopleServiceApi.commentOnBoard.class);
 
@@ -281,7 +232,7 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
         call.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, retrofit2.Response<ResponseBody> response) {
-                Toast.makeText(getApplicationContext(), "Code : " + String.valueOf(response.code()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "전송완료!", Toast.LENGTH_SHORT).show();
             }
 
             @Override
@@ -293,4 +244,24 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @Override
+    protected void settingBoardDetail(RetrofitModel.BoardDetail response)
+    {
+        if(response == null)
+        {
+            MyUtils.makeNetworkErrorToast(this);
+            return;
+        }
+
+        for(RetrofitModel.CommentBrief comment : response.comments) {
+            String[] temp1 = comment.created_at.split("T");
+            String[] temp2 = temp1[0].split("-");
+            String[] temp3 = temp1[1].split(":");
+
+            String nowtime = temp2[1] + "월 " + temp2[2] + "일 " + temp3[0] + ":" + temp3[1];
+
+            adp_free_list.addItem(null, comment.owner.name, nowtime, comment.sound);
+        }
+        adp_free_list.notifyDataSetChanged();
+    }
 }

@@ -20,13 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
 import okhttp3.RequestBody;
-import okhttp3.Response;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -109,7 +105,7 @@ public class RolePlayListViewAdapter extends BaseAdapter {
                 {
                     sendAudioFile(position);
 
-                    ((EventActivity)context).occurDataChange();
+                    ((SituationActivity)context).occurDataChange();
                 }
             }
         };
@@ -197,7 +193,7 @@ public class RolePlayListViewAdapter extends BaseAdapter {
 
         VopleServiceApi.commentOnBoard service = retrofit.create(VopleServiceApi.commentOnBoard.class);
 
-        Call<ResponseBody> call = service.upload(EventActivity.roomId, requestFile, listViewItemList.get(position).getPlot_id());
+        Call<ResponseBody> call = service.upload(SituationActivity.roomId, requestFile, listViewItemList.get(position).getPlot_id());
 
         call.enqueue(new Callback<ResponseBody>() {
             @Override

@@ -18,7 +18,7 @@
         app:srcCompat="@drawable/login_logo" />
 
     <EditText
-        android:id="@+id/edt_password1"
+        android:id="@+id/edt_id"
         android:layout_width="270dp"
         android:layout_height="35dp"
         android:layout_marginTop="150dp"
@@ -39,7 +39,7 @@
 
 
     <EditText
-        android:id="@+id/edt_username"
+        android:id="@+id/edt_password"
         android:layout_width="270dp"
         android:layout_height="40dp"
         android:layout_marginTop="15dp"
@@ -54,7 +54,7 @@
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edt_password1" />
+        app:layout_constraintTop_toBottomOf="@+id/edt_id" />
 
     <TextView
         android:id="@+id/textView2"
@@ -72,7 +72,7 @@
         android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btn_login" />
+        app:layout_constraintTop_toBottomOf="@id/btn_login" />
 
     <TextView
         android:id="@+id/tv_signup"
@@ -89,7 +89,7 @@
         android:textSize="15dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textView2"
-        app:layout_constraintTop_toBottomOf="@+id/btn_login" />
+        app:layout_constraintTop_toBottomOf="@id/btn_login" />
 
     <Button
         android:id="@+id/btn_login"
@@ -104,6 +104,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.503"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edt_username" />
+        app:layout_constraintTop_toBottomOf="@+id/edt_password" />
 
 </android.support.constraint.ConstraintLayout>

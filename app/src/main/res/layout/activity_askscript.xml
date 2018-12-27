@@ -39,7 +39,7 @@
         app:layout_constraintTop_toTopOf="@+id/imageView4" />
 
     <EditText
-        android:id="@+id/tv_title"
+        android:id="@+id/edt_title"
         android:layout_width="wrap_content"
         android:layout_height="50dp"
         android:layout_marginTop="20dp"

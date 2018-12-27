@@ -56,8 +56,12 @@ public class ListViewAdapter extends BaseAdapter {
 
         btn_play.setTag(true);
 
+
+
         // Data Set(listViewItemList)에서 position에 위치한 데이터 참조 획득
         ListViewItem listViewItem = listViewItemList.get(pos);
+
+        profileImageView.setImageDrawable(listViewItem.getProfile());
 
         View.OnClickListener listener = new View.OnClickListener() {
             @Override

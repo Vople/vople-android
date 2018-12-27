@@ -8,7 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.mobile.vople.vople.item.RoomBreifItem;
+
+import com.mobile.vople.vople.server.RoomBreifItem;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -23,13 +23,15 @@ import com.mobile.vople.vople.server.model.MyRetrofit;
 
 import java.util.Map;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
-public class LoginActivity extends AppCompatActivity implements View.OnClickListener
-{
+public class LoginActivity extends AppCompatActivity {
+
     public final int PERMISSION = 1;
 
     public int permissionCheck_STORAGE;
@@ -37,13 +39,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     public static LoginActivity instance;
 
-    private EditText edt_id, edt_password;
-    private TextView tv_signup;
-    private Button btn_login;
+    @BindView(R.id.edt_id)
+    EditText edt_id;
+    @BindView(R.id.edt_password)
+    EditText edt_password;
+    @BindView(R.id.tv_signup)
+    TextView tv_signup;
+    @BindView(R.id.btn_login)
+    Button btn_login;
 
     private Retrofit retrofit;
-
-    private Map<String, String> map = null;
 
     private SharedPreference sp;
 
@@ -52,32 +57,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
+        ButterKnife.bind(this);
+
         RequestPermission();
-
-        Initialize();
-
-        instance = this;
-
-    }
-
-
-    private void Initialize() {
-        edt_id = (EditText) findViewById(R.id.edt_password1);
-        edt_password = (EditText) findViewById(R.id.edt_username);
-
-        tv_signup = (TextView) findViewById(R.id.tv_signup);
-
-        btn_login = (Button) findViewById(R.id.btn_login);
-
-        btn_login.setOnClickListener(this);
-
-        retrofit = MyRetrofit.getInstance().getRetrofit();
 
         retrofit = RetrofitInstance.getInstance(getApplicationContext());
 
         sp = SharedPreference.getInstance();
 
-        tv_signup.setOnClickListener(this);
+        instance = this;
+
+
     }
 
     @TargetApi(Build.VERSION_CODES.M)
@@ -93,20 +83,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             if(shouldShowRequestPermissionRationale(Manifest.permission.WRITE_EXTERNAL_STORAGE) ||
                     shouldShowRequestPermissionRationale(Manifest.permission.RECORD_AUDIO))
-            {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, PERMISSION);
-            }
-
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.RECORD_AUDIO}, PERMISSION);
             else
-            {
-                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.RECORD_AUDIO}, PERMISSION);
-            }
+                requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.RECORD_AUDIO}, PERMISSION);
         }
     }
 
-    @Override
+    @OnClick({R.id.btn_login, R.id.tv_signup})
     public void onClick(View v) {
-
 
         if (v.getId() == btn_login.getId()) {
 
@@ -114,36 +100,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             VopleServiceApi.login service = retrofit.create(VopleServiceApi.login.class);
 
-            String id_str = edt_id.getText().toString();
-            String pw_str = edt_password.getText().toString();
+            String login_id = edt_id.getText().toString();
+            String login_pwd = edt_password.getText().toString();
 
-            final Call<VopleServiceApi.Token> repos = service.repoContributors(id_str, pw_str);
-            repos.enqueue(new Callback<VopleServiceApi.Token>() {
-                @Override
-                public void onResponse(Call<VopleServiceApi.Token> call, Response<VopleServiceApi.Token> response) {
-                    if (response.code() == 200) {
-                        sp.put("Authorization", response.body().token);
+            service.repoContributors(login_id, login_pwd)
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(response -> {
+                        sp.put("Authorization", response.token);
                         sp.put("IS_AUTO_LOGIN", "Yes");
-                        sp.put("STORED_ID", id_str);
-                        sp.put("STORED_PWD", pw_str);
+                        sp.put("STORED_ID", login_id);
+                        sp.put("STORED_PWD", login_pwd);
                         Intent intent = new Intent(getApplicationContext(), ListOrCreateActivity.class);
                         startActivity(intent);
+                        pd.dismiss();
                         finish();
-
-                    } else {
-                        Toast.makeText(getApplicationContext(), "Response.code = " + String.valueOf(response.code()),
+                    }, t -> {
+                        Toast.makeText(getApplicationContext(), "아이디나 비밀번호가 잘못되었습니다",
                                 Toast.LENGTH_SHORT).show();
-                    }
-                    pd.dismiss();
-
-                }
-
-                @Override
-                public void onFailure(Call<VopleServiceApi.Token> call, Throwable t) {
-                    Log.d("TAG", t.getLocalizedMessage());
-                    pd.dismiss();
-                }
-            });
+                        Log.d("TAG", t.getLocalizedMessage());
+                        pd.dismiss();
+                    });
         }
         else if(v.getId() == tv_signup.getId())
         {

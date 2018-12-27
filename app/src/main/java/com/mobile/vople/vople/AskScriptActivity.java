@@ -9,40 +9,42 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class AskScriptActivity extends AppCompatActivity implements View.OnClickListener {
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-    private Button btn_ask, btn_back;
-    private EditText edt_title;
-    private EditText edt_script;
+public class AskScriptActivity extends AppCompatActivity{
+
+    @BindView(R.id.btn_ask)
+    Button btn_ask;
+    @BindView(R.id.btn_back)
+    Button btn_back;
+    @BindView(R.id.edt_title)
+    EditText edt_title;
+    @BindView(R.id.edt_script)
+    EditText edt_script;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_askscript);
-
-        btn_ask = findViewById(R.id.btn_ask);
-        btn_back = findViewById(R.id.btn_back);
-        btn_ask.setOnClickListener(this);
-        btn_back.setOnClickListener(this);
-
-        edt_title = findViewById(R.id.tv_title);
-
-        edt_script = findViewById(R.id.edt_script);
+        ButterKnife.bind(this);
     }
 
-    @Override
-    public void onClick(View v) {
-        if(v.getId() == btn_ask.getId()){
-            if(edt_title.getText().length() <= 0){
+    @OnClick({R.id.btn_ask, R.id.btn_back})
+    public void onButtonClick(View v) {
+        if(v.getId() == btn_ask.getId())
+        {
+            if(edt_title.getText().length() <= 0)
+            {
                 Toast.makeText(this, "제목을 입력해주세요", Toast.LENGTH_SHORT).show();
             }
-
-            else if(edt_script.getText().length() <= 0){
+            else if(edt_script.getText().length() <= 0)
+            {
                 Toast.makeText(this, "대본을 입력해주세요", Toast.LENGTH_SHORT).show();
             }
-
-            else{
-
+            else
+            {
                 Intent email = new Intent(Intent.ACTION_SEND);
                 email.setType("plain/text");
                 String[] address = {"once29@naver.com"};

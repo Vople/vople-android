@@ -1,27 +1,17 @@
 package com.mobile.vople.vople.server;
 
-import android.media.session.MediaSession;
-
-import com.mobile.vople.vople.server.model.User;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
+import io.reactivex.Observable;
 import io.reactivex.Single;
-import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 import retrofit2.Call;
-import retrofit2.http.Body;
+import retrofit2.Response;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
-import retrofit2.http.HeaderMap;
 import retrofit2.http.Multipart;
-import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
@@ -37,7 +27,7 @@ public class VopleServiceApi {
     {
         @FormUrlEncoded
         @POST("rest-auth/login/")
-        Call<VopleServiceApi.Token> repoContributors(
+        Single<Token> repoContributors(
                 @Field("username") String id,
                 @Field("password") String password
         );
@@ -61,7 +51,7 @@ public class VopleServiceApi {
     public interface listAllScripts
     {
         @GET("sounds/scripts/")
-        Call<List<RetrofitModel.Script>> repoContributors();
+        Single<List<RetrofitModel.Script>> repoContributors();
     }
 
     public interface boards
@@ -73,7 +63,7 @@ public class VopleServiceApi {
     public interface create_board {
         @FormUrlEncoded
         @POST("sounds/board/")
-        Call<RetrofitModel.BoardContributor> repoContributors(
+        Single<Response<RetrofitModel.BoardContributor>> repoContributors(
                 @Field("title") String title,
                 @Field("content") String content,
                 @Field("mode") int mode,
@@ -83,7 +73,7 @@ public class VopleServiceApi {
 
     public interface get_plots{
         @GET("sounds/{board_id}/plots/")
-        Call<List<RetrofitModel.Plot>> repoContributors(
+        Single<List<RetrofitModel.Plot>> repoContributors(
                 @Path("board_id") int board_id
         );
     }
@@ -137,7 +127,7 @@ public class VopleServiceApi {
     public interface boardDetail
     {
         @GET("sounds/{board_id}/board/")
-        Call<RetrofitModel.BoardDetail> repoContributors(
+        Single<Response<RetrofitModel.BoardDetail>> repoContributors(
                 @Path("board_id") int board_id
         );
     }

@@ -22,6 +22,8 @@ import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.SharedPreference;
 import com.mobile.vople.vople.server.VopleServiceApi;
 
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -140,27 +142,17 @@ public class SplashActivity extends AppCompatActivity {
 
                 VopleServiceApi.login service = retrofit.create(VopleServiceApi.login.class);
 
-                final Call<VopleServiceApi.Token> repos = service.repoContributors(stored_id, stored_pwd);
-                repos.enqueue(new Callback<VopleServiceApi.Token>() {
-                    @Override
-                    public void onResponse(Call<VopleServiceApi.Token> call, Response<VopleServiceApi.Token> response) {
-                        if (response.code() == 200) {
-                            sp.put("Authorization", response.body().token);
-                            Intent intent = new Intent(getApplicationContext(), ListOrCreateActivity.class);
-                            startActivity(intent);
+                service.repoContributors(stored_id, stored_pwd)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(response -> {
+                            sp.put("Authorization", response.token);
+                            startActivity(new Intent(getApplicationContext(), ListOrCreateActivity.class));
                             finish();
-
-                        } else {
-                        }
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<VopleServiceApi.Token> call, Throwable t) {
-                        Log.d("TAG", t.getLocalizedMessage());
-                    }
+                            }, throwable -> {
+                            Log.d("TAG", throwable.getLocalizedMessage());
                 });
-                // close this activity
+
                 finish();
             }
         }, SPLASH_TERM);
