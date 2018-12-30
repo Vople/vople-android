@@ -1,6 +1,9 @@
 package com.mobile.vople.vople.di;
 
 
+import com.mobile.vople.vople.splash.SplashActivity;
+import com.mobile.vople.vople.splash.SplashModule;
+
 import dagger.Module;
 import dagger.android.ContributesAndroidInjector;
 
@@ -13,5 +16,9 @@ import dagger.android.ContributesAndroidInjector;
  */
 @Module
 public abstract class ActivityBindingModule {
+    @ActivityScoped
+    @ContributesAndroidInjector(modules = SplashModule.class)
+    abstract SplashActivity splashActivity();
+
 
 }

@@ -16,9 +16,7 @@ import com.google.gson.Gson;
 import com.mobile.vople.vople.FreeActivity;
 import com.mobile.vople.vople.R;
 import com.mobile.vople.vople.SituationActivity;
-import com.mobile.vople.vople.main.MainActivity;
 import com.mobile.vople.vople.server.MyUtils;
-import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
 import com.mobile.vople.vople.server.RoomBreifItem;
 import com.mobile.vople.vople.server.VopleServiceApi;
@@ -29,12 +27,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
-import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 /**
@@ -75,7 +68,6 @@ public class EnterRoomDialog extends Dialog {
 
     protected void initialize()
     {
-        retrofit = RetrofitInstance.getInstance(getContext());
 
         if(item.getRoomType() == 1)
             enterSituationRoom();

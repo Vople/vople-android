@@ -3,6 +3,8 @@ package com.mobile.vople.vople.di;
 import android.app.Application;
 import android.content.Context;
 
+import javax.inject.Named;
+
 import dagger.Binds;
 import dagger.Module;
 
@@ -13,8 +15,9 @@ import dagger.Module;
  * One of the advantages of Dagger.Android is that your
  * Application & Activities are provided into your graph for you.
  * {@link
- * AppComponent}.
+ * AppComponent}.r
  */
+
 @Module
 public abstract class ApplicationModule {
     //expose Application as an injectable context

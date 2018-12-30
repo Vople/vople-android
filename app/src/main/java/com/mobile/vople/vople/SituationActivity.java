@@ -16,8 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.vople.vople.server.MySettings;
-import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
+import com.mobile.vople.vople.server.VopleApi;
 import com.mobile.vople.vople.server.VopleServiceApi;
 
 import java.io.File;
@@ -31,6 +31,8 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -62,7 +64,8 @@ public class SituationActivity extends BaseEventActivity {
 
     private List<RetrofitModel.Plot> plotList;
 
-    private Retrofit retrofit;
+    @Inject
+    VopleApi mVopleApi;
 
     private boolean is_first = true;
 
@@ -86,6 +89,7 @@ public class SituationActivity extends BaseEventActivity {
 
     }
 
+    @SuppressLint({"CheckResult", "HandlerLeak"})
     private void initialize()
     {
         adp_event = new ListViewAdapter();
@@ -95,8 +99,6 @@ public class SituationActivity extends BaseEventActivity {
         listView_role_play.setAdapter(adp_role_play);
 
         i_big_heart = 0;
-
-        retrofit = RetrofitInstance.getInstance(this);
 
         plotList = new ArrayList<>();
 
@@ -115,7 +117,7 @@ public class SituationActivity extends BaseEventActivity {
             finish();
         }
 
-        VopleServiceApi.get_plots service_get_plots = retrofit.create(VopleServiceApi.get_plots.class);
+        VopleServiceApi.get_plots service_get_plots = mVopleApi.getRetrofit().create(VopleServiceApi.get_plots.class);
         service_get_plots.repoContributors(roomId)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -142,11 +144,12 @@ public class SituationActivity extends BaseEventActivity {
         };
     }
 
+    @SuppressLint("CheckResult")
     public void occurDataChange()
     {
         adp_event.clear();
 
-        VopleServiceApi.boardDetail service_board_detail = retrofit.create(VopleServiceApi.boardDetail.class);
+        VopleServiceApi.boardDetail service_board_detail = mVopleApi.getRetrofit().create(VopleServiceApi.boardDetail.class);
 
         service_board_detail.repoContributors(roomId)
                 .subscribeOn(Schedulers.io())

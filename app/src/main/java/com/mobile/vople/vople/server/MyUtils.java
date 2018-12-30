@@ -1,6 +1,10 @@
 package com.mobile.vople.vople.server;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import com.coremedia.iso.boxes.Container;
@@ -62,6 +66,16 @@ public class MyUtils {
     public static void makeFullRoomErrorToast(Context context)
     {
         Toast.makeText(context, "방이 꽉 찼습니다. 다른 방을 이용해 주세요.", Toast.LENGTH_SHORT).show();
+    }
+
+    public static void addFragmentToActivity(@NonNull FragmentManager fragmentManager,
+                                             @NonNull Fragment fragment, int frameId)
+    {
+        if( fragmentManager == null || fragment == null) return;
+
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(frameId, fragment);
+        transaction.commit();
     }
 
 }

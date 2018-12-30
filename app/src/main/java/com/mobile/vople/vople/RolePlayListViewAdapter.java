@@ -13,12 +13,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mobile.vople.vople.server.RetrofitInstance;
+import com.mobile.vople.vople.server.VopleApi;
 import com.mobile.vople.vople.server.VopleServiceApi;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -37,6 +39,9 @@ public class RolePlayListViewAdapter extends BaseAdapter {
     private String sound_path = "/recorder";
 
     private ArrayList<RolePlayListViewItem> listViewItemList = new ArrayList<RolePlayListViewItem>();
+
+    @Inject
+    VopleApi mVopleApi;
 
     public RolePlayListViewAdapter() {
     }
@@ -184,14 +189,12 @@ public class RolePlayListViewAdapter extends BaseAdapter {
     {
         File file = new File(Environment.getExternalStorageDirectory() + sound_path + String.valueOf(position) + ".mp3");
 
-        Retrofit retrofit = RetrofitInstance.getInstance(context);
-
         RequestBody requestFile =
                 RequestBody.create(MediaType.parse("audio/*"), file);
 
         MultipartBody.Part body = MultipartBody.Part.createFormData("audio", file.getName(), requestFile);
 
-        VopleServiceApi.commentOnBoard service = retrofit.create(VopleServiceApi.commentOnBoard.class);
+        VopleServiceApi.commentOnBoard service = mVopleApi.getRetrofit().create(VopleServiceApi.commentOnBoard.class);
 
         Call<ResponseBody> call = service.upload(SituationActivity.roomId, requestFile, listViewItemList.get(position).getPlot_id());
 

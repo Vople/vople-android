@@ -1,50 +1,28 @@
 package com.mobile.vople.vople;
 
-import android.app.Dialog;
-import android.content.Intent;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.mobile.vople.vople.main.MainActivity;
-import com.mobile.vople.vople.main.MainAdapter;
 import com.mobile.vople.vople.server.MyUtils;
-import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
 import com.mobile.vople.vople.server.RoomBreifItem;
-import com.mobile.vople.vople.server.SharedPreference;
+import com.mobile.vople.vople.server.VopleApi;
 import com.mobile.vople.vople.server.VopleServiceApi;
 import com.mobile.vople.vople.server.VopleServiceApi.getEventBoards;
-import com.mobile.vople.vople.server.model.MyRetrofit;
 import com.mobile.vople.vople.ui.EnterRoomDialog;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.inject.Inject;
 
-import androidx.annotation.Nullable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnItemClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class VopleAdminEventActivity extends AppCompatActivity
@@ -54,7 +32,8 @@ public class VopleAdminEventActivity extends AppCompatActivity
 
     private VopleAdminAdapter adp_event;
 
-    private Retrofit retrofit;
+    @Inject
+    VopleApi mVopleApi;
 
     @BindView(R.id.lv_event)
     ListView lv_event;
@@ -68,7 +47,7 @@ public class VopleAdminEventActivity extends AppCompatActivity
 
         initialize();
 
-        VopleServiceApi.getEventBoards service_get_all_event_boards = retrofit.create(getEventBoards.class);
+        VopleServiceApi.getEventBoards service_get_all_event_boards = mVopleApi.getRetrofit().create(getEventBoards.class);
 
         service_get_all_event_boards.repoContributors()
                 .subscribeOn(Schedulers.io())
@@ -88,9 +67,6 @@ public class VopleAdminEventActivity extends AppCompatActivity
     {
         adp_event = new VopleAdminAdapter();
         lv_event.setAdapter(adp_event);
-
-        retrofit = RetrofitInstance.getInstance(getApplicationContext());
-
     }
 
     @OnItemClick(R.id.lv_event)
@@ -99,4 +75,9 @@ public class VopleAdminEventActivity extends AppCompatActivity
         new EnterRoomDialog(this, (RoomBreifItem) adp_event.getItem(position)).show();
     }
 
+    @OnClick(R.id.btn_back)
+    void onButtonClick(View v)
+    {
+        finish();
+    }
 }

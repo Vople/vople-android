@@ -1,49 +1,35 @@
 package com.mobile.vople.vople.main;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.app.Dialog;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.mobile.vople.vople.SituationActivity;
-import com.mobile.vople.vople.FreeActivity;
 import com.mobile.vople.vople.ListOrCreateActivity;
 import com.mobile.vople.vople.LoginActivity;
 import com.mobile.vople.vople.NavAdapter;
 import com.mobile.vople.vople.R;
 import com.mobile.vople.vople.server.MyUtils;
-import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
 import com.mobile.vople.vople.server.RoomBreifItem;
-import com.mobile.vople.vople.server.SharedPreference;
+import com.mobile.vople.vople.server.MySharedPreferences;
+import com.mobile.vople.vople.server.VopleApi;
 import com.mobile.vople.vople.server.VopleServiceApi;
 import com.mobile.vople.vople.ui.EnterRoomDialog;
 
-import java.util.ArrayList;
-import java.util.List;
+import javax.inject.Inject;
 
-import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import okhttp3.ResponseBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity{
@@ -59,11 +45,16 @@ public class MainActivity extends AppCompatActivity{
     @BindView(R.id.lv_nav)
     ListView lv_nav;
 
-    private Retrofit retrofit;
+    @Inject
+    VopleApi mVopleApi;
 
     private MainAdapter adp_main;
     private NavAdapter adp_nav;
 
+    //@Inject
+    MySharedPreferences mySharedPreferences;
+
+    @SuppressLint("CheckResult")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +64,7 @@ public class MainActivity extends AppCompatActivity{
 
         initialize();
 
-        VopleServiceApi.boards service_get_all_boards = retrofit.create(VopleServiceApi.boards.class);
+        VopleServiceApi.boards service_get_all_boards = mVopleApi.getRetrofit().create(VopleServiceApi.boards.class);
 
         service_get_all_boards.repoContributors()
                 .subscribeOn(Schedulers.io())
@@ -97,8 +88,6 @@ public class MainActivity extends AppCompatActivity{
         adp_nav = new NavAdapter();
         lv_nav.setAdapter(adp_nav);
 
-        retrofit = RetrofitInstance.getInstance(getApplicationContext());
-
         lv_main.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -117,8 +106,8 @@ public class MainActivity extends AppCompatActivity{
         }
         else if(v.getId() == R.id.btn_logout)
         {
-            SharedPreference.getInstance(MainActivity.this).remove("IS_AUTO_LOGIN");
-            SharedPreference.getInstance(MainActivity.this).put("IS_AUTO_LOGIN", "No");
+            mySharedPreferences.remove("IS_AUTO_LOGIN");
+            mySharedPreferences.put("IS_AUTO_LOGIN", "No");
             Intent intent = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(intent);
             finish();

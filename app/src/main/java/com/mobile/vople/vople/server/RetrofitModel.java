@@ -1,11 +1,5 @@
 package com.mobile.vople.vople.server;
 
-import com.mobile.vople.vople.server.model.User;
-
-import java.io.File;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -21,10 +15,7 @@ public class RetrofitModel {
         public String title;
         public int mode;
         public ScriptBrief script;
-        //public  int board_likes;
-
     }
-
 
     public class CreateBoardContributor{
         public String title;
@@ -42,7 +33,6 @@ public class RetrofitModel {
         public int member_restriction;
         public String title;
     }
-
 
     public class BoardDetailScript extends Script
     {

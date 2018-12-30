@@ -1,5 +1,6 @@
 package com.mobile.vople.vople.ui;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -17,12 +18,14 @@ import android.widget.Toast;
 
 import com.mobile.vople.vople.SituationActivity;
 import com.mobile.vople.vople.R;
-import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
+import com.mobile.vople.vople.server.VopleApi;
 import com.mobile.vople.vople.server.VopleServiceApi;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -56,7 +59,8 @@ public class CreateRoomDialog extends Dialog{
 
     private List<RetrofitModel.Script> all_scripts;
 
-    private Retrofit retrofit;
+    @Inject
+    VopleApi mVopleApi;
 
     public CreateRoomDialog(@NonNull Context context) {
         super(context);
@@ -70,13 +74,12 @@ public class CreateRoomDialog extends Dialog{
     private void initialze()
     {
         all_scripts = new ArrayList<>();
-
-        retrofit = RetrofitInstance.getInstance(getContext());
     }
 
+    @SuppressLint("CheckResult")
     private void loadScripts()
     {
-        VopleServiceApi.listAllScripts service = retrofit.create(VopleServiceApi.listAllScripts.class);
+        VopleServiceApi.listAllScripts service = mVopleApi.getRetrofit().create(VopleServiceApi.listAllScripts.class);
 
         service.repoContributors()
                 .subscribeOn(Schedulers.io())
@@ -102,7 +105,7 @@ public class CreateRoomDialog extends Dialog{
         sp_playScript.setAdapter(adp1);
     }
 
-    @OnClick({R.id.btn_cancel, R.id.btn_submit, R.id.rb_situation, R.id.rb_mission})
+    @OnClick({R.id.btn_close, R.id.btn_submit, R.id.rb_situation, R.id.rb_mission})
     void onButtonClick(View v)
     {
 
@@ -121,7 +124,7 @@ public class CreateRoomDialog extends Dialog{
                 }
             }
 
-            VopleServiceApi.create_board mkBoardService = retrofit.create(VopleServiceApi.create_board.class);
+            VopleServiceApi.create_board mkBoardService = mVopleApi.getRetrofit().create(VopleServiceApi.create_board.class);
 
             mkBoardService.repoContributors(edt_roomName.getText().toString(),
                     (String) sp_playScript.getSelectedItem(),

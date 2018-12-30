@@ -1,27 +1,24 @@
 package com.mobile.vople.vople;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.RadioGroup;
 import android.widget.Toast;
 
-import com.mobile.vople.vople.server.RetrofitInstance;
-import com.mobile.vople.vople.server.SharedPreference;
+import com.mobile.vople.vople.server.MySharedPreferences;
 import com.mobile.vople.vople.server.VopleServiceApi;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class SignUpActivity extends AppCompatActivity implements View.OnClickListener{
@@ -43,9 +40,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
     @BindView(R.id.btn_submit)
     Button btn_submit;
 
-    private Retrofit retrofit;
+    @Inject
+    Retrofit retrofit;
 
-    private SharedPreference sp;
+    private MySharedPreferences sp;
 
     private final static String TAG = "-----SignUpActivity----";
 
@@ -62,11 +60,10 @@ public class SignUpActivity extends AppCompatActivity implements View.OnClickLis
 
     private void initialize()
     {
-        retrofit = RetrofitInstance.getInstance(getApplicationContext());
 
-        sp = SharedPreference.getInstance();
     }
 
+    @SuppressLint("CheckResult")
     @Override
     public void onClick(View v) {
         if(v.getId() == btn_submit.getId())

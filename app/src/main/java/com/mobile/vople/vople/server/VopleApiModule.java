@@ -5,6 +5,10 @@ import android.content.Context;
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
+import javax.inject.Inject;
+
+import dagger.Module;
+import dagger.Provides;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -13,28 +17,34 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by parkjaemin on 08/11/2018.
- */
+@Module
+public class VopleApiModule {
 
-public class RetrofitInstance {
-    private static Retrofit retrofit = null;
-    private static final String API_URL = MySettings.BASE_URL;
+    private Context mContext;
+//
+//    @Inject
+//    MySharedPreferences mySharedPreferences;
 
-    static public  Retrofit getInstance(Context context){
-        if(retrofit == null){
-            final SharedPreference preference = SharedPreference.getInstance(context);
+    public VopleApiModule(Context context)
+    {
+        this.mContext = context;
+    }
+
+    @Provides
+    Retrofit provideRetrofit(){
             OkHttpClient.Builder builder = new OkHttpClient().newBuilder();
             builder.addInterceptor(new Interceptor() {
                 @Override
                 public Response intercept(Chain chain) throws IOException {
-                    String token = preference.get("Authorization");
+                    //String token = mySharedPreferences.get("Authorization");
                     //Log.d("TAG", token);
                     Request.Builder  requestBuilder = chain.request().newBuilder();
 
-                    if(!token.equals("")){
-                        requestBuilder.addHeader("Authorization", "JWT "+token);
-                    }
+                    String token = "asdfxzcvasdf";
+
+                    //if(!token.equals("")){
+                        requestBuilder.addHeader("Authorization", "JWT " + token);
+                    //}
 
                     Request request = requestBuilder.build();
                     return chain.proceed(request);
@@ -46,14 +56,11 @@ public class RetrofitInstance {
                     .build();
 
 
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(API_URL) // 통신 url
+            return new Retrofit.Builder()
+                    .baseUrl(MySettings.BASE_URL) // 통신 url
                     .addConverterFactory(GsonConverterFactory.create()) // json통신 여부
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .client(client)
                     .build();
-
-        }
-        return retrofit;
     }
 }

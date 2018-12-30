@@ -10,6 +10,7 @@ android {
         versionCode 3
         versionName "1.2"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        multiDexEnabled true
     }
     buildTypes {
         release {
@@ -48,6 +49,9 @@ dependencies {
 
     // MP4Parser
     implementation 'com.googlecode.mp4parser:isoparser:1.1.21'
+
+    // Open Source Library
+    implementation "com.google.guava:guava:$rootProject.guavaVersion"
 
     // RxJava & RxAndroid
     implementation 'io.reactivex.rxjava2:rxjava:2.2.2'
@@ -95,5 +99,8 @@ dependencies {
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
+
+    //MultiDex
+    implementation 'com.android.support:multidex:1.0.3'
 }
 apply plugin: 'com.google.gms.google-services'

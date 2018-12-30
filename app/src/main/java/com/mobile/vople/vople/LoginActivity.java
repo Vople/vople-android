@@ -1,8 +1,8 @@
 package com.mobile.vople.vople;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
@@ -16,17 +16,17 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.mobile.vople.vople.server.RetrofitInstance;
-import com.mobile.vople.vople.server.SharedPreference;
+import com.mobile.vople.vople.server.MySharedPreferences;
+import com.mobile.vople.vople.server.VopleApi;
 import com.mobile.vople.vople.server.VopleServiceApi;
-import com.mobile.vople.vople.server.model.MyRetrofit;
 
-import java.util.Map;
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 import retrofit2.Retrofit;
 
@@ -48,9 +48,15 @@ public class LoginActivity extends AppCompatActivity {
     @BindView(R.id.btn_login)
     Button btn_login;
 
-    private Retrofit retrofit;
+    @Inject
+    VopleApi mVopleApi;
 
-    private SharedPreference sp;
+    //@Inject
+    MySharedPreferences sp;
+
+    private Disposable disposable;
+
+    private final String TAG = "LOGINACTIVITY_TAG";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,10 +66,6 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         RequestPermission();
-
-        retrofit = RetrofitInstance.getInstance(getApplicationContext());
-
-        sp = SharedPreference.getInstance();
 
         instance = this;
 
@@ -91,21 +93,17 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @SuppressLint("CheckResult")
     @OnClick({R.id.btn_login, R.id.tv_signup})
     public void onClick(View v) {
 
         if (v.getId() == btn_login.getId()) {
 
-            final ProgressDialog pd = ProgressDialog.show(LoginActivity.this, "로그인중", "로그인중 입니다.");
-
-            VopleServiceApi.login service = retrofit.create(VopleServiceApi.login.class);
-
             String login_id = edt_id.getText().toString();
             String login_pwd = edt_password.getText().toString();
 
-            Toast.makeText(this, login_id + " : " + login_pwd, Toast.LENGTH_SHORT).show();
-
-            service.repoContributors(login_id, login_pwd)
+            disposable = mVopleApi.getRetrofit().create(VopleServiceApi.login.class)
+                    .repoContributors(login_id, login_pwd)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(response -> {
@@ -116,11 +114,11 @@ public class LoginActivity extends AppCompatActivity {
                         Intent intent = new Intent(getApplicationContext(), ListOrCreateActivity.class);
                         startActivity(intent);
                         finish();
-                        pd.dismiss();
                     }, throwable -> {
-                        //Toast.makeText(getApplicationContext(), "아이디나 비밀번호가 잘못되었습니다",
-                          //      Toast.LENGTH_SHORT).show();
-                        pd.dismiss();
+                        Toast.makeText(getApplicationContext(),
+                                "아이디나 비밀번호가 잘못되었습니다",
+                                Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, throwable.getLocalizedMessage());
                     });
         }
         else if(v.getId() == tv_signup.getId())
@@ -130,4 +128,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        if(!disposable.isDisposed())
+            disposable.dispose();
+        super.onDestroy();
+    }
 }

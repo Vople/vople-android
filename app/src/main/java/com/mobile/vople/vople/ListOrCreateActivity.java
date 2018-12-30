@@ -11,8 +11,11 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.mobile.vople.vople.main.MainActivity;
-import com.mobile.vople.vople.server.SharedPreference;
+import com.mobile.vople.vople.server.MySharedPreferenceModule;
+import com.mobile.vople.vople.server.MySharedPreferences;
 import com.mobile.vople.vople.ui.CreateRoomDialog;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,6 +39,9 @@ public class ListOrCreateActivity extends AppCompatActivity {
     Button btn_nav;
     @BindView(R.id.lv_nav)
     ListView lv_nav;
+
+    @Inject
+    MySharedPreferences mySharedPreference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,8 +81,8 @@ public class ListOrCreateActivity extends AppCompatActivity {
         }
         else if(v.getId() == R.id.btn_logout)
         {
-            SharedPreference.getInstance(ListOrCreateActivity.this).remove("IS_AUTO_LOGIN");
-            SharedPreference.getInstance(ListOrCreateActivity.this).put("IS_AUTO_LOGIN", "No");
+            mySharedPreference.remove("IS_AUTO_LOGIN");
+            mySharedPreference.put("IS_AUTO_LOGIN", "No");
             Intent intent = new Intent(this, LoginActivity.class);
             startActivity(intent);
             finish();

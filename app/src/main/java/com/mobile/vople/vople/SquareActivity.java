@@ -3,26 +3,18 @@ package com.mobile.vople.vople;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.mobile.vople.vople.server.MyUtils;
-import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
 import com.mobile.vople.vople.server.VopleServiceApi;
-
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class SquareActivity extends AppCompatActivity{
@@ -33,6 +25,8 @@ public class SquareActivity extends AppCompatActivity{
     Button btn_back;
 
     private SquareListViewAdapter adp_square;
+
+    private Retrofit retrofit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,8 +44,6 @@ public class SquareActivity extends AppCompatActivity{
         adp_square = new SquareListViewAdapter();
 
         lv_script_square.setAdapter(adp_square);
-
-        Retrofit retrofit = RetrofitInstance.getInstance(getApplicationContext());
 
         VopleServiceApi.getAllScripts service_get_all_scripts = retrofit.create(VopleServiceApi.getAllScripts.class);
 

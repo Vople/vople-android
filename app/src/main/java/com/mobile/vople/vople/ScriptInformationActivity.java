@@ -9,21 +9,20 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mobile.vople.vople.server.MyUtils;
-import com.mobile.vople.vople.server.RetrofitInstance;
 import com.mobile.vople.vople.server.RetrofitModel;
+import com.mobile.vople.vople.server.VopleApi;
 import com.mobile.vople.vople.server.VopleServiceApi;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.schedulers.Schedulers;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 
 public class ScriptInformationActivity extends AppCompatActivity{
@@ -35,10 +34,11 @@ public class ScriptInformationActivity extends AppCompatActivity{
     @BindView(R.id.btn_back)
     Button btn_back;
 
+    @Inject
+    VopleApi mVopleApi;
+
     private String allPlots = "";
     private String script_title;
-
-    private Retrofit retrofit;
 
     private List<RetrofitModel.Plot> plotList;
 
@@ -72,9 +72,8 @@ public class ScriptInformationActivity extends AppCompatActivity{
             finish();
         }
 
-        retrofit = RetrofitInstance.getInstance(getApplicationContext());
 
-        VopleServiceApi.getScriptDetail service_script_detail = retrofit.create(VopleServiceApi.getScriptDetail.class);
+        VopleServiceApi.getScriptDetail service_script_detail = mVopleApi.getRetrofit().create(VopleServiceApi.getScriptDetail.class);
 
         service_script_detail.repoContributors(script_id)
                 .subscribeOn(Schedulers.io())
